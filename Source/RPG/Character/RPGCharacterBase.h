@@ -24,7 +24,7 @@ class RPG_API ARPGCharacterBase : public ACharacter , public IAbilitySystemInter
 
 public:
 	// Sets default values for this character's properties
-	ARPGCharacterBase();
+	ARPGCharacterBase(const class FObjectInitializer& ObjectInitializer);
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
@@ -60,6 +60,9 @@ protected:
 
 	/** This Function will initialize the abiilities of the character. */
 	virtual void IniitalizeAbilities();
+
+	/** Virtual function used to set the Attribute to Max value  */
+	virtual void SetHealth(float fNewHealth);
 
 	//The Main Name of the Character
 	UPROPERTY(BlueprintReadOnly , Category= "RPG|CharacterBase")

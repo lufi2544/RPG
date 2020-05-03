@@ -1,21 +1,22 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RPGHeroCharacter.h"ç
+#include "RPGHeroCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "RPGPlayerState.h"
 #include "RPGPlayerController.h"
 #include "RPG/AbilitySystem/RPGAttributeSetBase.h"
 #include "RPG/RPGAbilitySystemComponent.h"
+#include "AbilitySystemComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "RPG/RPGGameMode.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
-ARPGHeroCharacter::ARPGHeroCharacter()
+ARPGHeroCharacter::ARPGHeroCharacter(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
     CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-    CameraBoom->AttachTo(RootComponent);
+    CameraBoom->SetupAttachment(RootComponent);
     CameraBoom->SetRelativeLocation(FVector(0,0,CameraBoomDistanceToCharacter));
 
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -50,7 +51,25 @@ float ARPGHeroCharacter::GetStartingSpringCameraBoomLenght()
 }
 void ARPGHeroCharacter::OnRep_PlayerState()
 {
+    // this is for the clients, not server.
     Super::OnRep_PlayerState();
+
+    ARPGPlayerState* PS = Cast<ARPGPlayerState>(GetPlayerState());
+    if(PS)
+    {
+     AbilitySystemComponent = Cast<URPGAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+
+        // We initialize the ability Actor Info once the  Ability System has been related.
+        PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS,this);
+
+     AttributeSet = PS->GetAttributeSetBase();
+
+        InitializeAttributes();
+        // Use when the Player Respawns or he joins the game.
+        SetHealth(GetMaxHealth());
+
+        //TODO Set the Map Tag Count
+    }
 }
 
 void ARPGHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -66,9 +85,33 @@ void ARPGHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     PlayerInputComponent->BindAxis("TurnRate",this,&ARPGHeroCharacter::TurnRate);
 }
 
+
 void ARPGHeroCharacter::PossessedBy(AController* NewController)
 {
+    // Server Only
+    
     Super::PossessedBy(NewController);
+
+    ARPGPlayerState* PS = Cast<ARPGPlayerState>(GetPlayerState());
+    
+    if(PS)
+    {
+        AbilitySystemComponent = Cast<URPGAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+        PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS,this);
+
+        AttributeSet = PS->GetAttributeSetBase();
+
+        InitializeAttributes();
+
+        //TODO Add the character abilities only on the server;
+        //TODO add the Dead tag Map Count to 0;
+
+        
+        SetHealth(GetMaxHealth());
+
+        
+    }
+    
 }
 
 void ARPGHeroCharacter::PostInitializeComponents()

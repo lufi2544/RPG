@@ -19,7 +19,7 @@ class RPG_API ARPGHeroCharacter : public ARPGCharacterBase
 
 public:
 
-	ARPGHeroCharacter();
+	ARPGHeroCharacter(const class FObjectInitializer& ObjectInitializer);
 
 	virtual void PossessedBy(AController* NewController) override;
 
@@ -61,7 +61,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "RRPG|Camera")
 	FVector StartingCameraBoomLocation;
 
-	UPROPERTY(EditDefaultsOnly , EditAnywhere , Category = "RPG|Camera")
+	UPROPERTY(EditDefaultsOnly , Category = "RPG|Camera")
 	float CameraBoomDistanceToCharacter;
 
 	//Mouse

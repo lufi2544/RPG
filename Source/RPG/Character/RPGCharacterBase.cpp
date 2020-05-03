@@ -3,16 +3,21 @@
 
 #include "RPGCharacterBase.h"
 #include "AbilitySystemComponent.h"
+#include "RPGCharacterMovementComponent.h"
 #include "RPG/AbilitySystem/RPGAttributeSetBase.h"
 #include "Components/CapsuleComponent.h"
 #include "RPG/AbilitySystem/RPGGameplayAbility.h"
 #include "RPG/RPGAbilitySystemComponent.h"
 
 // Sets default values
-ARPGCharacterBase::ARPGCharacterBase()
+ARPGCharacterBase::ARPGCharacterBase(const class FObjectInitializer& ObjectInitializer):
+Super(ObjectInitializer.SetDefaultSubobjectClass<URPGCharacterMovementComponent>(ACharacter::CapsuleComponentName))
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility , ECollisionResponse::ECR_Overlap);
+
+	bAlwaysRelevant = true;
 
 }
 
@@ -101,6 +106,15 @@ void ARPGCharacterBase::IniitalizeAbilities()
 {
 
 	//For now we are going to let this for later usage.
+}
+
+void ARPGCharacterBase::SetHealth(float fNewHealth)
+{
+	if(AttributeSet.IsValid())
+	{
+		AttributeSet->SetHealth(fNewHealth);
+	}
+	
 }
 
 
