@@ -21,6 +21,7 @@ void URPGAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
     DOREPLIFETIME_CONDITION_NOTIFY(URPGAttributeSetBase, Health, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(URPGAttributeSetBase, MaxHealth, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(URPGAttributeSetBase, MoveSpeed, COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(URPGAttributeSetBase, CharacterLevel, COND_None, REPNOTIFY_Always);
     
 }
 
@@ -36,6 +37,11 @@ void URPGAttributeSetBase::OnRep_MaxHealth()
 void URPGAttributeSetBase::OnRep_MoveSpeed()
 {
     GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , MoveSpeed);
+}
+
+void URPGAttributeSetBase::OnRep_CharacterLevel()
+{
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase, CharacterLevel);
 }
 
 

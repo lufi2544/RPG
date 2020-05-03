@@ -64,6 +64,21 @@ float ARPGPlayerState::GetMoveSpeed() const
     return 0.0f;
 }
 
+float ARPGPlayerState::GetCharacterLevel() const
+{
+    if(AttributeSet)
+    {
+        AttributeSet->GetCharacterLevel();
+    }
+
+    return 0.0f;
+}
+
+bool ARPGPlayerState::IsAlive() const
+{
+   return GetHealth()>0;
+}
+
 void ARPGPlayerState::PostInitializeComponents()
 {
     Super::PostInitializeComponents();

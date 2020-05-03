@@ -4,10 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
+#include "AbilitySystemComponent.h"
+#include "GameplayEffect.h"
+#include "RPGPlayerState.h"
+#include "RPGPlayerController.h"
+#include "AbilitySystemInterface.h"
+#include "RPG/AbilitySystem/RPGAttributeSetBase.h"
+#include "RPG/AbilitySystem/RPGGameplayAbility.h"
+
+
+
 #include "RPGCharacterBase.generated.h"
 
 UCLASS()
-class RPG_API ARPGCharacterBase : public ACharacter
+class RPG_API ARPGCharacterBase : public ACharacter , public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -15,15 +26,65 @@ public:
 	// Sets default values for this character's properties
 	ARPGCharacterBase();
 
+	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	/** Getters for the Character Attributes. */
+
+	/** Character Health Amount. */
+	UFUNCTION(BlueprintPure , Category = "RPG|CharacterBase|Attributes")
+	float GetHealth() const;
+
+	/** Character Max Health. We will normally set this amount for Health on Respawn. */
+	UFUNCTION(BlueprintPure , Category = "RPG|CharacterBase|Attributes")
+	float GetMaxHealth() const;
+
+	/** Character Movement Speed. */
+	UFUNCTION(BlueprintPure , Category = "RPG|CharacterBase|Attributes")
+	float GetMoveSpeed() const;
+
+	/** The Character Level. */
+	UFUNCTION(BlueprintPure , Category = "RPG|CharacterBase|Attributes")
+	float GetCharacterLevel() const;
+
+	/** Returns if the Character is Alive. */
+	UFUNCTION(BlueprintPure , Category = "RPG|CharacterBase|State")
+	virtual bool IsAlive() const;
+
 protected:
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	/*This function will iniitialize the Attributes for the character.We
+	*check if there is any attributes to Initialize on the Attributes Variable as well.*/
+	virtual void InitializeAttributes();
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	/** This Function will initialize the abiilities of the character. */
+	virtual void IniitalizeAbilities();
+
+	//The Main Name of the Character
+	UPROPERTY(BlueprintReadOnly , Category= "RPG|CharacterBase")
+	FText CharacterName;
+
+	//The Character Initial Attributes
+	UPROPERTY(BlueprintReadOnly , Category = "RPG|CharacterBase")
+	TSubclassOf<UGameplayEffect>CharacterInitialAttributes;
+
+	//These are the character Abilities.
+	UPROPERTY(BlueprintReadOnly , Category = "RPG|CharacterBase")
+	TArray<TSubclassOf<URPGGameplayAbility>>CharacterAbilities;
+	
+
+	/* I have Opted to make a TWeakPtr in Stead of a common UPROPERTY in this project because I think is more correct to have the
+	 * Ability System Component and The Attribute Set on the Player State and the from there just point to that variables.
+	 */
+
+	TWeakObjectPtr<class URPGAbilitySystemComponent>AbilitySystemComponent;
+
+	TWeakObjectPtr<class URPGAttributeSetBase>AttributeSet;
+	
+	
+
+
+
 
 };

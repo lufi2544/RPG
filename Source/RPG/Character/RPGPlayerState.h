@@ -39,11 +39,22 @@ public:
 	 * Getters for the Character State(AttributeSet related)
 	 */
 
+	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|Attributes")
 	float GetHealth() const;
 
+	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|Attributes")
 	float GetMaxHealth() const;
 
+	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|Attributes")
 	float GetMoveSpeed() const;
+
+	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|Attributes")
+	float GetCharacterLevel() const;
+
+	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|State")
+	bool IsAlive() const;
+
+	
 
 protected:
 

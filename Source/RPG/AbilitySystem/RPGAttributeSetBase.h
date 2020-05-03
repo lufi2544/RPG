@@ -48,6 +48,11 @@ class RPG_API URPGAttributeSetBase : public UAttributeSet
 	FGameplayAttributeData MoveSpeed;
 	ATTRIBUTE_ACCESSORS(URPGAttributeSetBase , MoveSpeed);
 
+	//The Character Level.
+	UPROPERTY(BlueprintReadOnly , Category = "RPG|AttributeSet" ,ReplicatedUsing = OnRep_CharacterLevel)
+	FGameplayAttributeData CharacterLevel;
+	ATTRIBUTE_ACCESSORS(URPGAttributeSetBase , CharacterLevel);
+
 	
 
 protected:
@@ -63,6 +68,9 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRep_MaxHealth();
+
+	UFUNCTION()
+	virtual void OnRep_CharacterLevel();
 	
 	
 	

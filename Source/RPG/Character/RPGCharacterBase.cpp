@@ -2,12 +2,17 @@
 
 
 #include "RPGCharacterBase.h"
+#include "AbilitySystemComponent.h"
+#include "RPG/AbilitySystem/RPGAttributeSetBase.h"
+#include "Components/CapsuleComponent.h"
+#include "RPG/AbilitySystem/RPGGameplayAbility.h"
+#include "RPG/RPGAbilitySystemComponent.h"
 
 // Sets default values
 ARPGCharacterBase::ARPGCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -18,17 +23,86 @@ void ARPGCharacterBase::BeginPlay()
 	
 }
 
-// Called every frame
-void ARPGCharacterBase::Tick(float DeltaTime)
+UAbilitySystemComponent* ARPGCharacterBase::GetAbilitySystemComponent() const
 {
-	Super::Tick(DeltaTime);
-
+	return AbilitySystemComponent.Get();
 }
 
-// Called to bind functionality to input
-void ARPGCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+float ARPGCharacterBase::GetHealth() const
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	if(AttributeSet.IsValid())
+	{
+		return AttributeSet->GetHealth();
+	}
+	
+	return 0.0f;
 }
+
+float ARPGCharacterBase::GetMaxHealth() const
+{
+	if(AttributeSet.IsValid())
+	{
+	return AttributeSet->GetMaxHealth();	
+	}
+	
+	return 0.0f;
+}
+
+float ARPGCharacterBase::GetMoveSpeed() const
+{
+	if(AttributeSet.IsValid())
+	{
+		return AttributeSet->GetMoveSpeed();
+	}
+
+	return 0.0f;
+}
+
+float ARPGCharacterBase::GetCharacterLevel() const
+{
+	if (AttributeSet.IsValid())
+	{
+		AttributeSet->GetCharacterLevel();
+	}
+
+	return 0.0f;
+}
+
+bool ARPGCharacterBase::IsAlive() const
+{
+	return GetHealth() > 0;
+}
+
+
+void ARPGCharacterBase::InitializeAttributes()
+{
+
+	//Can run on Server and Client
+	if(IsValid(CharacterInitialAttributes) && AbilitySystemComponent.IsValid() && AttributeSet.IsValid())
+	{
+
+		FGameplayEffectContextHandle EffectContextHandle = AbilitySystemComponent->MakeEffectContext();
+
+		FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(CharacterInitialAttributes,GetCharacterLevel(),EffectContextHandle);
+
+		if(EffectSpecHandle.IsValid())
+		{
+
+			FActiveGameplayEffectHandle ActiveGameplayEffectHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(),AbilitySystemComponent.Get());
+			
+		}
+
+		
+		
+	}
+}
+
+void ARPGCharacterBase::IniitalizeAbilities()
+{
+
+	//For now we are going to let this for later usage.
+}
+
+
+
 
