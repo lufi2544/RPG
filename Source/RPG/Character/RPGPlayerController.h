@@ -13,5 +13,13 @@ UCLASS()
 class RPG_API ARPGPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+	public:
+
+	protected:
+
+	void OnPossess(APawn* InPawn) override;
+
+	void OnRep_PlayerState() override;
 	
 };

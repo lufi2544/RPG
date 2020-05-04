@@ -2,6 +2,8 @@
 
 
 #include "RPGHeroCharacter.h"
+
+
 #include "Components/CapsuleComponent.h"
 #include "RPGPlayerState.h"
 #include "RPGPlayerController.h"
@@ -12,169 +14,225 @@
 #include "RPG/RPGGameMode.h"
 #include "Kismet/KismetMathLibrary.h"
 
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/DecalComponent.h"
+#include "Components/WidgetComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "UObject/ConstructorHelpers.h"
+
+
+
 
 ARPGHeroCharacter::ARPGHeroCharacter(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-    CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-    CameraBoom->SetupAttachment(RootComponent);
-    CameraBoom->SetRelativeLocation(FVector(0,0,CameraBoomDistanceToCharacter));
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(FName("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->SetRelativeLocation(FVector(0, 0, 68.492264));
 
-    FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-    FollowCamera->SetupAttachment(CameraBoom);
-    FollowCamera->FieldOfView = 80.0f;
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(FName("FollowCamera"));
+	FollowCamera->SetupAttachment(CameraBoom);
+	FollowCamera->FieldOfView = 80.0f;
 
-    GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	
 
-    // We make sure to play the animations on the server so we can manipulate the transforms of the bones and sockets and
-    // cast FX and more things.
-    GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
-    GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    GetMesh()->SetCollisionProfileName(FName("NoCollision"));
-    
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	// Makes sure that the animations play on the Server so that we can use bone and socket transforms
+	// to do things like spawning projectiles and other FX.
+	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->SetCollisionProfileName(FName("NoCollision"));
+
 }
 
+// Called to bind functionality to input
+void ARPGHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &ARPGHeroCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ARPGHeroCharacter::MoveRight);
+
+	PlayerInputComponent->BindAxis("LookUp", this, &ARPGHeroCharacter::LookUp);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &ARPGHeroCharacter::LookUpRate);
+	PlayerInputComponent->BindAxis("Turn", this, &ARPGHeroCharacter::Turn);
+	PlayerInputComponent->BindAxis("TurnRate", this, &ARPGHeroCharacter::TurnRate);
+
+	// Bind player input to the AbilitySystemComponent. Also called in OnRep_PlayerState because of a potential race condition.
+	BindASCInput();
+}
+/**
+* On the Server, Possession happens before BeginPlay.
+* On the Client, BeginPlay happens before Possession.
+* So we can't use BeginPlay to do anything with the AbilitySystemComponent because we don't have it until the PlayerState replicates from possession.
+*/
 void ARPGHeroCharacter::BeginPlay()
 {
-    StartingCameraBoomArmLenght = CameraBoom->TargetArmLength;
-    StartingCameraBoomLocation = CameraBoom->GetRelativeLocation();
+	Super::BeginPlay();
+
+	// Only needed for Heroes placed in world and when the player is the Server.
+	// On respawn, they are set up in PossessedBy.
+	// When the player a client, the floating status bars are all set up in OnRep_PlayerState.
+
+	StartingCameraBoomArmLenght = CameraBoom->TargetArmLength;
+	StartingCameraBoomLocation = CameraBoom->GetRelativeLocation();
+}
+
+// Server only
+void ARPGHeroCharacter::PossessedBy(AController * NewController)
+{
+	Super::PossessedBy(NewController);
+
+	ARPGPlayerState* PS = GetPlayerState<ARPGPlayerState>();
+	if (PS)
+	{
+		// Set the ASC on the Server. Clients do this in OnRep_PlayerState()
+		AbilitySystemComponent = Cast<URPGAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+
+		// AI won't have PlayerControllers so we can init again here just to be sure. No harm in initing twice for heroes that have PlayerControllers.
+		PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS, this);
+
+		// Set the AttributeSetBase for convenience attribute functions
+		AttributeSet = PS->GetAttributeSetBase();
+
+		// If we handle players disconnecting and rejoining in the future, we'll have to change this so that possession from rejoining doesn't reset attributes.
+		// For now assume possession = spawn/respawn.
+		InitializeAttributes();
+
+		
+		// Respawn specific things that won't affect first possession.
+		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
+		SetHealth(GetMaxHealth());
+	}
+}
+
+// Client only
+void ARPGHeroCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	ARPGPlayerState* PS = GetPlayerState<ARPGPlayerState>();
+	if (PS)
+	{
+		// Set the ASC for clients. Server does this in PossessedBy.
+		AbilitySystemComponent = Cast<URPGAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+
+		// Init ASC Actor Info for clients. Server will init its ASC when it possesses a new Actor.
+		AbilitySystemComponent->InitAbilityActorInfo(PS, this);
+
+		// Bind player input to the AbilitySystemComponent. Also called in SetupPlayerInputComponent because of a potential race condition.
+		BindASCInput();
+
+		// Set the AttributeSetBase for convenience attribute functions
+		AttributeSet = PS->GetAttributeSetBase();
+
+		// If we handle players disconnecting and rejoining in the future, we'll have to change this so that posession from rejoining doesn't reset attributes.
+		// For now assume possession = spawn/respawn.
+		InitializeAttributes();
+
+		ARPGPlayerController* PC = Cast<ARPGPlayerController>(GetController());
+
+
+		// Respawn specific things that won't affect first possession.
+
+
+		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
+		SetHealth(GetMaxHealth());
+
+	}
+}
+
+USpringArmComponent * ARPGHeroCharacter::GetCameraBoom()
+{
+	return CameraBoom;
+}
+
+UCameraComponent * ARPGHeroCharacter::GetFollowCamera()
+{
+	return FollowCamera;
+}
+
+float ARPGHeroCharacter::GetStartingSpringCameraBoomArmLenght()
+{
+	return StartingCameraBoomArmLenght;
 }
 
 FVector ARPGHeroCharacter::GetStartingCameraBoomLocation()
 {
-    return StartingCameraBoomLocation;
+	return StartingCameraBoomLocation;
 }
 
-float ARPGHeroCharacter::GetStartingSpringCameraBoomLenght()
+void ARPGHeroCharacter::LookUp(float Value)
 {
-    return StartingCameraBoomArmLenght;
+	if (IsAlive())
+	{
+		AddControllerPitchInput(Value);
+	}
 }
-void ARPGHeroCharacter::OnRep_PlayerState()
+
+void ARPGHeroCharacter::LookUpRate(float Value)
 {
-    // this is for the clients, not server.
-    Super::OnRep_PlayerState();
+	if (IsAlive())
+	{
+		//We calculate the cm/frame
+		float fLookUpRatePerFrame = GetWorld()->DeltaTimeSeconds * BaseTurnRate;
 
-    ARPGPlayerState* PS = Cast<ARPGPlayerState>(GetPlayerState());
-    if(PS)
-    {
-     AbilitySystemComponent = Cast<URPGAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+		// We multyply by the sensitivity
+		float fFinalLookUpRate = fLookUpRatePerFrame * Value;
 
-        // We initialize the ability Actor Info once the  Ability System has been related.
-        PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS,this);
-
-     AttributeSet = PS->GetAttributeSetBase();
-
-        InitializeAttributes();
-        // Use when the Player Respawns or he joins the game.
-        SetHealth(GetMaxHealth());
-
-        //TODO Set the Map Tag Count
-    }
+		AddControllerPitchInput(fFinalLookUpRate);
+	}
 }
 
-void ARPGHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ARPGHeroCharacter::Turn(float Value)
 {
-    Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-    PlayerInputComponent->BindAxis("MoveForward",this,&ARPGHeroCharacter::MoveForward);
-    PlayerInputComponent->BindAxis("MOveRight",this,&ARPGHeroCharacter::MoveForward);
-
-    PlayerInputComponent->BindAxis("LookUp",this,&ARPGHeroCharacter::LookUp);
-    PlayerInputComponent->BindAxis("LookUpRate",this,&ARPGHeroCharacter::LookUpRate);
-    PlayerInputComponent->BindAxis("Turn",this,&ARPGHeroCharacter::Turn);
-    PlayerInputComponent->BindAxis("TurnRate",this,&ARPGHeroCharacter::TurnRate);
+	if (IsAlive())
+	{
+		AddControllerYawInput(Value);
+	}
 }
 
-
-void ARPGHeroCharacter::PossessedBy(AController* NewController)
+void ARPGHeroCharacter::TurnRate(float Value)
 {
-    // Server Only
-    
-    Super::PossessedBy(NewController);
+	if (IsAlive())
+	{
+		// We get the cm/frame
+		float fTurnRatePerFrame = GetWorld()->DeltaTimeSeconds * BaseTurnRate;
 
-    ARPGPlayerState* PS = Cast<ARPGPlayerState>(GetPlayerState());
-    
-    if(PS)
-    {
-        AbilitySystemComponent = Cast<URPGAbilitySystemComponent>(PS->GetAbilitySystemComponent());
-        PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS,this);
+		// And we multiply by the sensitivity
+		float fFinalTurnRate = fTurnRatePerFrame * Value;
 
-        AttributeSet = PS->GetAttributeSetBase();
+		AddControllerYawInput(fFinalTurnRate);
 
-        InitializeAttributes();
-
-        //TODO Add the character abilities only on the server;
-        //TODO add the Dead tag Map Count to 0;
-
-        
-        SetHealth(GetMaxHealth());
-
-        
-    }
-    
+	}
 }
 
-void ARPGHeroCharacter::PostInitializeComponents()
+void ARPGHeroCharacter::MoveForward(float Value)
 {
-    Super::PostInitializeComponents();
+	AddMovementInput(UKismetMathLibrary::GetForwardVector(FRotator(0, GetControlRotation().Yaw, 0)), Value);
 }
 
-void ARPGHeroCharacter::LookUp(float fValue)
+void ARPGHeroCharacter::MoveRight(float Value)
 {
-    if(IsAlive())
-    {
-       AddControllerPitchInput(fValue); 
-    }
+	AddMovementInput(UKismetMathLibrary::GetRightVector(FRotator(0, GetControlRotation().Yaw, 0)), Value);
 }
 
-void ARPGHeroCharacter::LookUpRate(float fValue)
+
+
+
+
+void ARPGHeroCharacter::BindASCInput()
 {
-    if(IsAlive())
-    {
-        // Siempre que se quiera comparar y llegar a medir una unidad en /frame hay que multiplicarla por deltatime seconds
-        // que son los frames / s .
-     float fLookUpRatePerFrame = GetWorld()->DeltaTimeSeconds * BaseLookUpRate;
+	if (!ASCInputBound && AbilitySystemComponent.IsValid() && IsValid(InputComponent))
+	{
+		AbilitySystemComponent->BindAbilityActivationToInputComponent(InputComponent, FGameplayAbilityInputBinds(FString("ConfirmTarget"),
+			FString("CancelTarget"), FString("ERPGbilityInputID"), static_cast<int32>(ERPGbilityInputID::Confirm), static_cast<int32>(ERPGbilityInputID::Cancel)));
 
-     float fFinalLookUpRate = fLookUpRatePerFrame * fValue;
-
-       AddControllerPitchInput(fFinalLookUpRate);
-        
-    }
+		ASCInputBound = true;
+	}
 }
 
-void ARPGHeroCharacter::Turn(float fValue)
-{
-    if(IsAlive())
-    {
-        AddControllerYawInput(fValue);
-    }
-}
-
-void ARPGHeroCharacter::TurnRate(float fValue)
-{
-    if (IsAlive())
-    {
-        float fTurnAmountperFrame = GetWorld()->DeltaTimeSeconds * BaseTurnRate;
-
-        float fTurnAmount = fTurnAmountperFrame * fValue;
-        
-        AddControllerYawInput(fTurnAmount);
-    }
-}
-
-void ARPGHeroCharacter::MoveForward(float fValue)
-{
-
-   const FRotator ForwardRotator = FRotator(0,GetControlRotation().Yaw,0);
-
-    AddMovementInput(UKismetMathLibrary::GetForwardVector(ForwardRotator),fValue);
-
-    
-}
-
-void ARPGHeroCharacter::MoveRight(float fValue)
-{
-    const FRotator RightRotator = FRotator(0,GetControlRotation().Yaw,0);
-
-    AddMovementInput(UKismetMathLibrary::GetRightVector(RightRotator),fValue);
-}

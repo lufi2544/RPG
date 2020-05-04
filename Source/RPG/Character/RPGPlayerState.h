@@ -58,7 +58,7 @@ public:
 
 protected:
 
-	void PostInitializeComponents() override;
+
 
 	UPROPERTY()
 	class URPGAbilitySystemComponent* AbilitySystemComponent;

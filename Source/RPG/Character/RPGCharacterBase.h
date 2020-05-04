@@ -65,15 +65,15 @@ protected:
 	virtual void SetHealth(float fNewHealth);
 
 	//The Main Name of the Character
-	UPROPERTY(BlueprintReadOnly , Category= "RPG|CharacterBase")
+	UPROPERTY(BlueprintReadOnly ,EditAnywhere, Category= "RPG|CharacterBase")
 	FText CharacterName;
 
 	//The Character Initial Attributes
-	UPROPERTY(BlueprintReadOnly , Category = "RPG|CharacterBase")
+	UPROPERTY(BlueprintReadOnly ,EditAnywhere, Category = "RPG|CharacterBase")
 	TSubclassOf<UGameplayEffect>CharacterInitialAttributes;
 
 	//These are the character Abilities.
-	UPROPERTY(BlueprintReadOnly , Category = "RPG|CharacterBase")
+	UPROPERTY(BlueprintReadOnly ,EditAnywhere, Category = "RPG|CharacterBase")
 	TArray<TSubclassOf<URPGGameplayAbility>>CharacterAbilities;
 	
 

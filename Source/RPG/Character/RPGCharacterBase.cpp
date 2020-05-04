@@ -11,7 +11,7 @@
 
 // Sets default values
 ARPGCharacterBase::ARPGCharacterBase(const class FObjectInitializer& ObjectInitializer):
-Super(ObjectInitializer.SetDefaultSubobjectClass<URPGCharacterMovementComponent>(ACharacter::CapsuleComponentName))
+Super(ObjectInitializer.SetDefaultSubobjectClass<URPGCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -94,7 +94,8 @@ void ARPGCharacterBase::InitializeAttributes()
 		{
 
 			FActiveGameplayEffectHandle ActiveGameplayEffectHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(),AbilitySystemComponent.Get());
-			
+
+
 		}
 
 		

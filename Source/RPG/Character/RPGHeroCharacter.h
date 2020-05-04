@@ -6,6 +6,7 @@
 #include "RPGCharacterBase.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "RPG/RPG.h"
 
 #include "RPGHeroCharacter.generated.h"
 
@@ -33,15 +34,13 @@ public:
 	FVector GetStartingCameraBoomLocation();
 
 	UFUNCTION(BlueprintPure , Category = "RPG|HeroCharacter")
-	float GetStartingSpringCameraBoomLenght();
+	float GetStartingSpringCameraBoomArmLenght();
 	
 protected:
 	
 	virtual void BeginPlay() override;
 
 	virtual void OnRep_PlayerState() override;
-
-	virtual void PostInitializeComponents() override;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|Camera")
 	float BaseTurnRate = 45.0f;
@@ -61,9 +60,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "RRPG|Camera")
 	FVector StartingCameraBoomLocation;
 
-	UPROPERTY(EditDefaultsOnly , Category = "RPG|Camera")
-	float CameraBoomDistanceToCharacter;
-
 	//Mouse
 	void LookUp(float fValue);
 
@@ -81,5 +77,12 @@ protected:
 
 	//Mouse + GamePad
 	void MoveRight(float fValue);
+
+	bool ASCInputBound = false;
+
+	// Called from both SetupPlayerInputComponent and OnRep_PlayerState because of a potential race condition where the PlayerController might
+	// call ClientRestart which calls SetupPlayerInputComponent before the PlayerState is repped to the client so the PlayerState would be null in SetupPlayerInputComponent.
+	// Conversely, the PlayerState might be repped before the PlayerController calls ClientRestart so the Actor's InputComponent would be null in OnRep_PlayerState.
+	void BindASCInput();
 	
 };

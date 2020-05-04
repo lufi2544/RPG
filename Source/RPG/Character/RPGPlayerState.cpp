@@ -39,29 +39,17 @@ URPGAttributeSetBase* ARPGPlayerState::GetAttributeSetBase() const
 
 float ARPGPlayerState::GetHealth() const
 {
-    if(AttributeSet)
-    {
         return AttributeSet->GetHealth();
-    }
-    return 0.0f;
 }
 
 float ARPGPlayerState::GetMaxHealth() const
 {
-    if(AttributeSet)
-    {
         return AttributeSet->GetMaxHealth();
-    }
-    return 0.0f;
 }
 
 float ARPGPlayerState::GetMoveSpeed() const
 {
-    if(AttributeSet)
-    {
         return AttributeSet->GetMoveSpeed();
-    }
-    return 0.0f;
 }
 
 float ARPGPlayerState::GetCharacterLevel() const
@@ -76,10 +64,7 @@ float ARPGPlayerState::GetCharacterLevel() const
 
 bool ARPGPlayerState::IsAlive() const
 {
-   return GetHealth()>0;
+   return GetHealth()>0.0f;
 }
 
-void ARPGPlayerState::PostInitializeComponents()
-{
-    Super::PostInitializeComponents();
-}
+
