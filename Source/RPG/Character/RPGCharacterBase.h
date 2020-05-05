@@ -59,7 +59,7 @@ protected:
 	virtual void InitializeAttributes();
 
 	/** This Function will initialize the abiilities of the character. */
-	virtual void IniitalizeAbilities();
+	virtual void InitializeAbilities();
 
 	/** Virtual function used to set the Attribute to Max value  */
 	virtual void SetHealth(float fNewHealth);

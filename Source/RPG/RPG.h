@@ -34,17 +34,21 @@ enum class ERPGbilityInputID : uint8
     // 2 Cancel
     Cancel			UMETA(DisplayName = "Cancel"),
     // 3 LMB
-    Ability1		UMETA(DisplayName = "Ability1"),
-    // 4 RMB
+    PrimaryWeaponAttack	UMETA(DisplayName = "PrimaryWeaponAttack"),
+    //4 RMB
+    SecundaryWeaponAttack UMETA(DisplayName = "SecundaryWeaponAttack"),
+    // 5 E
     Ability2		UMETA(DisplayName = "Ability2"),
-    // 5 Q
+    // 6 Q
     Ability3		UMETA(DisplayName = "Ability3"),
-    // 6 E
+    // 7 
     Ability4		UMETA(DisplayName = "Ability4"),
-    // 7 R
+    // 8 
     Ability5		UMETA(DisplayName = "Ability5"),
-    // 8 Sprint
+    // 9 Sprint
     Sprint			UMETA(DisplayName = "Sprint"),
     // 9 Jump
     Jump			UMETA(DisplayName = "Jump")
+    //10 ZoomMode
+    ,LockMode UMETA(DisplayName ="LockMode")
 };

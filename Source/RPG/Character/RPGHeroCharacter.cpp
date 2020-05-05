@@ -103,6 +103,8 @@ void ARPGHeroCharacter::PossessedBy(AController * NewController)
 		// For now assume possession = spawn/respawn.
 		InitializeAttributes();
 
+		InitializeAbilities();
+
 		
 		// Respawn specific things that won't affect first possession.
 		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.

@@ -103,10 +103,24 @@ void ARPGCharacterBase::InitializeAttributes()
 	}
 }
 
-void ARPGCharacterBase::IniitalizeAbilities()
+void ARPGCharacterBase::InitializeAbilities()
 {
+	if((Role != ROLE_Authority) || !AbilitySystemComponent.IsValid() ||AbilitySystemComponent->InitialAbilitiesInitialized)
+	{
+		return;
+	}
+	
+	if(CharacterAbilities.Num() > 0 )
+	{
+		for(TSubclassOf<URPGGameplayAbility> Ability: CharacterAbilities)
+		{
+			
+			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability,GetCharacterLevel(),static_cast<int32>(Ability.GetDefaultObject()->AbilityID),this));
+		}	
+	}
 
-	//For now we are going to let this for later usage.
+	
+	AbilitySystemComponent->InitialAbilitiesInitialized = true;
 }
 
 void ARPGCharacterBase::SetHealth(float fNewHealth)
