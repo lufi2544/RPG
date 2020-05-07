@@ -48,7 +48,36 @@ enum class ERPGbilityInputID : uint8
     // 9 Sprint
     Sprint			UMETA(DisplayName = "Sprint"),
     // 9 Jump
-    Jump			UMETA(DisplayName = "Jump")
-    //10 ZoomMode
-    ,LockMode UMETA(DisplayName ="LockMode")
+    Jump			UMETA(DisplayName = "Jump"),
+    //10 BattleMode
+    BattleMode     UMETA(DisplayName ="LockMode"),
+    //11 Roll
+    Roll            UMETA(DsiplayName = "Roll"),
+    //12 Interact
+    Interact           UMETA(DisplayName = "Interact"),
+    //13 Block
+    Block           UMETA(DisplayName = "Block")
+};
+
+/// This Enum will store all the possibles combinations of the Player animations, depending on the weappns taht he carries.
+UENUM(BlueprintType)
+enum class ERPGAnimationMode : uint8
+{
+    //No Weapon
+    NoWeapon,
+    //SingleSword
+    SingleSword,
+    //DoubleSword
+    DoubleSword,
+    //Sword and Shield
+    SwordShield     UMETA(DisplayName = "Sword and Shield"),
+    //DoubleHand Sword
+    DoubleHandSword,
+    //Magic wand
+    MagicWand,
+    //Bow
+    Bow
+    
+
+    
 };

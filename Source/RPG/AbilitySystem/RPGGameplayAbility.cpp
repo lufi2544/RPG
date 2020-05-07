@@ -23,3 +23,37 @@ void URPGGameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo
     
     
 }
+
+void URPGGameplayAbility::CommitExecute(const FGameplayAbilitySpecHandle Handle,
+    const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+{
+    Super::CommitExecute(Handle, ActorInfo, ActivationInfo);
+
+    if (bIsComboAbility)
+    {
+        //Depending on the character montages that he will be play, we set the Max Stacks for the Ability.
+        AbilityMaxStacks = CharacterMontagesToPlay.Num();
+    }
+
+    
+    // We commit the resources and add the Ability Stacks if needed.
+
+    // If the ability Is stackable, that means that we can cast the ability in a certain amount of time and is not the first time we pass through here, we add a stack.
+    
+
+    
+}
+
+void URPGGameplayAbility::ResetAbilityStacks()
+{
+    AbilityStacks = 0;
+}
+
+void URPGGameplayAbility::ApplyCooldown(const FGameplayAbilitySpecHandle Handle,
+    const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const
+{
+    Super::ApplyCooldown(Handle, ActorInfo, ActivationInfo);
+
+    
+    
+}

@@ -43,6 +43,12 @@ void URPGCharacterMovementComponent::UpdateFromCompressedFlags(uint8 Flags)
     Super::UpdateFromCompressedFlags(Flags);
 
     RequestToStartSprinting = (Flags & FSavedMove_Character::FLAG_Custom_0) != 0;
+
+    RequestToStartRolling = (Flags & FSavedMove_Character::FLAG_Custom_1) != 0;
+    
+    RequestToStartBlocking = (Flags & FSavedMove_Character::FLAG_Custom_1) != 0;
+
+    RequestToStartBattleMode = (Flags & FSavedMove_Character::FLAG_Custom_1) != 0;
     
 }
 
@@ -72,11 +78,45 @@ void URPGCharacterMovementComponent::StopSprinting()
      RequestToStartSprinting = false;
 }
 
+void URPGCharacterMovementComponent::StartRolling()
+{
+    RequestToStartRolling = true;
+}
+
+void URPGCharacterMovementComponent::StopRolling()
+{
+    RequestToStartRolling = false;
+}
+
+void URPGCharacterMovementComponent::StartBlocking()
+{
+    RequestToStartBlocking = true;
+}
+
+void URPGCharacterMovementComponent::StopBlocking()
+{
+    RequestToStartBlocking = false;
+}
+
+void URPGCharacterMovementComponent::StartBattleMode()
+{
+    RequestToStartBattleMode = true;
+}
+
+void URPGCharacterMovementComponent::StopBattleMode()
+{
+    RequestToStartBattleMode = false;
+}
+
 void URPGCharacterMovementComponent::FRPGSavedMode::Clear()
 {
     Super::Clear();
 
-    SavedRequestToStartSprinting = false;
+     SavedRequestToStartSprinting = false;
+     SavedRequestToStartRolling = false;
+     SavedRequestToStartBlocking = false;
+     SavedRequestToStartBattleMode = false;
+    
 }
 
 uint8 URPGCharacterMovementComponent::FRPGSavedMode::GetCompressedFlags() const
@@ -86,6 +126,21 @@ uint8 URPGCharacterMovementComponent::FRPGSavedMode::GetCompressedFlags() const
     if(SavedRequestToStartSprinting)
     {
         Result |= FLAG_Custom_0;
+    }
+
+    if(SavedRequestToStartRolling)
+    {
+        Result |= FLAG_Custom_1;
+    }
+
+    if (SavedRequestToStartBlocking)
+    {
+        Result |= FLAG_Custom_2;
+    }
+
+    if(SavedRequestToStartBattleMode)
+    {
+        Result |= FLAG_Custom_3;
     }
 
    // We may add some other flags to the project.
@@ -101,6 +156,22 @@ bool URPGCharacterMovementComponent::FRPGSavedMode::CanCombineWith(const FSavedM
         return false;
     }
 
+    if(SavedRequestToStartRolling != ((FRPGSavedMode*)&NewMove)->SavedRequestToStartRolling)
+    {
+        return false;
+    }
+    
+    if(SavedRequestToStartBlocking != ((FRPGSavedMode*)&NewMove)->SavedRequestToStartBlocking)
+    {
+        return false;
+    }
+    
+    if(SavedRequestToStartBattleMode != ((FRPGSavedMode*)&NewMove)->SavedRequestToStartBattleMode)
+    {
+        return false;
+    }
+    
+
     return Super::CanCombineWith(NewMove, Character, MaxDelta);
 }
 
@@ -113,6 +184,12 @@ void URPGCharacterMovementComponent::FRPGSavedMode::SetMoveFor(ACharacter* Chara
     if(CharacterMovement)
     {
         SavedRequestToStartSprinting = CharacterMovement->RequestToStartSprinting;
+
+        SavedRequestToStartRolling = CharacterMovement->RequestToStartRolling;
+
+        SavedRequestToStartBlocking = CharacterMovement->RequestToStartBlocking;
+
+        SavedRequestToStartBattleMode = CharacterMovement->RequestToStartBattleMode;
     }
 }
 

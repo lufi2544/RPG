@@ -39,6 +39,9 @@ class RPG_API URPGCharacterMovementComponent : public UCharacterMovementComponen
 
 
 		uint8 SavedRequestToStartSprinting : 1;
+		uint8 SavedRequestToStartRolling : 1;
+		uint8 SavedRequestToStartBlocking : 1;
+		uint8 SavedRequestToStartBattleMode : 1;
 	};
 
 	class FRPGNetworkPredictionData_Client : public FNetworkPredictionData_Client_Character
@@ -59,6 +62,13 @@ public:
 	
 	uint8 RequestToStartSprinting :1;
 
+	uint8 RequestToStartRolling : 1;
+
+	uint8 RequestToStartBlocking : 1;
+
+	uint8 RequestToStartBattleMode : 1;
+	
+
 	virtual float GetMaxSpeed() const override;
 	virtual void UpdateFromCompressedFlags(uint8 Flags) override;
 	virtual class FNetworkPredictionData_Client* GetPredictionData_Client() const override;
@@ -68,6 +78,24 @@ public:
 	void StartSprinting();
 	UFUNCTION(BlueprintCallable , Category= "Sprint")
 	void StopSprinting();
+
+	///Rolling
+	UFUNCTION(BlueprintCallable , Category = "Roll")
+	void StartRolling();
+	UFUNCTION(BlueprintCallable , Category = "Roll")
+    void StopRolling();
+
+	///Blocking
+	UFUNCTION(BlueprintCallable , Category = "Blocking")
+	void StartBlocking();
+	UFUNCTION(BlueprintCallable , Category = "Blocking")
+	void StopBlocking();
+
+	///BattleMode
+	UFUNCTION(BlueprintCallable , Category = "BattleMode")
+    void StartBattleMode();
+	UFUNCTION(BlueprintCallable , Category = "BattleMode")
+    void StopBattleMode();
 
 	
 	

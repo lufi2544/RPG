@@ -36,6 +36,7 @@ ARPGHeroCharacter::ARPGHeroCharacter(const class FObjectInitializer& ObjectIniti
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(FName("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom);
 	FollowCamera->FieldOfView = 80.0f;
+	
 
 	
 
