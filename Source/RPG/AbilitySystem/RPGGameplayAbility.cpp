@@ -29,6 +29,9 @@ void URPGGameplayAbility::CommitExecute(const FGameplayAbilitySpecHandle Handle,
 {
     Super::CommitExecute(Handle, ActorInfo, ActivationInfo);
 
+       // We set the ability ready to start.
+    bHasEnded = false;
+
     if (bIsComboAbility)
     {
         //Depending on the character montages that he will be play, we set the Max Stacks for the Ability.

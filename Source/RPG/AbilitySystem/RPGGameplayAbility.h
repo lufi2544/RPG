@@ -47,6 +47,10 @@ public:
 	UPROPERTY(BlueprintReadOnly , EditAnywhere , Category = "RPG|Ability|Stacks")
     uint8 bIsComboAbility : 1;
 
+	//Wether the Ability Has ended or not.
+    UPROPERTY(BlueprintReadWrite , Category= "RPG|Ability")
+	uint8 bHasEnded : 1;
+
 	//Window time that the player has to recast the ability if the ability is stackable.
 	UPROPERTY(BlueprintReadWrite , EditAnywhere ,Category = "RPG|Ability|Stacks")
 	float RecastTime = 0.0f;
