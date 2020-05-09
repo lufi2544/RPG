@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Abilities/Tasks/AbilityTask.h"
 #include "Animation/AnimMontage.h"
-#include "RPG/RPGAbilitySystemComponent.h"
 
 #include "RPGAT_PlayMontageAndWaitForEvent.generated.h"
 

@@ -9,8 +9,8 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
 #include "Animation/AnimInstance.h"
-#include "RPG/RPGAbilitySystemComponent.h"
-#include "RPG/AbilitySystem/RPGGameplayAbility.h"
+#include "RPG/Public/AbilitySystem/RPGAbilitySystemComponent.h"
+#include "RPG/Public/AbilitySystem/RPGGameplayAbility.h"
 #include "RPG/RPG.h"
 #include "GameFramework/Character.h"
 
