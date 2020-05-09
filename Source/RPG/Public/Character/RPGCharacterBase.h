@@ -10,6 +10,7 @@
 #include "RPGPlayerState.h"
 #include "RPGPlayerController.h"
 #include "AbilitySystemInterface.h"
+#include "RPG/RPG.h"
 
 
 class URPGAttributeSetBase;
@@ -75,7 +76,6 @@ protected:
 	//These are the character Abilities.
 	UPROPERTY(BlueprintReadOnly ,EditAnywhere, Category = "RPG|CharacterBase")
 	TArray<TSubclassOf<URPGGameplayAbility>>CharacterAbilities;
-	
 
 	/* I have Opted to make a TWeakPtr in Stead of a common UPROPERTY in this project because I think is more correct to have the
 	 * Ability System Component and The Attribute Set on the Player State and the from there just point to that variables.

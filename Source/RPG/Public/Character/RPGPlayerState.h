@@ -9,6 +9,7 @@
 #include "AbilitySystemComponent.h"
 #include "RPGCharacterBase.h"
 #include "RPG/Public/Items/RPGEquipableItem.h"
+#include "RPG/RPG.h"
 
 
 
@@ -59,6 +60,7 @@ public:
 	//Returns the items that are already equipped on the Player. 
 	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|Item")
 	TArray<ARPGEquipableItem*> GetEquippedItems() const;
+	
 
 
 	/** This function attaches the curret item to the Player himself.
@@ -69,6 +71,8 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable , Category = "RPG|RPGPlayerState|Item")
 	bool EquipItem(ARPGEquipableItem* ItemToAdd , ARPGCharacterBase* Player ,FName SocketName);
+
+	
 	
 
 protected:
@@ -81,7 +85,6 @@ protected:
 	uint32 bIsWandEquipped : 1;
 	uint32 bIsBowEquipped : 1;
 	uint32 bIsBackPackEquipped : 1;
-
 
 	UPROPERTY()
 	class URPGAbilitySystemComponent* AbilitySystemComponent;

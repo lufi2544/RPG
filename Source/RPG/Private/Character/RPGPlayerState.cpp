@@ -26,7 +26,7 @@ ARPGPlayerState::ARPGPlayerState()
 
     // It is a must to update the components at the same frequency than the character.
     NetUpdateFrequency = 100.f;
-    
+
 }
 
 void ARPGPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -144,6 +144,8 @@ TArray<ARPGEquipableItem*> ARPGPlayerState::GetEquippedItems() const
 {
     return  EquippedItems;
 }
+
+
 
 
 
