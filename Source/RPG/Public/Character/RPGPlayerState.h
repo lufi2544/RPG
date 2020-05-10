@@ -15,6 +15,7 @@
 
 #include "RPGPlayerState.generated.h"
 
+class ARPGCharacterBase;
 class URPGAbilitySystemComponent;
 class URPGAttributeSetBase;
 
@@ -75,6 +76,9 @@ public:
 	
 	
 
+	
+	
+
 protected:
 
 	uint32 bIsWeaponEquipped : 1;
@@ -84,6 +88,8 @@ protected:
 	uint32 bIsDoubblehandSwordEquipped : 1;
 	uint32 bIsWandEquipped : 1;
 	uint32 bIsBowEquipped : 1;
+
+	UPROPERTY(BlueprintReadWrite , Category= "RPG|RPGPlayerState|Item")
 	uint32 bIsBackPackEquipped : 1;
 
 	UPROPERTY()

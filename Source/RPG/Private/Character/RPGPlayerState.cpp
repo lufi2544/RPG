@@ -27,6 +27,8 @@ ARPGPlayerState::ARPGPlayerState()
     // It is a must to update the components at the same frequency than the character.
     NetUpdateFrequency = 100.f;
 
+    bIsBackPackEquipped = false;
+
 }
 
 void ARPGPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -83,6 +85,7 @@ bool ARPGPlayerState::CanEquipItem(ARPGEquipableItem* ItemToCheck)
       {
           bIsBackPackEquipped = true;
       }
+     
 
         return  true;
 }

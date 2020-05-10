@@ -21,6 +21,8 @@ class URPGSwordComponent;
 UENUM(BlueprintType)
 enum class ERPGWeaponType : uint8
 {
+	//None
+	None,
 	//Sword
 	Sword,
 
