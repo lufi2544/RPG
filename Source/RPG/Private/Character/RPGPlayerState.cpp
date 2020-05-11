@@ -40,6 +40,51 @@ void ARPGPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
  
 }
 
+UAbilitySystemComponent* ARPGPlayerState::GetAbilitySystemComponent() const
+{
+    return AbilitySystemComponent;
+}
+
+URPGAttributeSetBase* ARPGPlayerState::GetAttributeSetBase() const
+{
+    return AttributeSet;   
+}
+
+float ARPGPlayerState::GetHealth() const
+{
+    return AttributeSet->GetHealth();
+}
+
+float ARPGPlayerState::GetMaxHealth() const
+{
+    return AttributeSet->GetMaxHealth();
+}
+
+float ARPGPlayerState::GetMoveSpeed() const
+{
+    return AttributeSet->GetMoveSpeed();
+}
+
+float ARPGPlayerState::GetCharacterLevel() const
+{
+    if(AttributeSet)
+    {
+        AttributeSet->GetCharacterLevel();
+    }
+
+    return 0.0f;
+}
+
+bool ARPGPlayerState::IsAlive() const
+{
+    return GetHealth()>0.0f;
+}
+
+TArray<ARPGEquipableItem*> ARPGPlayerState::GetEquippedItems() const
+{
+    return  EquippedItems;
+}
+
 
 bool ARPGPlayerState::CheckItemAnimationInteraction(ARPGEquipableItem* ItemToCheck)
 {
@@ -122,9 +167,7 @@ bool ARPGPlayerState::CheckItemAnimationInteraction(ARPGEquipableItem* ItemToChe
             
             }else
             {
-                bIsShieldEquipped = true;
-                
-            
+
                 CharacterAnimationMode = ERPGAnimationMode::SwordShield;
      
             }
@@ -135,8 +178,6 @@ bool ARPGPlayerState::CheckItemAnimationInteraction(ARPGEquipableItem* ItemToChe
         if (ItemToCheck->GetItemData().ItemType == ERPGItemType::BackPack)
         {
             ARPGBag* Bag = dynamic_cast<ARPGBag*>(ItemToCheck);
-            
-            bIsBackPackEquipped = true;
 
             // We Update the Capacity of our Inventory.
             InventoryCapacity = Bag->GetBagCapacity();
@@ -177,7 +218,14 @@ bool ARPGPlayerState::CanEquipItem(ARPGEquipableItem* ItemToCheck)
         return false;
 }
 
-bool ARPGPlayerState::EquipItem(ARPGEquipableItem* ItemToAdd,ARPGCharacterBase* Player , FName SocketName)
+void ARPGPlayerState::EquipItem(ARPGEquipableItem* ItemToAdd, ARPGCharacterBase* Player, FName SocketName)
+{
+    ItemToAdd->AttachToComponent(Player->GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,SocketName);
+
+    ChangeItemEquipmentState(ItemToAdd);
+}
+
+bool ARPGPlayerState::InteractWithItem(ARPGEquipableItem* ItemToAdd,ARPGCharacterBase* Player , FName SocketName)
 {
     if(!ensure(Player) || !ensure(ItemToAdd)){return false;}
 
@@ -190,7 +238,7 @@ bool ARPGPlayerState::EquipItem(ARPGEquipableItem* ItemToAdd,ARPGCharacterBase* 
         if (!bAllPrimaryItemsEquipped && bIsSwordEquipped && CharacterAnimationMode == ERPGAnimationMode::DoubleSword)
         {
             //The Socket of the Second Sword has Reference directly to the RPG_Skeleton, if you change the left hand Socket Name, remember to change he name here too.
-            ItemToAdd->AttachToComponent(Player->GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,FName("hand_lShield"));
+            EquipItem(ItemToAdd,Player,FName("hand_lShield"));
 
             ChangeItemEquipmentState(ItemToAdd);
             bSuccess = true;
@@ -198,9 +246,7 @@ bool ARPGPlayerState::EquipItem(ARPGEquipableItem* ItemToAdd,ARPGCharacterBase* 
            
         }else
         {
-            ItemToAdd->AttachToComponent(Player->GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,SocketName);
-
-            ChangeItemEquipmentState(ItemToAdd);
+            EquipItem(ItemToAdd, Player, SocketName);
         
             bSuccess = true;
         }
@@ -314,51 +360,19 @@ void ARPGPlayerState::ChangeItemEquipmentState(ARPGEquipableItem* Item)
             }
         }
 
-}
-
-UAbilitySystemComponent* ARPGPlayerState::GetAbilitySystemComponent() const
-{
-    return AbilitySystemComponent;
-}
-
-URPGAttributeSetBase* ARPGPlayerState::GetAttributeSetBase() const
-{
-    return AttributeSet;   
-}
-
-float ARPGPlayerState::GetHealth() const
-{
-        return AttributeSet->GetHealth();
-}
-
-float ARPGPlayerState::GetMaxHealth() const
-{
-        return AttributeSet->GetMaxHealth();
-}
-
-float ARPGPlayerState::GetMoveSpeed() const
-{
-        return AttributeSet->GetMoveSpeed();
-}
-
-float ARPGPlayerState::GetCharacterLevel() const
-{
-    if(AttributeSet)
+    if (Item->GetItemData().ItemType == ERPGItemType::BackPack)
     {
-        AttributeSet->GetCharacterLevel();
+        ARPGBag* Bag = dynamic_cast<ARPGBag*>(Item);
+
+        bIsBackPackEquipped = true;
+            
     }
 
-    return 0.0f;
-}
+    if (Item->GetItemData().ItemType == ERPGItemType::Shield)
+    {
+       bIsShieldEquipped = true;
+    }
 
-bool ARPGPlayerState::IsAlive() const
-{
-   return GetHealth()>0.0f;
-}
-
-TArray<ARPGEquipableItem*> ARPGPlayerState::GetEquippedItems() const
-{
-    return  EquippedItems;
 }
 
 bool ARPGPlayerState::HasPlayerPrimaryItemsEquipped()
@@ -371,6 +385,9 @@ bool ARPGPlayerState::HasPlayerPrimaryItemsEquipped()
 
     return bAllPrimaryItemsEquipped;
 }
+
+
+
 
 
 

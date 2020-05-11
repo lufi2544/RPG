@@ -74,7 +74,7 @@ public:
 	 * @param SocketName The socket Name  which the Item will be attach to.
 	 */
 	UFUNCTION(BlueprintCallable , Category = "RPG|RPGPlayerState|Item")
-	bool EquipItem(ARPGEquipableItem* ItemToAdd , ARPGCharacterBase* Player ,FName SocketName);
+	bool InteractWithItem(ARPGEquipableItem* ItemToAdd , ARPGCharacterBase* Player ,FName SocketName);
 
 	
 
@@ -82,6 +82,7 @@ public:
 protected:
 
 	/** Variables for the Inventory and in hand Items Logic */
+	
 	uint32 bIsWeaponEquipped : 1;
 	uint32 bIsDoubbleSwordEquipped :1;
 	uint32 bIsSwordEquipped : 1;
@@ -139,6 +140,8 @@ protected:
 
 	/** Checks if the Item can be equipped or not on the Player. */
 	bool CanEquipItem(ARPGEquipableItem* ItemToCheck);
+	
+	void EquipItem(ARPGEquipableItem* ItemToAdd, ARPGCharacterBase* Player, FName SocketName);
 
 	/** Function that checks if the Item will go to the invetory of will be equipped, depending on the character`s WeaponMode.
 	*For example, if We are in Doubble Sword Mode, if we take a shield, it will go to the inventory and it won`t be equipped.
