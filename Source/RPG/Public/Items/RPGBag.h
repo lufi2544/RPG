@@ -18,7 +18,10 @@ class RPG_API ARPGBag : public ARPGEquipableItem
 	
 	ARPGBag();
 
-	
+	int32 GetBagCapacity() const;
+	int32 GetActuaBagCapacity() const;
+
+
 	protected:
 
 	//The Maximum amount of objects that the Player can carry in this bag;
@@ -28,5 +31,7 @@ class RPG_API ARPGBag : public ARPGEquipableItem
 	//The Actual amount of objects that the Player has in this bag;
 	UPROPERTY(BlueprintReadOnly, Category  = "RPG|Item|Bag")
 	int32 ActuaBagCapacity;
-	
+
+
+
 };

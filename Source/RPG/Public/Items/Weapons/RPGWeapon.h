@@ -26,6 +26,9 @@ enum class ERPGWeaponType : uint8
 	//Sword
 	Sword,
 
+	//Axe
+	Axe,
+
 	//DoubleHandSword
 	DoubleHandSword,
 

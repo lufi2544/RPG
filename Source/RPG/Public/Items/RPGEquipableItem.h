@@ -29,27 +29,35 @@ struct  FRPGItemData
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere , BlueprintReadOnly, Category = "RPG|Item")
+	UPROPERTY()
 	TSubclassOf<ARPGEquipableItem>ItemClass;
 
     //The Item Type.
-    UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "RPG|Item")
+    UPROPERTY()
     ERPGItemType ItemType;
 
 	//The Item Name.
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "RPG|Item")
+	UPROPERTY()
     FName ItemName;
 
+	//Item Image
+	UPROPERTY()
+	UTexture2D* ItemImage;
+
+	//If the Item Can be consume by the player(potion , food , etc).
+	UPROPERTY()
+	uint32 bIsConsumible :1;
+
 	// The Damage amount that the item has.
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "RPG|Item")
+	UPROPERTY()
     float Damage;
 
 	//The Armor that the Item has.
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "RPG|Item")
+	UPROPERTY()
     float Armor;
 
 	// How much the item costs.
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "RPG|Item")
+	UPROPERTY()
     float Price;
 
 };

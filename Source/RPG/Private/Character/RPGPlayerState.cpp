@@ -3,12 +3,13 @@
 
 #include "Character/RPGPlayerState.h"
 
-#include <xkeycheck.h>
+#include "RPG/Public/Items/Weapons/RPGWeapon.h"
 
 
 
 #include "AbilitySystem/RPGAbilitySystemComponent.h"
 #include "AbilitySystem/RPGAttributeSetBase.h"
+#include "Items/RPGBag.h"
 #include "Net/UnrealNetwork.h"
 
 ARPGPlayerState::ARPGPlayerState()
@@ -29,13 +30,151 @@ ARPGPlayerState::ARPGPlayerState()
 
     bIsBackPackEquipped = false;
 
+    bIsShieldEquipped = false;
+
 }
 
 void ARPGPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+ 
+}
+
+
+bool ARPGPlayerState::CheckItemAnimationInteraction(ARPGEquipableItem* ItemToCheck)
+{
+    bool bCanInteract = true;
+
+    if(!bAllPrimaryItemsEquipped)
+    {
+        // This is the case when the item is a Weapon.
+        if (ItemToCheck->GetItemData().ItemType == ERPGItemType::Weapon)
+        {
+
+        
+            ARPGWeapon* Weapon = dynamic_cast<ARPGWeapon*>(ItemToCheck);
+
+            if (Weapon)
+            {
+                if (Weapon->GetWeaponType() == ERPGWeaponType::Axe)
+                {
+            
+
+                    CharacterAnimationMode = ERPGAnimationMode::AxeAndShield;
+
+              
+                }
+
+                //We set a do once for the first sword and a then the second time the second sword will be equipped
+                if ((Weapon->GetWeaponType() == ERPGWeaponType::Sword ))
+                {
+               
+                    if( CharacterWeaponMode == ERPGCharacterWeaponMode::DoubleSword )
+                    {
+                                     
+                        CharacterAnimationMode = ERPGAnimationMode::DoubleSword;
+       
+                    }else
+                    {
+   
+                        CharacterAnimationMode = ERPGAnimationMode::SwordShield;
+ 
+                    }
+                }
+
+                if (Weapon->GetWeaponType() == ERPGWeaponType::Bow)
+                {
+  
+                    CharacterAnimationMode = ERPGAnimationMode::Bow;
+                    
+                }
+
+                if (Weapon->GetWeaponType() == ERPGWeaponType::Wand)
+                {
+ 
+                    CharacterAnimationMode = ERPGAnimationMode::MagicWand;
+                   
+                }
+
+            
+                if (Weapon->GetWeaponType() == ERPGWeaponType::DoubleHandSword)
+                {
+    
+                    CharacterAnimationMode = ERPGAnimationMode::DoubleHandSword;
+                 
+                }
+            
+            }
+        }
+    
+   
+        // This is the case when the item is a Shield.
+        if (ItemToCheck->GetItemData().ItemType == ERPGItemType::Shield)
+        {
+            if( CharacterAnimationMode == ERPGAnimationMode::DoubleSword ||
+            CharacterAnimationMode == ERPGAnimationMode::Bow || CharacterAnimationMode == ERPGAnimationMode::DoubleHandSword ||
+            CharacterAnimationMode == ERPGAnimationMode::MagicWand)
+            {
+            
+                AddItemToInventory(ItemToCheck);
+                bCanInteract = false;
+           
+            
+            }else
+            {
+                bIsShieldEquipped = true;
+                
+            
+                CharacterAnimationMode = ERPGAnimationMode::SwordShield;
+     
+            }
+        }
+    }
+         // This is the case when the item is a BackPack.
+    
+        if (ItemToCheck->GetItemData().ItemType == ERPGItemType::BackPack)
+        {
+            ARPGBag* Bag = dynamic_cast<ARPGBag*>(ItemToCheck);
+            
+            bIsBackPackEquipped = true;
+
+            // We Update the Capacity of our Inventory.
+            InventoryCapacity = Bag->GetBagCapacity();
+            
+        }
+
+    return bCanInteract;
+}
+
+
+
+bool ARPGPlayerState::CanEquipItem(ARPGEquipableItem* ItemToCheck)
+{
+     if(!IsValid(ItemToCheck) ||EquippedItems.Contains(ItemToCheck) ||
+       ( ItemToCheck->GetItemData().ItemType == ERPGItemType::Weapon && bIsWeaponEquipped ) ||
+       (ItemToCheck->GetItemData().ItemType == ERPGItemType::Shield && bIsShieldEquipped) ||
+       (ItemToCheck->GetItemData().ItemType == ERPGItemType::BackPack && bIsBackPackEquipped))
+     {
+         UE_LOG(LogTemp , Error, TEXT("The item that the Player %s is trying to take, is not valid, it will go to the Inventory;") , *GetPlayerName());
+
+       
+         UE_LOG(LogTemp, Warning, TEXT("%f"),CurrentInventoryItemsNum);
+         //The item addition to the Invetory (BackPack) will be handled via BP, go to the BP_ShieldBase for example and open the interface method to see it.
+         
+         return false;  
+
+     }
 
     
+     if(CheckItemAnimationInteraction(ItemToCheck))
+     {
+         ItemToCheck->SetIsEquipped(true);
+
+         return  true;
+     }
+  
+    
+        return false;
 }
 
 bool ARPGPlayerState::EquipItem(ARPGEquipableItem* ItemToAdd,ARPGCharacterBase* Player , FName SocketName)
@@ -48,60 +187,134 @@ bool ARPGPlayerState::EquipItem(ARPGEquipableItem* ItemToAdd,ARPGCharacterBase* 
     {
         EquippedItems.Add(ItemToAdd);
 
-        ItemToAdd->AttachToComponent(Player->GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,SocketName);
+        if (!bAllPrimaryItemsEquipped && bIsSwordEquipped && CharacterAnimationMode == ERPGAnimationMode::DoubleSword)
+        {
+            //The Socket of the Second Sword has Reference directly to the RPG_Skeleton, if you change the left hand Socket Name, remember to change he name here too.
+            ItemToAdd->AttachToComponent(Player->GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,FName("hand_lShield"));
+
+            ChangeItemEquipmentState(ItemToAdd);
+            bSuccess = true;
+
+           
+        }else
+        {
+            ItemToAdd->AttachToComponent(Player->GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,SocketName);
+
+            ChangeItemEquipmentState(ItemToAdd);
         
-        bSuccess = true;
+            bSuccess = true;
+        }
+    }else
+    {
+        // This means that we have to add the item to the Inventory
+
+        AddItemToInventory(ItemToAdd);
     }
     
     return bSuccess;
 }
 
-bool ARPGPlayerState::CanEquipItem(ARPGEquipableItem* ItemToCheck)
-{
-     if(!IsValid(ItemToCheck) ||EquippedItems.Contains(ItemToCheck) ||
-       ( ItemToCheck->GetItemData().ItemType == ERPGItemType::Weapon && bIsWeaponEquipped ) ||
-       (ItemToCheck->GetItemData().ItemType == ERPGItemType::Shield && bIsShieldEquipped) ||
-       (ItemToCheck->GetItemData().ItemType == ERPGItemType::BackPack && bIsBackPackEquipped))
-     {
-         UE_LOG(LogTemp , Error, TEXT("The item that the Player %s is trying to take, is not valid;") , *GetPlayerName());
-
-
-         return false;  
-
-     }
-    
-     if (ItemToCheck->GetItemData().ItemType == ERPGItemType::Weapon)
-     {
-         bIsWeaponEquipped = true;
-         bIsSwordEquipped = true;
-     }
-    
-     if (ItemToCheck->GetItemData().ItemType == ERPGItemType::Shield)
-     {
-         bIsShieldEquipped = true;
-     }
-    
-     if (ItemToCheck->GetItemData().ItemType == ERPGItemType::BackPack)
-      {
-          bIsBackPackEquipped = true;
-      }
-     
-
-        return  true;
-}
-
 void ARPGPlayerState::AddItemToInventory(ARPGEquipableItem* ItemToAdd)
 {
-    if(IsValid(ItemToAdd))
+    if(IsValid(ItemToAdd) && CheckItemCapacity())
     {
-        //InventoryItemsData.Add(ItemToAdd->GetItemData());
-
+        
+        //We add the item data to the Inventory to store it.
+        Inventory.Add(ItemToAdd->GetItemData());
+        
+        
         ItemToAdd->Destroy();
 
         
     }
 }
 
+bool ARPGPlayerState::CheckItemCapacity()
+{
+    if (CurrentInventoryItemsNum < InventoryCapacity)
+    {
+        CurrentInventoryItemsNum++;
+        return true;
+    }
+    UE_LOG(LogTemp, Error, TEXT("INVENTORY FULL!!!!, Current Items: %i    , Inventory Capacity : %i"), CurrentInventoryItemsNum,InventoryCapacity);
+    return false;
+
+
+}
+
+void ARPGPlayerState::ChangeItemEquipmentState(ARPGEquipableItem* Item)
+{
+    if ( Item->GetItemData().ItemType == ERPGItemType::Weapon )     
+    {
+        ARPGWeapon* Weapon = dynamic_cast<ARPGWeapon*>(Item);
+
+         if (Weapon)
+            {
+                if (Weapon->GetWeaponType() == ERPGWeaponType::Axe)
+                {
+                    bIsAxeEquipped = true;
+                    bIsWeaponEquipped = true;
+
+                }
+
+                //We set a do once for the first sword and a then the second time the second sword will be equipped
+                if ((Weapon->GetWeaponType() == ERPGWeaponType::Sword ))
+                {
+               
+                    if( CharacterWeaponMode == ERPGCharacterWeaponMode::DoubleSword )
+                    {
+                        if(bIsSwordEquipped)
+                        {
+                            bIsWeaponEquipped = true;
+                            bIsDoubbleSwordEquipped = true;
+        
+                        }
+
+                        bIsSwordEquipped = true;
+
+                    }else
+                    {
+                        bIsSwordEquipped = true;
+                        bIsWeaponEquipped = true;
+
+                    }
+                }
+
+                if (Weapon->GetWeaponType() == ERPGWeaponType::Bow)
+                {
+                    bIsBowEquipped = true;
+                    bIsWeaponEquipped = true;
+              
+
+
+                    
+                }
+
+                if (Weapon->GetWeaponType() == ERPGWeaponType::Wand)
+                {
+                    bIsWandEquipped = true;
+                    bIsWeaponEquipped = true;
+               
+
+
+                   
+                }
+
+            
+                if (Weapon->GetWeaponType() == ERPGWeaponType::DoubleHandSword)
+                {
+                    bIsDoubbleHandSwordEquipped = true;
+                    bIsWeaponEquipped = true;
+               
+
+
+                 
+                }
+            
+            }
+        }
+
+}
 
 UAbilitySystemComponent* ARPGPlayerState::GetAbilitySystemComponent() const
 {
@@ -146,6 +359,17 @@ bool ARPGPlayerState::IsAlive() const
 TArray<ARPGEquipableItem*> ARPGPlayerState::GetEquippedItems() const
 {
     return  EquippedItems;
+}
+
+bool ARPGPlayerState::HasPlayerPrimaryItemsEquipped()
+{
+    if (bIsDoubbleSwordEquipped || (bIsShieldEquipped && bIsSwordEquipped) || (bIsWandEquipped)
+        || (bIsAxeEquipped && bIsShieldEquipped) || bIsBowEquipped || bIsDoubbleHandSwordEquipped)
+    {
+        bAllPrimaryItemsEquipped = true;
+    }
+
+    return bAllPrimaryItemsEquipped;
 }
 
 

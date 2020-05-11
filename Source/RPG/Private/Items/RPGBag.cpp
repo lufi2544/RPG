@@ -7,3 +7,13 @@ ARPGBag::ARPGBag()
 {
     
 }
+
+int32 ARPGBag::GetBagCapacity() const
+{
+    return BagCapacity;
+}
+
+int32 ARPGBag::GetActuaBagCapacity() const
+{
+    return ActuaBagCapacity;
+}

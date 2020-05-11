@@ -71,6 +71,8 @@ enum class ERPGAnimationMode : uint8
     DoubleSword,
     //Sword and Shield
     SwordShield     UMETA(DisplayName = "Sword and Shield"),
+    //AxeAndShield
+    AxeAndShield,
     //DoubleHand Sword
     DoubleHandSword,
     //Magic wand
@@ -80,4 +82,29 @@ enum class ERPGAnimationMode : uint8
     
 
     
+};
+
+UENUM(BlueprintType)
+enum class ERPGCharacterWeaponMode : uint8
+{
+    //No Weapon
+    NoWeapon,
+
+    //Sword and Shield
+    SwordAndShield,
+
+    //Axe and Shield
+   AxeAndShield,
+
+    //Double Sword
+    DoubleSword,
+
+    //Double Hand Sword
+    DoubleHandSword,
+
+    //Wand
+    Wand,
+
+    //Bow
+    Bow
 };
