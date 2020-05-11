@@ -29,13 +29,13 @@ enum class ERPGWeaponType : uint8
 	//Axe
 	Axe,
 
-	//DoubleHandSword
+	//Warlord
 	DoubleHandSword,
 
-	//Bow
+	//Elf
 	Bow,
 
-	//Wand
+	//Imperior
 	Wand
 };
 UCLASS()

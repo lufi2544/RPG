@@ -114,7 +114,7 @@ bool ARPGPlayerState::CheckItemAnimationInteraction(ARPGEquipableItem* ItemToChe
                 if ((Weapon->GetWeaponType() == ERPGWeaponType::Sword ))
                 {
                
-                    if( CharacterWeaponMode == ERPGCharacterWeaponMode::DoubleSword )
+                    if( CharacterHeroType == ERPGCharacterHeroType::Indrax )
                     {
                                      
                         CharacterAnimationMode = ERPGAnimationMode::DoubleSword;
@@ -156,9 +156,8 @@ bool ARPGPlayerState::CheckItemAnimationInteraction(ARPGEquipableItem* ItemToChe
         // This is the case when the item is a Shield.
         if (ItemToCheck->GetItemData().ItemType == ERPGItemType::Shield)
         {
-            if( CharacterAnimationMode == ERPGAnimationMode::DoubleSword ||
-            CharacterAnimationMode == ERPGAnimationMode::Bow || CharacterAnimationMode == ERPGAnimationMode::DoubleHandSword ||
-            CharacterAnimationMode == ERPGAnimationMode::MagicWand)
+            if( CharacterHeroType != (ERPGCharacterHeroType::Spinder) ||
+                CharacterHeroType != (ERPGCharacterHeroType::Kevalam))
             {
             
                 AddItemToInventory(ItemToCheck);
@@ -220,41 +219,43 @@ bool ARPGPlayerState::CanEquipItem(ARPGEquipableItem* ItemToCheck)
 
 void ARPGPlayerState::EquipItem(ARPGEquipableItem* ItemToAdd, ARPGCharacterBase* Player, FName SocketName)
 {
-    ItemToAdd->AttachToComponent(Player->GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,SocketName);
+    //Second Sword Attachment
+    if ( bIsSwordEquipped && CharacterAnimationMode == ERPGAnimationMode::DoubleSword && ItemToAdd->GetItemData().ItemType != ERPGItemType::BackPack )
+    {
+        //The Socket of the Second Sword has Reference directly to the RPG_Skeleton, if you change the left hand Socket Name, remember to change he name here too.
+        ItemToAdd->AttachToComponent(Player->GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,FName("hand_lShield"));        
 
-    ChangeItemEquipmentState(ItemToAdd);
+        ChangeItemEquipmentState(ItemToAdd);
+        EquippedItems.Add(ItemToAdd);
+        
+    }else
+    {
+        ItemToAdd->AttachToComponent(Player->GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,SocketName);
+        
+        ChangeItemEquipmentState(ItemToAdd);
+        EquippedItems.Add(ItemToAdd);
+    }
+
+
 }
 
-bool ARPGPlayerState::InteractWithItem(ARPGEquipableItem* ItemToAdd,ARPGCharacterBase* Player , FName SocketName)
+bool ARPGPlayerState::InteractWithItem(ARPGEquipableItem* Item,ARPGCharacterBase* Player , FName SocketName)
 {
-    if(!ensure(Player) || !ensure(ItemToAdd)){return false;}
+    if(!ensure(Player) || !ensure(Item)){return false;}
 
-    bool bSuccess = false;
+    bool bSuccess = true;
     
-    if(ItemToAdd && CanEquipItem(ItemToAdd))
+    if(Item && CanEquipItem(Item) && !HasPlayerPrimaryItemsEquipped())
     {
-        EquippedItems.Add(ItemToAdd);
-
-        if (!bAllPrimaryItemsEquipped && bIsSwordEquipped && CharacterAnimationMode == ERPGAnimationMode::DoubleSword)
-        {
-            //The Socket of the Second Sword has Reference directly to the RPG_Skeleton, if you change the left hand Socket Name, remember to change he name here too.
-            EquipItem(ItemToAdd,Player,FName("hand_lShield"));
-
-            ChangeItemEquipmentState(ItemToAdd);
-            bSuccess = true;
-
-           
-        }else
-        {
-            EquipItem(ItemToAdd, Player, SocketName);
         
-            bSuccess = true;
-        }
+        EquipItem(Item,Player,SocketName);
+       
     }else
     {
         // This means that we have to add the item to the Inventory
 
-        AddItemToInventory(ItemToAdd);
+        AddItemToInventory(Item);
+        bSuccess = false;
     }
     
     return bSuccess;
@@ -307,7 +308,7 @@ void ARPGPlayerState::ChangeItemEquipmentState(ARPGEquipableItem* Item)
                 if ((Weapon->GetWeaponType() == ERPGWeaponType::Sword ))
                 {
                
-                    if( CharacterWeaponMode == ERPGCharacterWeaponMode::DoubleSword )
+                    if( CharacterHeroType == ERPGCharacterHeroType::Indrax )
                     {
                         if(bIsSwordEquipped)
                         {
@@ -377,8 +378,8 @@ void ARPGPlayerState::ChangeItemEquipmentState(ARPGEquipableItem* Item)
 
 bool ARPGPlayerState::HasPlayerPrimaryItemsEquipped()
 {
-    if (bIsDoubbleSwordEquipped || (bIsShieldEquipped && bIsSwordEquipped) || (bIsWandEquipped)
-        || (bIsAxeEquipped && bIsShieldEquipped) || bIsBowEquipped || bIsDoubbleHandSwordEquipped)
+    if ((bIsDoubbleSwordEquipped || (bIsShieldEquipped && bIsSwordEquipped) || (bIsWandEquipped)
+        || (bIsAxeEquipped && bIsShieldEquipped) || bIsBowEquipped || bIsDoubbleHandSwordEquipped) && bIsBackPackEquipped)
     {
         bAllPrimaryItemsEquipped = true;
     }

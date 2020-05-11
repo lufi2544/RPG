@@ -67,17 +67,17 @@ enum class ERPGAnimationMode : uint8
     NoWeapon,
     //SingleSword
     SingleSword,
-    //DoubleSword
+    //Indrax
     DoubleSword,
     //Sword and Shield
     SwordShield     UMETA(DisplayName = "Sword and Shield"),
-    //AxeAndShield
+    //Kevalam
     AxeAndShield,
     //DoubleHand Sword
     DoubleHandSword,
     //Magic wand
     MagicWand,
-    //Bow
+    //Elf
     Bow
     
 
@@ -85,26 +85,26 @@ enum class ERPGAnimationMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERPGCharacterWeaponMode : uint8
+enum class ERPGCharacterHeroType : uint8
 {
     //No Weapon
     NoWeapon,
 
     //Sword and Shield
-    SwordAndShield,
+    Spinder,
 
     //Axe and Shield
-   AxeAndShield,
+    Kevalam,
 
     //Double Sword
-    DoubleSword,
+    Indrax,
 
     //Double Hand Sword
-    DoubleHandSword,
+    Warlord,
 
-    //Wand
-    Wand,
+    //Wizard
+    Imperior,
 
-    //Bow
-    Bow
+    //Elf
+    Elf
 };

@@ -66,15 +66,14 @@ public:
 	
 	/** Item Inventory Functions */
 
-	/** This function will Equip the Item to the Player if possible. If the player can`t equip the item because he has already some items equipped, they will be placed on the Inventory.
-	 *Also checks depending on the Current Character Weapon Mode if the Item could be equipped(If are in Double Sword Mode, we can`t grab a shield and equip it, it will go to the Inventory)
-	 *The function checks if we can equipp the item, if there is already a weapon equipped, the item will go to the inventory.
+	/**Called when the Player Interacst with an item. Maybe the Item gets equipped or maybe it goes to the Inventory, it depends on the Character Weapon Mode 
+	 *
 	 * @param ItemToAdd Item that will be added to the Player.
 	 * @param Player The Player whom the item will be added.
 	 * @param SocketName The socket Name  which the Item will be attach to.
 	 */
 	UFUNCTION(BlueprintCallable , Category = "RPG|RPGPlayerState|Item")
-	bool InteractWithItem(ARPGEquipableItem* ItemToAdd , ARPGCharacterBase* Player ,FName SocketName);
+	bool InteractWithItem(ARPGEquipableItem* Item , ARPGCharacterBase* Player ,FName SocketName);
 
 	
 
@@ -101,8 +100,10 @@ protected:
 
 	/** Animation State Variables */
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere , Category= "RPG|RPGPlayerState|Animation" , Replicated)
-	ERPGCharacterWeaponMode CharacterWeaponMode = ERPGCharacterWeaponMode::NoWeapon;
+	// This is the Character Hero type, it may change over the game, so I decided to just add that on the Player State, because is something that can
+	//be changed eventually.
+	UPROPERTY(BlueprintReadWrite, EditAnywhere , Category= "RPG|RPGPlayerState|State" , Replicated)
+	ERPGCharacterHeroType CharacterHeroType = ERPGCharacterHeroType::NoWeapon;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere , Category= "RPG|RPGPlayerState|Animation" , Replicated)
 	ERPGAnimationMode CharacterAnimationMode = ERPGAnimationMode::NoWeapon;
@@ -140,7 +141,8 @@ protected:
 
 	/** Checks if the Item can be equipped or not on the Player. */
 	bool CanEquipItem(ARPGEquipableItem* ItemToCheck);
-	
+
+	/** Equips the @ItemToAdd to the Player.*/
 	void EquipItem(ARPGEquipableItem* ItemToAdd, ARPGCharacterBase* Player, FName SocketName);
 
 	/** Function that checks if the Item will go to the invetory of will be equipped, depending on the character`s WeaponMode.
