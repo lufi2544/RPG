@@ -37,8 +37,10 @@ ARPGHeroCharacter::ARPGHeroCharacter(const class FObjectInitializer& ObjectIniti
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(FName("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom);
 	FollowCamera->FieldOfView = 80.0f;
-	
 
+	InventoryComponent = CreateDefaultSubobject<ARPGPlayerInventoryComponent>(TEXT("InventoryComponent"));
+	
+	InventoryComponent->SetReplicates(true);
 	
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
@@ -49,6 +51,11 @@ ARPGHeroCharacter::ARPGHeroCharacter(const class FObjectInitializer& ObjectIniti
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionProfileName(FName("NoCollision"));
 
+}
+
+void ARPGHeroCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 }
 
 // Called to bind functionality to input
@@ -150,6 +157,26 @@ void ARPGHeroCharacter::OnRep_PlayerState()
 	}
 }
 
+void ARPGHeroCharacter::SetCharacterHeroType( ERPGCharacterHeroType NewCharacterHeroType)
+{
+	this->CharacterHeroType = NewCharacterHeroType;
+}
+
+void ARPGHeroCharacter::SetCharacterAnimationMode(  ERPGAnimationMode NewCharacterAnimationMode)
+{
+	this->CharacterAnimationMode = NewCharacterAnimationMode;
+}
+
+ERPGCharacterHeroType ARPGHeroCharacter::GetCharacterHeroType() const
+{
+	return CharacterHeroType;
+}
+
+ERPGAnimationMode ARPGHeroCharacter::GetCharacterAnimationMode() const
+{
+	return CharacterAnimationMode;
+}
+
 USpringArmComponent * ARPGHeroCharacter::GetCameraBoom()
 {
 	return CameraBoom;
@@ -165,6 +192,11 @@ float ARPGHeroCharacter::GetStartingSpringCameraBoomArmLenght()
 	return StartingCameraBoomArmLenght;
 }
 
+ARPGPlayerInventoryComponent* ARPGHeroCharacter::GetPlayerInventoryComponent() const
+{
+	return InventoryComponent;
+}
+
 FVector ARPGHeroCharacter::GetStartingCameraBoomLocation()
 {
 	return StartingCameraBoomLocation;
@@ -175,6 +207,8 @@ void ARPGHeroCharacter::LookUp(float Value)
 	if (IsAlive())
 	{
 		AddControllerPitchInput(Value);
+
+		
 	}
 }
 

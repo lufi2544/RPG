@@ -58,39 +58,8 @@ public:
 	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|State")
 	bool IsAlive() const;
 
-	//Returns the items that are already equipped on the Player. 
-	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|Item")
-	TArray<ARPGEquipableItem*> GetEquippedItems() const;
-
-	
-	
-	/** Item Inventory Functions */
-
-	/**Called when the Player Interacst with an item. Maybe the Item gets equipped or maybe it goes to the Inventory, it depends on the Character Weapon Mode 
-	 *
-	 * @param ItemToAdd Item that will be added to the Player.
-	 * @param Player The Player whom the item will be added.
-	 * @param SocketName The socket Name  which the Item will be attach to.
-	 */
-	UFUNCTION(BlueprintCallable , Category = "RPG|RPGPlayerState|Item")
-	bool InteractWithItem(ARPGEquipableItem* Item , ARPGCharacterBase* Player ,FName SocketName);
-
-	
-
-
 protected:
 
-	/** Variables for the Inventory and in hand Items Logic */
-	
-	uint32 bIsWeaponEquipped : 1;
-	uint32 bIsDoubbleSwordEquipped :1;
-	uint32 bIsSwordEquipped : 1;
-	uint32 bIsShieldEquipped : 1;
-	uint32 bIsDoubbleHandSwordEquipped : 1;
-	uint32 bIsAxeEquipped : 1;
-	uint32 bIsWandEquipped : 1;
-	uint32 bIsBowEquipped : 1;
-	uint32 bIsBackPackEquipped : 1;
 
 	UPROPERTY()
 	class URPGAbilitySystemComponent* AbilitySystemComponent;
@@ -98,72 +67,7 @@ protected:
 	UPROPERTY()
 	class URPGAttributeSetBase* AttributeSet;
 
-	/** Animation State Variables */
 
-	// This is the Character Hero type, it may change over the game, so I decided to just add that on the Player State, because is something that can
-	//be changed eventually.
-	UPROPERTY(BlueprintReadWrite, EditAnywhere , Category= "RPG|RPGPlayerState|State" , Replicated)
-	ERPGCharacterHeroType CharacterHeroType = ERPGCharacterHeroType::NoWeapon;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere , Category= "RPG|RPGPlayerState|Animation" , Replicated)
-	ERPGAnimationMode CharacterAnimationMode = ERPGAnimationMode::NoWeapon;
-
-
-	/** Inventory Properties */
-
-	//Current Items Equipped by the Player.
-	UPROPERTY( BlueprintReadOnly ,VisibleAnywhere, Category= "RPG|RPGPlayerState|Item", Replicated, EditFixedSize)
-    TArray<ARPGEquipableItem*>EquippedItems;
-	
-	//Array that stores the data of all the items that are in the Inventory.
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|RPGPlayerState" , Replicated, EditFixedSize)
-    TArray<struct FRPGItemData>Inventory;
-
-	//Player Inventory capacity..
-	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category= "RPG|RPGPlayerState|Item", Replicated)
-    int32 InventoryCapacity = 3;
-
-	//Current Items Equipped by the Player.
-	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category= "RPG|RPGPlayerState|Item", Replicated)
-    int32 CurrentInventoryItemsNum = 0;
-
-	//Current Items Equipped by the Player.
-	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category= "RPG|RPGPlayerState|Item", Replicated)
-	uint32 bAllPrimaryItemsEquipped :1;
-
-	
-
-	
-
-	/** Inventory Functions */
-
-	void ChangeItemEquipmentState(ARPGEquipableItem * Item);
-
-	/** Checks if the Item can be equipped or not on the Player. */
-	bool CanEquipItem(ARPGEquipableItem* ItemToCheck);
-
-	/** Equips the @ItemToAdd to the Player.*/
-	void EquipItem(ARPGEquipableItem* ItemToAdd, ARPGCharacterBase* Player, FName SocketName);
-
-	/** Function that checks if the Item will go to the invetory of will be equipped, depending on the character`s WeaponMode.
-	*For example, if We are in Doubble Sword Mode, if we take a shield, it will go to the inventory and it won`t be equipped.
-	*@param ItemToCheck The item That will be checked for the interaction.
-	*/
-	bool CheckItemAnimationInteraction(ARPGEquipableItem* ItemToCheck);
-	
-	/** Adds the @param ItemToAdd to the Inventory*/
-	void AddItemToInventory(ARPGEquipableItem* ItemToAdd);
-
-	/**We check if we cann add an item to the Bag
-	 * @return If the bag has capacity.
-	 */
-	bool CheckItemCapacity();
-
-
-	/** Returs if the Player has the primary Items (Sword and shield, Double Sword... Equipped) */
-	bool HasPlayerPrimaryItemsEquipped();
-
-	
 };
 
 

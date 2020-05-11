@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Character/RPGPlayerInventoryComponent.h"
 #include "GameFramework/GameModeBase.h"
 #include "RPGGameMode.generated.h"
 
@@ -13,6 +14,10 @@ class ARPGGameMode : public AGameModeBase
 
 public:
 	ARPGGameMode();
+
+protected:
+
+
 };
 
 

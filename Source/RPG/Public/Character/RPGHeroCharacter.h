@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "RPGCharacterBase.h"
+#include "RPGPlayerInventoryComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "RPG/RPG.h"
@@ -22,6 +23,9 @@ public:
 
 	ARPGHeroCharacter(const class FObjectInitializer& ObjectInitializer);
 
+
+	void GetLifetimeReplicatedProps( TArray< FLifetimeProperty > & OutLifetimeProps ) const override;
+	
 	virtual void PossessedBy(AController* NewController) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -29,18 +33,37 @@ public:
 	class USpringArmComponent* GetCameraBoom();
 
 	class UCameraComponent* GetFollowCamera();
+
+	ERPGCharacterHeroType GetCharacterHeroType() const;
+	
+	ERPGAnimationMode GetCharacterAnimationMode() const;
+
+	void SetCharacterHeroType( ERPGCharacterHeroType NewCharacterHeroType);
+	
+	void SetCharacterAnimationMode( ERPGAnimationMode NewCharacterAnimationMode);
 	
 	UFUNCTION(BlueprintPure , Category= "RPG|HeroCharacter")
 	FVector GetStartingCameraBoomLocation();
 
 	UFUNCTION(BlueprintPure , Category = "RPG|HeroCharacter")
 	float GetStartingSpringCameraBoomArmLenght();
+
+	UFUNCTION(BlueprintPure, Category = "RPG|HeroCharacter")
+	ARPGPlayerInventoryComponent* GetPlayerInventoryComponent() const;
 	
 protected:
 	
 	virtual void BeginPlay() override;
 
 	virtual void OnRep_PlayerState() override;
+
+	// This is the Character Hero type, it may change over the game, so I decided to just add that on the Player State, because is something that can
+	//be changed eventually.
+	UPROPERTY(BlueprintReadWrite, EditAnywhere , Category= "RPG|HeroCharacter" , Replicated)
+    ERPGCharacterHeroType CharacterHeroType = ERPGCharacterHeroType::NoWeapon;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere , Category= "RPG|HeroCharacter|Animation" , Replicated)
+    ERPGAnimationMode CharacterAnimationMode = ERPGAnimationMode::NoWeapon;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|Camera")
 	float BaseTurnRate = 45.0f;
@@ -59,6 +82,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "RRPG|Camera")
 	FVector StartingCameraBoomLocation;
+
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "RPG|Inventory" , Replicated)
+	ARPGPlayerInventoryComponent* InventoryComponent;
 
 	//Mouse
 	void LookUp(float fValue);
