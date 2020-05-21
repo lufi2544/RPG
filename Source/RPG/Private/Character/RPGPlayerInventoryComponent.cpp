@@ -1,16 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "RPG/Public/Character/RPGPlayerInventoryComponent.h"
+
+
 #include "Character/RPGPlayerState.h"
-
 #include "RPG/Public/Items/Weapons/RPGWeapon.h"
-
-
-
 #include "AbilitySystem/RPGAbilitySystemComponent.h"
 #include "AbilitySystem/RPGAttributeSetBase.h"
 #include "Items/RPGBag.h"
 #include "Net/UnrealNetwork.h"
-#include "RPG/Public/Character/RPGPlayerInventoryComponent.h"
+
 
 #include "Character/RPGHeroCharacter.h"
 

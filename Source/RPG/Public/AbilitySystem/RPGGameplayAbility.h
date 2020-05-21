@@ -3,11 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RPG/Public/AbilitySystem/RPGAbilityTypes.h"
 #include "Abilities/GameplayAbility.h"
 #include "RPG/RPG.h"
+#include "GameplayTagContainer.h"
 #include "RPGGameplayAbility.generated.h"
 
 class UAnimMontage;
+class UGameplayEffect;
+
 
 /**
  * 
@@ -65,12 +69,29 @@ public:
 	UPROPERTY(BlueprintReadWrite , EditAnywhere, Category = "RPG|Ability|Stacks")
     int32 AbilityMaxStacks = 0;
 
+	//This is a map made of a GameplayTag and a GameplayEffectContainer that will apply all the effects to the target or the owwer later when is called.
+	/**
+	 * \brief This is a nice template
+	 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "RPG|Ability|Effects")
+	TMap<FGameplayTag, struct FRPGGameplayEffectContainer> EffectContainerMap;
+
 	
 	// If an ability is marked as 'ActivateAbilityOnGranted', activate them immediately when given here
 	// Epic's comment: Projects may want to initiate passives or do other "BeginPlay" type of logic here.
 	virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 
+	/** We make a Gameplay Effect Container Spec to be applied later when is needed. */
+	UFUNCTION(BlueprintCallable, Category = "RPG|Ability")
+	virtual FRPGGameplayEffectContainerSpec MakeEffectContainerSpec(FGameplayTag ContainerTag, const FGameplayEventData& EventData, int32 OverrideGameplayLevel = -1);
 
+
+	virtual FRPGGameplayEffectContainerSpec MakeContainerSpecFromContainer(const FRPGGameplayEffectContainer& Container , const FGameplayEventData& EventData , int32 OverrideGameplayLevel = -1);
+
+	/** We apply a certain Effect Container Spec*/
+	UFUNCTION(BlueprintCallable, Category = "RPG|Ability")
+	TArray<FActiveGameplayEffectHandle> ApplyEffectContainerSpec(const FRPGGameplayEffectContainerSpec& ContainerSpec);
+	
 	/** Does the commit atomically (consume resources, do cooldowns, etc) */
 	virtual void CommitExecute(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo);
 

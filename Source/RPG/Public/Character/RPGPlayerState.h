@@ -16,8 +16,8 @@
 #include "RPGPlayerState.generated.h"
 
 class ARPGCharacterBase;
-class URPGAbilitySystemComponent;
 class URPGAttributeSetBase;
+class URPGAbilitySystemComponent;
 
 /**
  * 
