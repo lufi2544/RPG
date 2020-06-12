@@ -13,6 +13,8 @@ ARPGShield::ARPGShield()
 
 	SetReplicates(true);
 	
+	SetReplicateMovement(true);
+	
 
 }
 
