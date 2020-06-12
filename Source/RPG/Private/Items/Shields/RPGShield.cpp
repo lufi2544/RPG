@@ -12,7 +12,6 @@ ARPGShield::ARPGShield()
 	PrimaryActorTick.bCanEverTick = false;
 
 	SetReplicates(true);
-	bReplicateMovement = true;
 	
 
 }

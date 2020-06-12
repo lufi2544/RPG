@@ -12,7 +12,6 @@ ARPGEquipableItem::ARPGEquipableItem()
 	PrimaryActorTick.bCanEverTick = false;
 
 	SetReplicates(true);
-	bReplicateMovement = true;
 
 }
 

@@ -105,7 +105,7 @@ void ARPGCharacterBase::InitializeAttributes()
 
 void ARPGCharacterBase::InitializeAbilities()
 {
-	if((Role != ROLE_Authority) || !AbilitySystemComponent.IsValid() ||AbilitySystemComponent->InitialAbilitiesInitialized)
+	if((GetLocalRole() != ROLE_Authority) || !AbilitySystemComponent.IsValid() ||AbilitySystemComponent->InitialAbilitiesInitialized)
 	{
 		return;
 	}

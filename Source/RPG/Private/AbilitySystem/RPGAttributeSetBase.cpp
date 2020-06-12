@@ -27,21 +27,21 @@ void URPGAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 void URPGAttributeSetBase::OnRep_Health()
 {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , Health);
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , Health,COND_None);
 }
 
 void URPGAttributeSetBase::OnRep_MaxHealth()
 {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , MaxHealth);
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , MaxHealth,COND_None);
 }
 void URPGAttributeSetBase::OnRep_MoveSpeed()
 {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , MoveSpeed);
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , MoveSpeed,COND_None);
 }
 
 void URPGAttributeSetBase::OnRep_CharacterLevel()
 {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase, CharacterLevel);
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase, CharacterLevel,COND_None);
 }
 
 
