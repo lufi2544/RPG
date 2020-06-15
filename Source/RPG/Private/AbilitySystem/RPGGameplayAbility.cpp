@@ -104,7 +104,10 @@ FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeContainerSpecFromContai
              AActor* AvatarActor = GetAvatarActorFromActorInfo();
             
              //We use the Function of the Target Type class (could beeing executed via BP also)
-             InTargetType->GetTargets(Instigator,Instigator,EventData,HitResults,TargetActors);
+             ReturnEffectContainerSpec.bHitEnemy =  InTargetType->GetTargets(Instigator,Instigator,EventData,HitResults,TargetActors);
+             ReturnEffectContainerSpec.HitActors = TargetActors;
+             ReturnEffectContainerSpec.HitActorsHitResults = HitResults;
+            
             ReturnEffectContainerSpec.AddTargets(HitResults,TargetActors);
         }
         if(OverrideGameplayLevel == INDEX_NONE)

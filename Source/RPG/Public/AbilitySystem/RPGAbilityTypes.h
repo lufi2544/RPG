@@ -60,6 +60,14 @@ public:
  UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = "RPG|AbilityTypes")
  TArray<FGameplayEffectSpecHandle>TargetGameplayEffectSpecsHandle;
 
+ UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "RPG|AbilityTypes")
+ TArray<FHitResult> HitActorsHitResults;
+
+ UPROPERTY(EditAnywhere,  BlueprintReadOnly, Category = "RPG|AbilityTypes")
+ TArray<AActor*> HitActors;
+
+UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = "RPG|AbilityTypes")
+ uint32 bHitEnemy :1;
 
  /** Returns true if this has any valid effect specs */
  bool HasValidEffects() const;

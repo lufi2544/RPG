@@ -47,6 +47,8 @@ public:
 	// Sets default values for this actor's properties
 	ARPGWeapon(const FObjectInitializer& ObjectInitializer);
 
+	//Returns the Weapon type of the actual Character Weapon. 
+	UFUNCTION(BlueprintPure , Category ="RPG|Weapon")
 	ERPGWeaponType GetWeaponType() const;
 
 

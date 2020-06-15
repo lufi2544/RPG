@@ -16,16 +16,27 @@ bool FRPGGameplayEffectContainerSpec::HasValidTargets() const
 void FRPGGameplayEffectContainerSpec::AddTargets(const TArray<FHitResult>& HitResults,
     const TArray<AActor*>& TargetActors)
 {
-    for(const FHitResult& HitResult : HitResults)
-    {
-        FGameplayAbilityTargetData_SingleTargetHit* NewData = new FGameplayAbilityTargetData_SingleTargetHit(HitResult);
-        TargetData.Add(NewData);
-    }
 
-    if (TargetActors.Num() > 0)
+    // We want to use the Hit Results first and then if we consider, we use the Actors array.
+    if (HitResults.Num() > 0)
     {
-        FGameplayAbilityTargetData_ActorArray* NewData = new FGameplayAbilityTargetData_ActorArray();
-        NewData->TargetActorArray.Append(TargetActors);
-        TargetData.Add(NewData);
+
+        for(const FHitResult& HitResult : HitResults)
+        {
+            FGameplayAbilityTargetData_SingleTargetHit* NewData = new FGameplayAbilityTargetData_SingleTargetHit(HitResult);
+            TargetData.Add(NewData);
+        }
+        
+    }else
+    {
+        if (TargetActors.Num() > 0)
+        {
+            FGameplayAbilityTargetData_ActorArray* NewData = new FGameplayAbilityTargetData_ActorArray();
+            NewData->TargetActorArray.Append(TargetActors);
+            TargetData.Add(NewData);
+        }
     }
-}
+    }
+    
+
+

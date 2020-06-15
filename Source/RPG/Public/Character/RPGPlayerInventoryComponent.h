@@ -69,25 +69,37 @@ class RPG_API ARPGPlayerInventoryComponent : public AInfo
 	/** Inventory Properties */
 
 	//Current Items Equipped by the Player.
-	UPROPERTY( BlueprintReadOnly ,VisibleAnywhere, Category= "RPG|RPGPlayerState|Item", Replicated, EditFixedSize)
+	UPROPERTY( BlueprintReadOnly ,VisibleAnywhere, Category= "RPG|InventoryComopnent|Item", Replicated, EditFixedSize)
 	TArray<ARPGEquipableItem*>EquippedItems;
+
+	// This is the Weapon that the Character is holding on the right hand, could be a wand or a weapon.
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere,Category = "RPG|InventoryComopnent|Item")
+	ARPGEquipableItem* PrimaryItem;
+
+	// This is the Secundary Item that the Character is holding on the left hand, could be a weapon, a shield or could be empty.
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere,Category = "RPG|InventoryComopnent|Item")
+    ARPGEquipableItem* SecundayItem;
+
+	// This is the Secundary Item that the Character is holding on the left hand, could be a weapon, a shield or could be empty.
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere,Category = "RPG|InventoryComopnent|Item")
+    ARPGEquipableItem* BackPack;
 	
 	//Array that stores the data of all the items that are in the Inventory.
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|RPGPlayerState" , Replicated, EditFixedSize)
-    TArray<struct FRPGItemData>Inventory;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|InventoryComopnent|Item" , Replicated, EditFixedSize)
+    TArray<FRPGItemData>Inventory;
 
 	//Player Inventory capacity..
-	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category= "RPG|RPGPlayerState|Item", Replicated)
+	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category= "RPG|InventoryComopnent|Item", Replicated)
     int32 InventoryCapacity = 3;
 
 
 protected:
 	//Current Items Equipped by the Player.
-	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category= "RPG|RPGPlayerState|Item", Replicated)
+	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category= "RPG|InventoryComopnent|Item", Replicated)
     int32 CurrentInventoryItemsNum = 0;
 
 	//Current Items Equipped by the Player.
-	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category= "RPG|RPGPlayerState|Item", Replicated)
+	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category= "RPG|InventoryComopnent|Item", Replicated)
     uint32 bAllPrimaryItemsEquipped :1;
 
 
@@ -121,5 +133,7 @@ protected:
 	/** Returs if the Player has the primary Items (Sword and shield, Double Sword... Equipped) */
 	bool HasPlayerPrimaryItemsEquipped();
 
+	
+	void SetItemVariables(ARPGEquipableItem* ItemToAdd , ARPGHeroCharacter* Player);
 	
 };

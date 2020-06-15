@@ -22,12 +22,6 @@ ARPGWeapon::ARPGWeapon(const FObjectInitializer& ObjectInitializer)
 	SetReplicateMovement(true);
 	bAlwaysRelevant = true;
 
-	
-
-
-
-
-	
 }
 
 ERPGWeaponType ARPGWeapon::GetWeaponType() const

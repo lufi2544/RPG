@@ -142,6 +142,8 @@ void ARPGPlayerInventoryComponent::ChangeItemEquipmentState(ARPGEquipableItem* I
        bIsShieldEquipped = true;
     }
 
+    SetItemVariables(Item,Player);
+
 }
 
 bool ARPGPlayerInventoryComponent::CanEquipItem(ARPGEquipableItem* ItemToCheck,  ARPGHeroCharacter* Player)
@@ -332,3 +334,30 @@ bool ARPGPlayerInventoryComponent::HasPlayerPrimaryItemsEquipped()
 
     return bAllPrimaryItemsEquipped;
 }
+
+void ARPGPlayerInventoryComponent::SetItemVariables(ARPGEquipableItem* ItemToAdd, ARPGHeroCharacter* Player)
+{
+    if (!PrimaryItem && ItemToAdd)
+    {
+
+        if ( Player->GetCharacterHeroType() == ERPGCharacterHeroType::Indrax && bIsSwordEquipped )
+        {
+            PrimaryItem = ItemToAdd;
+        }
+
+        if ( bIsWeaponEquipped  )
+        {
+            PrimaryItem = ItemToAdd;  
+        }
+    }
+
+    if ( !SecundayItem && ItemToAdd )
+    {
+        if (bIsDoubbleSwordEquipped || bIsShieldEquipped)
+        {
+            SecundayItem = ItemToAdd;
+        }
+    }
+
+}
+

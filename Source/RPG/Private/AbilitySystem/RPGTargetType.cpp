@@ -3,23 +3,25 @@
 
 #include "RPG/Public/AbilitySystem/RPGTargetType.h"
 
-void URPGTargetType::GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer, AActor* Instigator,
+bool URPGTargetType::GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer, AActor* Instigator,
     FGameplayEventData EventData, TArray<FHitResult>& OutHitResults, TArray<AActor*>& OutActors) const
 {
-    return;
+    return OutActors.Num() > 0;
 }
 
 
 
 
 
-void URPGTargetType_UseOwner::GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer, AActor* Instigator,
+bool URPGTargetType_UseOwner::GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer, AActor* Instigator,
     FGameplayEventData EventData, TArray<FHitResult>& OutHitResults, TArray<AActor*>& OutActors) const
 {
     OutActors.Add(Instigator);
+
+    return OutActors.Num() > 0;
 }
 
-void URPGTargetType_UseEventData::GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer, AActor* Instigator,
+bool URPGTargetType_UseEventData::GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer, AActor* Instigator,
     FGameplayEventData EventData, TArray<FHitResult>& OutHitResults, TArray<AActor*>& OutActors) const
 {
     const FHitResult* FoundHitResult = EventData.ContextHandle.GetHitResult();
@@ -31,4 +33,6 @@ void URPGTargetType_UseEventData::GetTargets_Implementation(ARPGCharacterBase* T
     {
         OutActors.Add(const_cast<AActor*>(EventData.Target));
     }
+
+    return OutActors.Num() > 0;
 }

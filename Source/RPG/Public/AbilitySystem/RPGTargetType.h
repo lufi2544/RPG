@@ -20,7 +20,7 @@ public:
 
 	/** Called to determine targets to apply gameplay effects to */
 	UFUNCTION(BlueprintNativeEvent)
-	void GetTargets(ARPGCharacterBase* TargetingPlayer,AActor* Instigator , FGameplayEventData EventData , TArray<FHitResult>& OutHitResults, TArray<AActor*>&OutActors ) const ;
+	bool GetTargets(ARPGCharacterBase* TargetingPlayer,AActor* Instigator , FGameplayEventData EventData , TArray<FHitResult>& OutHitResults, TArray<AActor*>&OutActors ) const ;
 
 	
 	
@@ -37,7 +37,7 @@ class RPG_API URPGTargetType_UseOwner : public URPGTargetType
 	URPGTargetType_UseOwner(){}
 
     /** Called to determine targets to apply gameplay effects to */
-   virtual void GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer,AActor* Instigator , FGameplayEventData EventData , TArray<FHitResult>& OutHitResults, TArray<AActor*>&OutActors ) const override;
+   virtual bool GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer,AActor* Instigator , FGameplayEventData EventData , TArray<FHitResult>& OutHitResults, TArray<AActor*>&OutActors ) const override;
 
 	
 	
@@ -53,7 +53,7 @@ class RPG_API URPGTargetType_UseEventData : public URPGTargetType
 	URPGTargetType_UseEventData(){}
 
     /** Called to determine targets to apply gameplay effects to */
-    virtual void GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer,AActor* Instigator , FGameplayEventData EventData , TArray<FHitResult>& OutHitResults, TArray<AActor*>&OutActors ) const override ;
+    virtual bool GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer,AActor* Instigator , FGameplayEventData EventData , TArray<FHitResult>& OutHitResults, TArray<AActor*>&OutActors ) const override ;
 
 	
 	
