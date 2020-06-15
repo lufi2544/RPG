@@ -142,7 +142,12 @@ void ARPGPlayerInventoryComponent::ChangeItemEquipmentState(ARPGEquipableItem* I
        bIsShieldEquipped = true;
     }
 
-    SetItemVariables(Item,Player);
+    // If We have already the Primary Items Equipped, it is not necessary to Execute the Function
+     if (!PrimaryItem || !SecundayItem)
+     {
+         SetItemVariables(Item,Player);
+     }
+   
 
 }
 
