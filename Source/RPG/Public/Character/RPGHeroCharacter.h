@@ -84,8 +84,7 @@ protected:
 	FVector StartingCameraBoomLocation;
 
 	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "RPG|Inventory" , Replicated)
-	ARPGPlayerInventoryComponent* InventoryComponent;
+	
 
 	//Mouse
 	void LookUp(float fValue);
@@ -111,5 +110,10 @@ protected:
 	// call ClientRestart which calls SetupPlayerInputComponent before the PlayerState is repped to the client so the PlayerState would be null in SetupPlayerInputComponent.
 	// Conversely, the PlayerState might be repped before the PlayerController calls ClientRestart so the Actor's InputComponent would be null in OnRep_PlayerState.
 	void BindASCInput();
+
+	private:
+
+	UPROPERTY(BlueprintReadOnly, Category = "RPG|Inventory" , Replicated ,meta= (AllowPrivateAccess = "true") )
+    ARPGPlayerInventoryComponent* InventoryComponent;
 	
 };

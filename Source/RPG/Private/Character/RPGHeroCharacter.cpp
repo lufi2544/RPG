@@ -40,8 +40,6 @@ ARPGHeroCharacter::ARPGHeroCharacter(const class FObjectInitializer& ObjectIniti
 
 	InventoryComponent = CreateDefaultSubobject<ARPGPlayerInventoryComponent>(TEXT("InventoryComponent"));
 	
-	InventoryComponent->SetReplicates(true);
-	
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
