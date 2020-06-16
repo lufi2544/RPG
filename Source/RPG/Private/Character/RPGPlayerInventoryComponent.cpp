@@ -143,7 +143,7 @@ void ARPGPlayerInventoryComponent::ChangeItemEquipmentState(ARPGEquipableItem* I
     }
 
     // If We have already the Primary Items Equipped, it is not necessary to Execute the Function
-     if (!PrimaryItem || !SecundayItem)
+     if (!PrimaryItem || !SecundayItem || !BackPack)
      {
          SetItemVariables(Item,Player);
      }

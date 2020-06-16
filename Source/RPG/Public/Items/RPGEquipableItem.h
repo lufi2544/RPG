@@ -80,7 +80,7 @@ public:
 	UFUNCTION(BlueprintPure , Category = "RPG|Item")
 	FRPGItemData GetItemData() const;
 
-	// Function that sets the Item to a Is Equipped State when is attatched to the Player.
+	// Function that sets the Item to an Is Equipped State when is attatched to the Player.
 	UFUNCTION(BlueprintCallable, Category = "RPG|Item")
 	void SetIsEquipped(bool bNewState);
 

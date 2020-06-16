@@ -13,6 +13,8 @@
 // Sets default values
 ARPGWeapon::ARPGWeapon(const FObjectInitializer& ObjectInitializer) 
 {
+
+	WeaponComponent = CreateDefaultSubobject<URPGWeaponComponent>(FName("WeaponComponent"));
 	
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;

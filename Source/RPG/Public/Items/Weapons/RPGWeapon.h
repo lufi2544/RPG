@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RPGWeaponComponent.h"
 #include "GameFramework/Actor.h"
 #include "Items/RPGEquipableItem.h"
 #include "RPG/Interfaces/WeaponInterface.h"
@@ -62,8 +63,12 @@ protected:
 	//We set the collision for the Weapon to be ready to use by the Player.
 	void SetInHandCollision(URPGSwordComponent* Weapon);
 
+	//This is the Weapon Component, it is basically a Skeletal Mesh Component.
+	UPROPERTY(BlueprintReadOnly , VisibleAnywhere, Category = "RPG")
+	URPGWeaponComponent* WeaponComponent;
 
-UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = "RPG|Item|Weapon")
+
+	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = "RPG|Item|Weapon")
 	ERPGWeaponType WeaponType;
 
 };
