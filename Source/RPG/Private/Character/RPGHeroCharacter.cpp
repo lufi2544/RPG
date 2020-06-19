@@ -38,9 +38,6 @@ ARPGHeroCharacter::ARPGHeroCharacter(const class FObjectInitializer& ObjectIniti
 	FollowCamera->SetupAttachment(CameraBoom);
 	FollowCamera->FieldOfView = 80.0f;
 
-	InventoryComponent = CreateDefaultSubobject<ARPGPlayerInventoryComponent>(TEXT("InventoryComponent"));
-	
-
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
 	// Makes sure that the animations play on the Server so that we can use bone and socket transforms
@@ -188,11 +185,6 @@ UCameraComponent * ARPGHeroCharacter::GetFollowCamera()
 float ARPGHeroCharacter::GetStartingSpringCameraBoomArmLenght()
 {
 	return StartingCameraBoomArmLenght;
-}
-
-ARPGPlayerInventoryComponent* ARPGHeroCharacter::GetPlayerInventoryComponent() const
-{
-	return InventoryComponent;
 }
 
 FVector ARPGHeroCharacter::GetStartingCameraBoomLocation()

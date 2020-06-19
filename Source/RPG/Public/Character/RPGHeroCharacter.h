@@ -47,9 +47,6 @@ public:
 
 	UFUNCTION(BlueprintPure , Category = "RPG|HeroCharacter")
 	float GetStartingSpringCameraBoomArmLenght();
-
-	UFUNCTION(BlueprintPure, Category = "RPG|HeroCharacter")
-	ARPGPlayerInventoryComponent* GetPlayerInventoryComponent() const;
 	
 protected:
 	
@@ -110,11 +107,5 @@ protected:
 	// call ClientRestart which calls SetupPlayerInputComponent before the PlayerState is repped to the client so the PlayerState would be null in SetupPlayerInputComponent.
 	// Conversely, the PlayerState might be repped before the PlayerController calls ClientRestart so the Actor's InputComponent would be null in OnRep_PlayerState.
 	void BindASCInput();
-
-	private:
-
-	//This Is the Inventory Component for the Player which stores all the data related to the Objects that he has on the Inventory.
-	UPROPERTY(BlueprintReadOnly, Category = "RPG|Inventory" , Replicated ,meta= (AllowPrivateAccess = "true") )
-    ARPGPlayerInventoryComponent* InventoryComponent;
 	
 };

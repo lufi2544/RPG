@@ -28,6 +28,8 @@ ARPGPlayerState::ARPGPlayerState()
     // It is a must to update the components at the same frequency than the character.
     NetUpdateFrequency = 100.f;
 
+    InventoryComponent = CreateDefaultSubobject<ARPGPlayerInventoryComponent>(FName("InventoryComponent"));
+
 
 }
 
