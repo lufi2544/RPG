@@ -74,6 +74,11 @@ float ARPGPlayerState::GetCharacterLevel() const
     return 0.0f;
 }
 
+ARPGPlayerInventoryComponent* ARPGPlayerState::GetInventoryComponent()
+{
+  return IsValid(InventoryComponent) ? InventoryComponent : nullptr;
+}
+
 bool ARPGPlayerState::IsAlive() const
 {
     return GetHealth()>0.0f;

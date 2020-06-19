@@ -56,6 +56,9 @@ public:
 	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|Attributes")
 	float GetCharacterLevel() const;
 
+	UFUNCTION(BlueprintPure, Category = "RPG|PlayerState|Inventory")
+	ARPGPlayerInventoryComponent* GetInventoryComponent();
+
 	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|State")
 	bool IsAlive() const;
 
@@ -69,7 +72,7 @@ private:
 	class URPGAttributeSetBase* AttributeSet;
 
 	//This Is the Inventory Component for the Player which stores all the data related to the Objects that he has on the Inventory.
-	UPROPERTY(BlueprintReadOnly, category = "RPG|PlayerState|Inventory",Replicated, meta=(AllowPrivateAccess="True"))
+	UPROPERTY(BlueprintReadOnly, Category = "RPG|PlayerState|Inventory",Replicated, meta=(AllowPrivateAccess="True"))
 	ARPGPlayerInventoryComponent* InventoryComponent;
 
 
