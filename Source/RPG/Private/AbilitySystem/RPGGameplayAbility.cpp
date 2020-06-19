@@ -100,7 +100,7 @@ FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeContainerSpecFromContai
         {
              TArray<FHitResult>HitResults;
              TArray<AActor*>TargetActors;
-             URPGTargetType* InTargetType = Container.TargetType.GetDefaultObject();
+             const URPGTargetType* InTargetType = Container.TargetType.GetDefaultObject();
              AActor* AvatarActor = GetAvatarActorFromActorInfo();
             
              //We use the Function of the Target Type class (could beeing executed via BP also)
@@ -130,7 +130,7 @@ TArray<FActiveGameplayEffectHandle> URPGGameplayAbility::ApplyEffectContainerSpe
     //Out Effects Specs Handle
  TArray<FActiveGameplayEffectHandle> ActiveGameplayEffectHandles;
 
-    for (FGameplayEffectSpecHandle EffectSpecHandle : ContainerSpec.TargetGameplayEffectSpecsHandle)
+    for ( const FGameplayEffectSpecHandle& EffectSpecHandle : ContainerSpec.TargetGameplayEffectSpecsHandle)
     {
         ActiveGameplayEffectHandles.Append(K2_ApplyGameplayEffectSpecToTarget(EffectSpecHandle,ContainerSpec.TargetData));
     }

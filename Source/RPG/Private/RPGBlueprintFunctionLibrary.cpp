@@ -23,55 +23,20 @@ TArray<FActiveGameplayEffectHandle> URPGBlueprintFunctionLibrary::ApplyGameplayE
 {
 
     TArray<FActiveGameplayEffectHandle>ActiveGameplayEffectHandles;
-    
-    if (DoesContainerSpecHasEffects(ContainerSpec))
-    {
-        if (ContainerSpec.HitActorsHitResults.Num() > 0)
-        {
-            for (FHitResult TargetHitResult : ContainerSpec.HitActorsHitResults)
-            {
-                if (TargetHitResult.GetActor())
-                {
-                    AActor* Target = TargetHitResult.GetActor();
-                    ARPGCharacterBase* Herotarget = Cast<ARPGCharacterBase>(Target);
-                    URPGAbilitySystemComponent* TargetASC = Cast<URPGAbilitySystemComponent>(Herotarget->GetAbilitySystemComponent());
-   
-                        for (FGameplayEffectSpecHandle SpecHandle : ContainerSpec.TargetGameplayEffectSpecsHandle)
-                        {
-                            if (SpecHandle.IsValid() && TargetASC)
-                            {
-                                
-                                ActiveGameplayEffectHandles.Add(SpecHandle.Data->GetContext().GetInstigatorAbilitySystemComponent()->BP_ApplyGameplayEffectSpecToTarget(SpecHandle,TargetASC));
-                            }
-                        }
-                    
-                    
-                }
-                
-            }
-        }else if (ContainerSpec.HitActors.Num() > 0)
-        {
-            for(AActor* Target : ContainerSpec.HitActors)
-            {
-                if (Target)
-                {
-                   ARPGHeroCharacter* HeroTarget = Cast<ARPGHeroCharacter>(Target);
-                   URPGAbilitySystemComponent* TargetASC =Cast<URPGAbilitySystemComponent>( HeroTarget->GetAbilitySystemComponent() );
 
-                    for (FGameplayEffectSpecHandle SpecHandle : ContainerSpec.TargetGameplayEffectSpecsHandle)
-                    {
-                        if (TargetASC)
-                        {
-                            ActiveGameplayEffectHandles.Add(SpecHandle.Data->GetEffectContext().GetInstigatorAbilitySystemComponent()->BP_ApplyGameplayEffectSpecToTarget(SpecHandle,TargetASC)); 
-                        }   
-                            
-                        
-                    }
-                }
+    for (const FGameplayEffectSpecHandle& SpecHandle : ContainerSpec.TargetGameplayEffectSpecsHandle)
+    {
+        if (SpecHandle.IsValid())
+        {
+            // If effect is valid, iterate list of targets and apply to all
+            for (TSharedPtr<FGameplayAbilityTargetData> Data : ContainerSpec.TargetData.Data)
+            {
+                ActiveGameplayEffectHandles.Append(Data->ApplyGameplayEffectSpec(*SpecHandle.Data.Get()));
             }
         }
     }
-
+    
+       // UE_LOG(LogTemp,Error,TEXT("%s"),*ActiveGameplayEffectHandles.GetData()->ToString());
    return ActiveGameplayEffectHandles;
 }
 
