@@ -113,6 +113,7 @@ protected:
 
 	private:
 
+	//This Is the Inventory Component for the Player which stores all the data related to the Objects that he has on the Inventory.
 	UPROPERTY(BlueprintReadOnly, Category = "RPG|Inventory" , Replicated ,meta= (AllowPrivateAccess = "true") )
     ARPGPlayerInventoryComponent* InventoryComponent;
 	

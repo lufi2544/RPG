@@ -6,6 +6,10 @@
 #include "AbilitySystemComponent.h"
 #include "RPGAbilitySystemComponent.generated.h"
 
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FRecievedDamageDelegate, URPGAbilitySystemComponent*, SourceASC, float,InitialDamage,float, FinalDamage);
+
 /**
  * 
  */
@@ -16,5 +20,9 @@ class RPG_API URPGAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	bool InitialAbilitiesInitialized = false;
 	bool InitialEffectsInitializeded = false;
+
+	FRecievedDamageDelegate ReceivedDamaged;
+
+	virtual void ReceiveDamage(URPGAbilitySystemComponent* SourceASC, float InitialDamage,float FinalDamage);
 	
 };

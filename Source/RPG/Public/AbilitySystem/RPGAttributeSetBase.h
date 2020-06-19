@@ -48,12 +48,32 @@ class RPG_API URPGAttributeSetBase : public UAttributeSet
 	FGameplayAttributeData MoveSpeed;
 	ATTRIBUTE_ACCESSORS(URPGAttributeSetBase , MoveSpeed);
 
+	//The Amount of Armor that the Character has.
+	UPROPERTY(BlueprintReadOnly, Category= "RPG|AttributeSet", ReplicatedUsing= OnRep_Armor)
+	FGameplayAttributeData Armor;
+	ATTRIBUTE_ACCESSORS(URPGAttributeSetBase,Armor)
+
+	//This Property is a meta attribute, it will be used by the DamageExecutionCalculation class to calculate the final damage. It will turn into -Health.
+	//It is a temporary value that only exists on the Server.Not Replicated
+	UPROPERTY(BlueprintReadOnly, Category = "RPG|AttributeSet" , meta= (HideFromLevelInfos))
+	FGameplayAttributeData Damage;
+	ATTRIBUTE_ACCESSORS(URPGAttributeSetBase, Damage)
+	
 	//The Character Level.
 	UPROPERTY(BlueprintReadOnly , Category = "RPG|AttributeSet" ,ReplicatedUsing = OnRep_CharacterLevel)
 	FGameplayAttributeData CharacterLevel;
 	ATTRIBUTE_ACCESSORS(URPGAttributeSetBase , CharacterLevel);
 
-	
+	//The Amount of Experience that the Character has.
+	UPROPERTY(BlueprintReadOnly, Category = "RPG|AttributeSet", ReplicatedUsing = OnRep_XP)
+	FGameplayAttributeData XP;
+	ATTRIBUTE_ACCESSORS(URPGAttributeSetBase, XP)
+
+	// The Amount of Experience that is given to the Character´s killer.
+	UPROPERTY(BlueprintReadOnly, Category = "RPG|AttributeSetBase",ReplicatedUsing = OnRep_XPBounty)
+	FGameplayAttributeData XPBounty;
+	ATTRIBUTE_ACCESSORS(URPGAttributeSetBase , XPBounty)
+
 
 protected:
 
@@ -67,10 +87,21 @@ protected:
    virtual void OnRep_MoveSpeed();
 
 	UFUNCTION()
+	virtual void OnRep_Armor();
+
+	UFUNCTION()
 	virtual void OnRep_MaxHealth();
 
 	UFUNCTION()
 	virtual void OnRep_CharacterLevel();
+
+	UFUNCTION()
+	virtual void OnRep_XP();
+
+	UFUNCTION()
+	virtual void OnRep_XPBounty();
+
+	
 	
 	
 	
