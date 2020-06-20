@@ -105,10 +105,13 @@ FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeContainerSpecFromContai
             
              //We use the Function of the Target Type class (could beeing executed via BP also)
              ReturnEffectContainerSpec.bHitEnemy =  InTargetType->GetTargets(Instigator,Instigator,EventData,HitResults,TargetActors);
+
+             ReturnEffectContainerSpec.AddTargets(HitResults,TargetActors);
+            
              ReturnEffectContainerSpec.HitActors = TargetActors;
              ReturnEffectContainerSpec.HitActorsHitResults = HitResults;
             
-            ReturnEffectContainerSpec.AddTargets(HitResults,TargetActors);
+            
         }
         if(OverrideGameplayLevel == INDEX_NONE)
         {
@@ -121,6 +124,7 @@ FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeContainerSpecFromContai
         }
     }
 
+    UE_LOG(LogTemp,Error,TEXT("%f"),ReturnEffectContainerSpec.TargetGameplayEffectSpecsHandle.Num());
     return  ReturnEffectContainerSpec;
     
 }

@@ -17,7 +17,7 @@
  * We are going to make this header file to include all the types that we need to include on the proyect.
  * Enums, maps...
  */
-
+class URPGAbilitySystemComponent;
 class UGameplayEffect;
 class URPGTargetType;
 

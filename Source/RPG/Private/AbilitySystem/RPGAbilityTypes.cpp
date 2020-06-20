@@ -36,7 +36,7 @@ void FRPGGameplayEffectContainerSpec::AddTargets(const TArray<FHitResult>& HitRe
             TargetData.Add(NewData);
         }
     }
-    }
+}
     
 
 

@@ -6,12 +6,8 @@
 bool URPGTargetType::GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer, AActor* Instigator,
     FGameplayEventData EventData, TArray<FHitResult>& OutHitResults, TArray<AActor*>& OutActors) const
 {
-    return OutActors.Num() > 0;
+    return OutHitResults.Num() > 0;
 }
-
-
-
-
 
 bool URPGTargetType_UseOwner::GetTargets_Implementation(ARPGCharacterBase* TargetingPlayer, AActor* Instigator,
     FGameplayEventData EventData, TArray<FHitResult>& OutHitResults, TArray<AActor*>& OutActors) const

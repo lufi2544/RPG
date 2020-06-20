@@ -21,7 +21,7 @@ void URPGBlueprintFunctionLibrary::AddTargetsToGameplayEffectSpec(FRPGGameplayEf
 TArray<FActiveGameplayEffectHandle> URPGBlueprintFunctionLibrary::ApplyGameplayEffectContainerSpec(
     FRPGGameplayEffectContainerSpec ContainerSpec)
 {
-
+    
     TArray<FActiveGameplayEffectHandle>ActiveGameplayEffectHandles;
 
     for (const FGameplayEffectSpecHandle& SpecHandle : ContainerSpec.TargetGameplayEffectSpecsHandle)
@@ -36,7 +36,7 @@ TArray<FActiveGameplayEffectHandle> URPGBlueprintFunctionLibrary::ApplyGameplayE
         }
     }
     
-       // UE_LOG(LogTemp,Error,TEXT("%s"),*ActiveGameplayEffectHandles.GetData()->ToString());
+        
    return ActiveGameplayEffectHandles;
 }
 
