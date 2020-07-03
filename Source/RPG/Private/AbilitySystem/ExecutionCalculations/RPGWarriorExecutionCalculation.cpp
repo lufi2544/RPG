@@ -15,6 +15,8 @@ struct RPGDamageStatics
     // In this case we are not capturing the Damage exactly because we are getting the damage amount via Set by caller with the Effect Spec, but it is neccessary to just declare in order to modify it.
     DECLARE_ATTRIBUTE_CAPTUREDEF(Damage)
 
+    DECLARE_ATTRIBUTE_CAPTUREDEF(LifeSteal)
+
 
     RPGDamageStatics()
     {
@@ -25,6 +27,8 @@ struct RPGDamageStatics
 
         // The Target's received Damage. This is the value of health that will be subtracted on the Target. We're not capturing this.
         DEFINE_ATTRIBUTE_CAPTUREDEF(URPGAttributeSetBase,Damage,Target,false);
+
+        DEFINE_ATTRIBUTE_CAPTUREDEF(URPGAttributeSetBase,LifeSteal,Source,true);
     }
 };
 
@@ -42,6 +46,8 @@ URPGWarriorExecutionCalculation::URPGWarriorExecutionCalculation()
     RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
 
     RelevantAttributesToCapture.Add(DamageStatics().DamageDef);
+
+    RelevantAttributesToCapture.Add(DamageStatics().LifeStealDef);
     
 }
 

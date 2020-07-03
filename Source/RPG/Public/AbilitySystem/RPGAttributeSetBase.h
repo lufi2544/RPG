@@ -53,6 +53,10 @@ class RPG_API URPGAttributeSetBase : public UAttributeSet
 	FGameplayAttributeData Armor;
 	ATTRIBUTE_ACCESSORS(URPGAttributeSetBase,Armor)
 
+	UPROPERTY(BlueprintReadOnly, Category= "RPG|AttributeSet", ReplicatedUsing= OnRep_LifeSteal)
+	FGameplayAttributeData LifeSteal;
+	ATTRIBUTE_ACCESSORS(URPGAttributeSetBase,LifeSteal)
+
 	//This Property is a meta attribute, it will be used by the DamageExecutionCalculation class to calculate the final damage. It will turn into -Health.
 	//It is a temporary value that only exists on the Server.Not Replicated
 	UPROPERTY(BlueprintReadOnly, Category = "RPG|AttributeSet" , meta= (HideFromLevelInfos))
@@ -81,25 +85,28 @@ protected:
 //Functions for the Attributes replication.
 	
 	UFUNCTION()
-	virtual void OnRep_Health();
+	virtual void OnRep_Health(FGameplayAttributeData& HealthOldvalue);
+
+	UFUNCTION()
+    virtual void OnRep_MaxHealth(FGameplayAttributeData& MaxHealthOldvalue);
 	
 	UFUNCTION()
-   virtual void OnRep_MoveSpeed();
+	virtual void OnRep_LifeSteal(FGameplayAttributeData& LifeStealOldvalue);
+	
+	UFUNCTION()
+   virtual void OnRep_MoveSpeed(FGameplayAttributeData& MoveSpeedOldvalue);
 
 	UFUNCTION()
-	virtual void OnRep_Armor();
+	virtual void OnRep_Armor(FGameplayAttributeData& ArmorOldvalue);
 
 	UFUNCTION()
-	virtual void OnRep_MaxHealth();
+	virtual void OnRep_CharacterLevel(FGameplayAttributeData& CharacterLevelOldvalue);
 
 	UFUNCTION()
-	virtual void OnRep_CharacterLevel();
+	virtual void OnRep_XP(FGameplayAttributeData& XPOldvalue);
 
 	UFUNCTION()
-	virtual void OnRep_XP();
-
-	UFUNCTION()
-	virtual void OnRep_XPBounty();
+	virtual void OnRep_XPBounty(FGameplayAttributeData& XPBountyldvalue);
 
 	
 	

@@ -28,42 +28,48 @@ void URPGAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
     DOREPLIFETIME_CONDITION_NOTIFY(URPGAttributeSetBase, XP, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(URPGAttributeSetBase, XPBounty, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(URPGAttributeSetBase, Armor, COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(URPGAttributeSetBase, LifeSteal, COND_None, REPNOTIFY_Always);
     
     
 }
 
-void URPGAttributeSetBase::OnRep_Health()
+void URPGAttributeSetBase::OnRep_Health(FGameplayAttributeData& HealthOldvalue)
 {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , Health,COND_None);
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , Health,HealthOldvalue);
 }
 
-void URPGAttributeSetBase::OnRep_MaxHealth()
+void URPGAttributeSetBase::OnRep_LifeSteal(FGameplayAttributeData& LifeStealOldvalue)
 {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , MaxHealth,COND_None);
-}
-void URPGAttributeSetBase::OnRep_MoveSpeed()
-{
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , MoveSpeed,COND_None);
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , LifeSteal ,LifeStealOldvalue);
 }
 
-void URPGAttributeSetBase::OnRep_CharacterLevel()
+void URPGAttributeSetBase::OnRep_MaxHealth(FGameplayAttributeData& MaxHealthOldvalue)
 {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase, CharacterLevel,COND_None);
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , MaxHealth,MaxHealthOldvalue);
+}
+void URPGAttributeSetBase::OnRep_MoveSpeed(FGameplayAttributeData& MoveSpeedOldvalue)
+{
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , MoveSpeed,MoveSpeedOldvalue);
 }
 
-void URPGAttributeSetBase::OnRep_XP()
+void URPGAttributeSetBase::OnRep_CharacterLevel(FGameplayAttributeData& CharacterLevelOldvalue)
 {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , XP, COND_None)
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase, CharacterLevel,CharacterLevelOldvalue);
 }
 
-void URPGAttributeSetBase::OnRep_XPBounty()
+void URPGAttributeSetBase::OnRep_XP(FGameplayAttributeData& XPOldvalue)
 {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase,XPBounty,COND_None)
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase , XP, XPOldvalue)
 }
 
-void URPGAttributeSetBase::OnRep_Armor()
+void URPGAttributeSetBase::OnRep_XPBounty(FGameplayAttributeData& XPBountyldvalue)
 {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase,Armor,COND_None)
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase,XPBounty,XPBountyldvalue)
+}
+
+void URPGAttributeSetBase::OnRep_Armor(FGameplayAttributeData& ArmorOldvalue)
+{
+    GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase,Armor,ArmorOldvalue)
 }
 
 
