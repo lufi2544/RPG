@@ -55,9 +55,13 @@ FRPGGameplayTargetDataFilterHandle URPGBlueprintFunctionLibrary::MakeRPGGameplay
 
     if (IsValid(Actor))
     {
-        Filter.InitializeFilterContext(Actor);
 
-        *TargetDataFilterHandle.DataFilter = Filter;
+        FRPGGameplayTargetDataFilter* TargetDataFilter = new FRPGGameplayTargetDataFilter(Filter);
+
+        TargetDataFilter->InitializeFilterContext(Actor);
+
+        TargetDataFilterHandle.DataFilter = TSharedPtr<FRPGGameplayTargetDataFilter>(TargetDataFilter);
+        
     }
     
     

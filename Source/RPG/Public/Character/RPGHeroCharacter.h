@@ -80,6 +80,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "RRPG|Camera")
 	FVector StartingCameraBoomLocation;
 
+	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category= "RPG|State")
+	ERPGTeam PlayerTeam = ERPGTeam::Neutral;
 	
 	
 

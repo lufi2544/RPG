@@ -84,6 +84,8 @@ void ARPGHeroCharacter::BeginPlay()
 
 	StartingCameraBoomArmLenght = CameraBoom->TargetArmLength;
 	StartingCameraBoomLocation = CameraBoom->GetRelativeLocation();
+
+
 }
 
 // Server only
@@ -113,6 +115,9 @@ void ARPGHeroCharacter::PossessedBy(AController * NewController)
 		// Respawn specific things that won't affect first possession.
 		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
 		SetHealth(GetMaxHealth());
+
+	
+		PS->SetTeam(PlayerTeam);
 	}
 }
 
@@ -148,6 +153,9 @@ void ARPGHeroCharacter::OnRep_PlayerState()
 
 		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
 		SetHealth(GetMaxHealth());
+
+	
+		PS->SetTeam(PlayerTeam);
 
 	}
 }

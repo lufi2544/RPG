@@ -63,11 +63,14 @@ public:
 	bool IsAlive() const;
 
 	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState")
-	ERPGTeam GetTeam() const;
+	ERPGTeam GetTeam();
 
+	UFUNCTION(BlueprintCallable, Category= "RPG|RPGPlayerState")
+	void SetTeam(ERPGTeam NewTeam);
 	
 	protected:
 
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "RPG|PlayerState")
 	ERPGTeam Team = ERPGTeam::Neutral;
 
 	

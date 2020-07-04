@@ -25,22 +25,25 @@ struct RPG_API FRPGGameplayTargetDataFilter : public FGameplayTargetDataFilter
 
 	virtual bool FilterPassesForActor(const AActor* ActorToBeFiltered) const override
 	{
-		Super::FilterPassesForActor(ActorToBeFiltered);
 
+		Super::FilterPassesForActor(ActorToBeFiltered);
 		const ARPGHeroCharacter* TargetHero = Cast<ARPGHeroCharacter>(ActorToBeFiltered);
 		const ARPGHeroCharacter* Player = Cast<ARPGHeroCharacter>(SelfActor);
 
 		ARPGPlayerState* TargetingActorPS = Cast<ARPGPlayerState>(TargetHero->GetPlayerState());
 
-		if (Player != TargetHero)
+		if (TargetingActorPS)
 		{
-			if (Team != TargetingActorPS->GetTeam())
+			if (Player != TargetHero)
 			{
-				return true;
+				if (Team != TargetingActorPS->GetTeam())
+				{
+					return true;
+				}
 			}
 		}
 
-		return (bReverseFilter ^ true);
+		return false;
 	}
 	
 };
