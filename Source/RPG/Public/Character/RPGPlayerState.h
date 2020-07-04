@@ -62,6 +62,15 @@ public:
 	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState|State")
 	bool IsAlive() const;
 
+	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState")
+	ERPGTeam GetTeam() const;
+
+	
+	protected:
+
+	ERPGTeam Team = ERPGTeam::Neutral;
+
+	
 private:
 
 

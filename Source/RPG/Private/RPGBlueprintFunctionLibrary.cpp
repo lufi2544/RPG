@@ -47,3 +47,20 @@ TArray<FActiveGameplayEffectHandle> URPGBlueprintFunctionLibrary::ApplyGameplayE
 
     return  ContainerSpec.HasValidEffects();
 }
+
+FRPGGameplayTargetDataFilterHandle URPGBlueprintFunctionLibrary::MakeRPGGameplayTargetDataFilterHandle(
+    FRPGGameplayTargetDataFilter Filter, AActor* Actor)
+{
+    FRPGGameplayTargetDataFilterHandle TargetDataFilterHandle;
+
+    if (IsValid(Actor))
+    {
+        Filter.InitializeFilterContext(Actor);
+
+        *TargetDataFilterHandle.DataFilter = Filter;
+    }
+    
+    
+    return TargetDataFilterHandle;
+    
+}

@@ -6,6 +6,7 @@
 #include "AbilitySystem/RPGAbilityTypes.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "UObject/ObjectMacros.h"
+#include "UObject/ObjectMacros.h"
 
 #include "RPGBlueprintFunctionLibrary.generated.h"
 
@@ -41,7 +42,8 @@ class RPG_API URPGBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	/** True if the @ContainerSpec has Effects to Apply to Targets. */
 	static bool DoesContainerSpecHasEffects(FRPGGameplayEffectContainerSpec ContainerSpec);
 
-
+	UFUNCTION(BlueprintPure , Category = "RPG|Ability|Filter")
+	static FRPGGameplayTargetDataFilterHandle MakeRPGGameplayTargetDataFilterHandle(FRPGGameplayTargetDataFilter Filter , AActor* Actor);
 	
 };
 

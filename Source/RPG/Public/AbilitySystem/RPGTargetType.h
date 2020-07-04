@@ -3,9 +3,59 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Abilities/GameplayAbilityTargetDataFilter.h"
 #include "Character/RPGCharacterBase.h"
+#include "RPG/RPG.h"
+#include "RPG/Public/Character/RPGHeroCharacter.h"
 #include "UObject/NoExportTypes.h"
 #include "RPGTargetType.generated.h"
+
+
+
+USTRUCT(BlueprintType)
+struct RPG_API FRPGGameplayTargetDataFilter : public FGameplayTargetDataFilter
+{
+	GENERATED_USTRUCT_BODY()
+
+	virtual ~FRPGGameplayTargetDataFilter()
+	{}
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (ExposeOnSpawn = true), Category = Filter)
+	ERPGTeam Team;
+
+	virtual bool FilterPassesForActor(const AActor* ActorToBeFiltered) const override
+	{
+		Super::FilterPassesForActor(ActorToBeFiltered);
+
+		const ARPGHeroCharacter* TargetHero = Cast<ARPGHeroCharacter>(ActorToBeFiltered);
+		const ARPGHeroCharacter* Player = Cast<ARPGHeroCharacter>(SelfActor);
+
+		ARPGPlayerState* TargetingActorPS = Cast<ARPGPlayerState>(TargetHero->GetPlayerState());
+
+		if (Player != TargetHero)
+		{
+			if (Team != TargetingActorPS->GetTeam())
+			{
+				return true;
+			}
+		}
+
+		return (bReverseFilter ^ true);
+	}
+	
+};
+
+USTRUCT(BlueprintType)
+struct RPG_API FRPGGameplayTargetDataFilterHandle 
+{
+	GENERATED_USTRUCT_BODY()
+
+	TSharedPtr<FRPGGameplayTargetDataFilter> DataFilter;
+	
+};
+
+
+
 
 /**
  * 

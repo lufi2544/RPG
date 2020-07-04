@@ -9,6 +9,20 @@
 #define ACTOR_ROLE_FSTRING *(FindObject<UEnum>(ANY_PACKAGE, TEXT("ENetRole"), true)->GetNameStringByValue(GetLocalRole()))
 #define GET_ACTOR_ROLE_FSTRING(Actor) *(FindObject<UEnum>(ANY_PACKAGE, TEXT("ENetRole"), true)->GetNameStringByValue(Actor->GetLocalRole()))
 
+
+UENUM(BlueprintType)
+enum class ERPGTeam : uint8
+{
+
+    Neutral,
+
+    Ally,
+
+    Enemy
+	
+};
+
+
 UENUM(BlueprintType)
 enum class ERPGHitReactDirection : uint8
 {

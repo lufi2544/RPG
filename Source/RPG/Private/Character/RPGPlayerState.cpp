@@ -84,6 +84,11 @@ bool ARPGPlayerState::IsAlive() const
     return GetHealth()>0.0f;
 }
 
+ERPGTeam ARPGPlayerState::GetTeam() const
+{
+    return Team;
+}
+
 
 
 
