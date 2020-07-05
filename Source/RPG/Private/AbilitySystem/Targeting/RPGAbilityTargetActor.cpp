@@ -12,6 +12,17 @@ void ARPGAbilityTargetActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 
 void ARPGAbilityTargetActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+    //When the Ability Task Ends, we want the reticle to dissapear.
+    
+    if (WorldReticles.Num() > 0)
+    {
+       for (AGameplayAbilityWorldReticle* Reticle : WorldReticles)
+       {
+           Reticle->Destroy();
+       }
+    }
+
+    Super::EndPlay(EndPlayReason);
 }
 
 void ARPGAbilityTargetActor::SphereTraceWithFilter(TArray<FHitResult>& Out_HitResults,
@@ -55,9 +66,37 @@ void ARPGAbilityTargetActor::StartTargeting(UGameplayAbility* Ability)
 
     SourceActor = Ability->GetCurrentActorInfo()->AvatarActor.Get();
 
-    //TODO add reticle logic
+    // This is more useful for non instant Targeting actors, so we can start targeting a certain actor.
+   
 
-    
+    if (ReticleClass)
+    {
+
+        TArray<FHitResult>HitResults;
+
+        FVector EndLocation = FVector(StartLocation.GetTargetingTransform().GetLocation().X,StartLocation.GetTargetingTransform().GetLocation().Y,StartLocation.GetTargetingTransform().GetLocation().Z +2.f);
+
+        SphereTraceWithFilter(HitResults,RPGFilter,StartLocation.GetTargetingTransform().GetLocation(),EndLocation);
+
+        for (FHitResult HitResult : HitResults)
+        {
+            AActor* LocalActor = HitResult.GetActor();
+            TargetedActors.Add(LocalActor);
+            
+            AGameplayAbilityWorldReticle* LocalReticle = GetWorld()->SpawnActor<AGameplayAbilityWorldReticle>(ReticleClass,LocalActor->GetActorLocation(),LocalActor->GetActorRotation());
+
+            WorldReticles.Add(LocalReticle);
+
+            ReticleMap.Add(LocalReticle,LocalActor);
+
+            if (!ShouldProduceTargetDataOnServer)
+            {
+                LocalReticle->SetReplicates(true);
+            }
+        }
+         
+     }
+   
 }
 
 void ARPGAbilityTargetActor::ConfirmTargetingAndContinue()
@@ -83,6 +122,22 @@ void ARPGAbilityTargetActor::ConfirmTargetingAndContinue()
 
 void ARPGAbilityTargetActor::Tick(float DeltaSeconds)
 {
+    Super::Tick(DeltaSeconds);
+
+   //TODO add the reticle updated logic
+
+    if (WorldReticles.Num() > 0)
+    {
+        for (int32 Index = 0 ; Index < WorldReticles.Num() ; Index++)
+        {
+            AActor* LocalActor =  *ReticleMap.Find( WorldReticles[ Index ]);
+
+            WorldReticles[ Index ]->SetActorLocation(FVector(LocalActor->GetActorLocation().X , GetActorLocation().Y , GetActorLocation().Z + 170.0f));
+        }   
+    }
+    
+ 
+    
 }
 
 FGameplayAbilityTargetDataHandle ARPGAbilityTargetActor::MakeTargetData(const TArray<FHitResult>&HitResults) const

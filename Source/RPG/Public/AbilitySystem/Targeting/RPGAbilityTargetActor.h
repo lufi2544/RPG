@@ -58,5 +58,11 @@ class RPG_API ARPGAbilityTargetActor : public AGameplayAbilityTargetActor
 	protected:
 
 	FGameplayAbilityTargetDataHandle MakeTargetData(const TArray<FHitResult>&HitResults) const;
+
+	TWeakObjectPtr<AGameplayAbilityWorldReticle> ReticleActor;
+
+	TMap<AGameplayAbilityWorldReticle*,AActor*>ReticleMap;
+	TArray<AActor*>TargetedActors;
+	TArray<AGameplayAbilityWorldReticle*> WorldReticles;
 	
 };
