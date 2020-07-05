@@ -47,6 +47,9 @@ public:
 
 	UFUNCTION(BlueprintPure , Category = "RPG|HeroCharacter")
 	float GetStartingSpringCameraBoomArmLenght();
+
+	UFUNCTION(BlueprintPure , Category = "RPG|HeroCharacter")
+	ERPGTeam GetTeam() const;
 	
 protected:
 	
@@ -82,9 +85,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category= "RPG|State")
 	ERPGTeam PlayerTeam = ERPGTeam::Neutral;
-	
-	
 
+
+protected:
 	//Mouse
 	void LookUp(float fValue);
 

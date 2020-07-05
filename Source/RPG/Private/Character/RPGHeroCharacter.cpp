@@ -200,6 +200,11 @@ FVector ARPGHeroCharacter::GetStartingCameraBoomLocation()
 	return StartingCameraBoomLocation;
 }
 
+ERPGTeam ARPGHeroCharacter::GetTeam() const
+{
+	return PlayerTeam;
+}
+
 void ARPGHeroCharacter::LookUp(float Value)
 {
 	if (IsAlive())
