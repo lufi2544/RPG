@@ -38,12 +38,16 @@ class RPG_API URPGBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "RPG|BlueprintLibrary")
 	static TArray<FActiveGameplayEffectHandle> ApplyGameplayEffectContainerSpec(FRPGGameplayEffectContainerSpec ContainerSpec);
 
-	UFUNCTION(BlueprintCallable, Category = "RPG|BlueprintLibrary")
+	UFUNCTION(BlueprintPure, Category = "RPG|BlueprintLibrary")
 	/** True if the @ContainerSpec has Effects to Apply to Targets. */
 	static bool DoesContainerSpecHasEffects(FRPGGameplayEffectContainerSpec ContainerSpec);
 
 	UFUNCTION(BlueprintPure , Category = "RPG|Ability|Filter")
 	static FRPGGameplayTargetDataFilterHandle MakeRPGGameplayTargetDataFilterHandle(FRPGGameplayTargetDataFilter Filter , AActor* Actor);
+
+	UFUNCTION(BlueprintCallable, Category = "RPG|BlueprintLibrary")
+    static void ApplyEffectContainerSpecToTargetsFromTargetData(FRPGGameplayEffectContainerSpec ContainerSpec, const FGameplayAbilityTargetDataHandle& TargetDataHandle);
+
 	
 };
 

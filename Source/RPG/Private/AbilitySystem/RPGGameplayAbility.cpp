@@ -63,10 +63,45 @@ void URPGGameplayAbility::ApplyCooldown(const FGameplayAbilitySpecHandle Handle,
 
     
     
+}void URPGGameplayAbility::ApplyDamageModifiers( FRPGGameplayEffectContainerSpec& ContainerSpec,FRPGGameplayEffectContainerSpec InContainerSpec)
+{
+    ContainerSpec = InContainerSpec;
+    
+    // We basically create a new Spec Handle and add that to the SpecHandles that will be applied later from the Container Spec.
+    AActor* Player = GetAvatarActorFromActorInfo();
+
+    if (Player)
+    {
+        FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(AbilityDamageClass,1.0f,GetAbilitySystemComponentFromActorInfo()->MakeEffectContext());
+
+        SpecHandle.Data->SetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")),AbilityDamage);
+
+        ContainerSpec.TargetGameplayEffectSpecsHandle.Add(SpecHandle);
+    }
+
+
 }
 
-FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeEffectContainerSpec(FGameplayTag ContainerTag, const FGameplayEventData& EventData,
-    int32 OverrideGameplayLevel)
+void URPGGameplayAbility::ApplyRPGCoolDown()
+{
+    AActor* Player = GetActorInfo().AvatarActor.Get();
+
+    if (Player)
+    {
+        FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(AbilityCooldownClass,1.0f,GetAbilitySystemComponentFromActorInfo()->MakeEffectContext());
+
+        if (SpecHandle.IsValid())
+        {
+            SpecHandle.Data->SetSetByCallerMagnitude(AbilityCooldownClass.GetDefaultObject()->GetCoolDownTag(),AbilityCooldown);
+
+            GetAbilitySystemComponentFromActorInfo()->BP_ApplyGameplayEffectSpecToSelf(SpecHandle);
+        }
+    }
+ 
+}
+
+
+FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeEffectContainerSpec(FGameplayTag ContainerTag, const FGameplayEventData& EventData, int32 OverrideGameplayLevel)
 {
     //We look into the Container Map for GameplayEffects that matches the Event Tag.
     FRPGGameplayEffectContainer* EffectContainer = EffectContainerMap.Find(ContainerTag);
@@ -80,8 +115,7 @@ FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeEffectContainerSpec(FGa
     return FRPGGameplayEffectContainerSpec();
 }
 
-FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeContainerSpecFromContainer(
-    const FRPGGameplayEffectContainer& Container, const FGameplayEventData& EventData, int32 OverrideGameplayLevel)
+FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeContainerSpecFromContainer( const FRPGGameplayEffectContainer& Container, const FGameplayEventData& EventData, int32 OverrideGameplayLevel )
 {
     FRPGGameplayEffectContainerSpec ReturnEffectContainerSpec;
     
@@ -89,8 +123,6 @@ FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeContainerSpecFromContai
     ARPGCharacterBase* Instigator = Cast<ARPGCharacterBase>(GetAvatarActorFromActorInfo());
     // We make sure that the Player has and Ability System Component.
     URPGAbilitySystemComponent* InstigatorASC = Cast<URPGAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo());
-
-    
 
     if (InstigatorASC)
     {
@@ -125,6 +157,7 @@ FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeContainerSpecFromContai
     }
 
     UE_LOG(LogTemp,Error,TEXT("%f"),ReturnEffectContainerSpec.TargetGameplayEffectSpecsHandle.Num());
+    
     return  ReturnEffectContainerSpec;
     
 }
@@ -132,7 +165,7 @@ FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeContainerSpecFromContai
 TArray<FActiveGameplayEffectHandle> URPGGameplayAbility::ApplyEffectContainerSpec(const FRPGGameplayEffectContainerSpec& ContainerSpec)
 {
     //Out Effects Specs Handle
- TArray<FActiveGameplayEffectHandle> ActiveGameplayEffectHandles;
+    TArray<FActiveGameplayEffectHandle> ActiveGameplayEffectHandles;
 
     for ( const FGameplayEffectSpecHandle& EffectSpecHandle : ContainerSpec.TargetGameplayEffectSpecsHandle)
     {

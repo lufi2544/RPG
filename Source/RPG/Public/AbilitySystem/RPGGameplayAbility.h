@@ -7,6 +7,8 @@
 #include "Abilities/GameplayAbility.h"
 #include "RPG/RPG.h"
 #include "GameplayTagContainer.h"
+#include "RPGCooldownEffect.h"
+
 #include "RPGGameplayAbility.generated.h"
 
 class UAnimMontage;
@@ -69,6 +71,20 @@ public:
 	UPROPERTY(BlueprintReadWrite , EditAnywhere, Category = "RPG|Ability|Stacks")
     int32 AbilityMaxStacks = 0;
 
+	/** The class that the Ability relates to deal damage */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "RPG|Ability|Base")
+	TSubclassOf<URPGGameplayEffect> AbilityDamageClass;
+
+	/** The class that the Ability relates to Apply the Cooldown */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "RPG|Ability|Base")
+	TSubclassOf<URPGCooldownEffect> AbilityCooldownClass;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|Ability|Base")
+    float  AbilityDamage;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category = "RPG|Ability|Base")
+	float AbilityCooldown;
+	
 	//This is a map made of a GameplayTag and a GameplayEffectContainer that will apply all the effects to the target or the owwer later when is called.
 	/**
 	 * \brief This is a nice template
@@ -85,7 +101,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RPG|Ability")
 	virtual FRPGGameplayEffectContainerSpec MakeEffectContainerSpec(FGameplayTag ContainerTag, const FGameplayEventData& EventData, int32 OverrideGameplayLevel = -1);
 
-
 	virtual FRPGGameplayEffectContainerSpec MakeContainerSpecFromContainer(const FRPGGameplayEffectContainer& Container , const FGameplayEventData& EventData , int32 OverrideGameplayLevel = -1);
 
 	/** We apply a certain Effect Container Spec*/
@@ -101,5 +116,13 @@ public:
 
 	/** Applies CooldownGameplayEffect to the target */
 	virtual void ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const;
+
+	/** Create a new Spec Handle from the Ability Damage Class and add that to the Spec Handles from the @ContainerSpec. */
+	UFUNCTION(BlueprintCallable, Category= "RPG|Ability")
+	virtual void ApplyDamageModifiers(FRPGGameplayEffectContainerSpec& ContainerSpec,FRPGGameplayEffectContainerSpec InContainerSpec);
+
+	/** We create a new Spec from the Ability Cooldown Class and then apply it to the Player. */
+	UFUNCTION(BlueprintCallable, Category= "RPG|Ability")
+    virtual void ApplyRPGCoolDown();
 
 };

@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "AbilitySystemBlueprintLibrary.h"
 #include "RPG/Public/RPGBlueprintFunctionLibrary.h"
 
 
@@ -68,3 +68,42 @@ FRPGGameplayTargetDataFilterHandle URPGBlueprintFunctionLibrary::MakeRPGGameplay
     return TargetDataFilterHandle;
     
 }
+
+void URPGBlueprintFunctionLibrary::ApplyEffectContainerSpecToTargetsFromTargetData(FRPGGameplayEffectContainerSpec ContainerSpec, const FGameplayAbilityTargetDataHandle& TargetDataHandle)
+{
+
+    //Get all the actors from the Target Data
+    
+    TArray<AActor*>	Result;
+    for (int32 TargetDataIndex = 0; TargetDataIndex < TargetDataHandle.Data.Num(); ++TargetDataIndex)
+    {
+        if (TargetDataHandle.Data.IsValidIndex(TargetDataIndex))
+        {
+            const FGameplayAbilityTargetData* DataAtIndex = TargetDataHandle.Data[TargetDataIndex].Get();
+            if (DataAtIndex)
+            {
+                TArray<TWeakObjectPtr<AActor>> WeakArray = DataAtIndex->GetActors();
+                for (TWeakObjectPtr<AActor>& WeakPtr : WeakArray)
+                {
+                    Result.Add(WeakPtr.Get());
+                }
+            }
+        }
+    }
+
+    // Then we apply all the effects from the Container Spec
+    
+    FGameplayAbilityTargetData_ActorArray* TargetData_Actors = new FGameplayAbilityTargetData_ActorArray();
+
+    TargetData_Actors->TargetActorArray.Append(Result);
+    
+    for (FGameplayEffectSpecHandle SpecHandle : ContainerSpec.TargetGameplayEffectSpecsHandle)
+    {
+        if (SpecHandle.IsValid())
+        {
+            TargetData_Actors->ApplyGameplayEffectSpec(*SpecHandle.Data);
+        }
+    }
+    
+}
+

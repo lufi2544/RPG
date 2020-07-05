@@ -18,7 +18,7 @@ void FRPGGameplayEffectContainerSpec::AddTargets(const TArray<FHitResult>& HitRe
 {
 
     // We want to use the Hit Results first and then if we consider, we use the Actors array.
-    if (HitResults.Num() > 0)
+    if (HitResults.Num() > 0 && HitResults[0].Actor.IsValid())
     {
 
         for(const FHitResult& HitResult : HitResults)
