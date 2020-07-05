@@ -23,6 +23,8 @@ void ARPGAbilityTargetActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
     }
 
     Super::EndPlay(EndPlayReason);
+
+  
 }
 
 void ARPGAbilityTargetActor::SphereTraceWithFilter(TArray<FHitResult>& Out_HitResults,
