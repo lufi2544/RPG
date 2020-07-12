@@ -22,6 +22,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Net/UnrealNetwork.h"
 #include "UObject/ConstructorHelpers.h"
 
 
@@ -46,17 +47,37 @@ ARPGHeroCharacter::ARPGHeroCharacter(const class FObjectInitializer& ObjectIniti
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionProfileName(FName("NoCollision"));
 
+
+	UIFloatingStatusBarComponent = CreateDefaultSubobject<UWidgetComponent>(FName("FloatingBarUI"));
+
+	UIFloatingStatusBarComponent->SetupAttachment(RootComponent);
+	UIFloatingStatusBarComponent->SetRelativeLocation(FVector(0,0,120));
+	UIFloatingStatusBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500,500));
+
+	UIFloatingStatusBarClass = StaticLoadClass(UObject::StaticClass(),nullptr,TEXT("/Game/RPG/UI/WB_FloatingStatusBarHero.WB_FloatingStatusBarHero"));
+
+	if (!UIFloatingStatusBarClass)
+	{
+		UE_LOG(LogTemp,Error,TEXT("The UI Floating bar has not been loaded please update the reference location of the file on the c++ RPGHeroCharacter"));
+	}
+	
+
 }
 
 void ARPGHeroCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(ARPGHeroCharacter, CharacterAnimationMode, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ARPGHeroCharacter, CharacterHeroType, COND_None, REPNOTIFY_Always);
 }
 
 // Called to bind functionality to input
 void ARPGHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ARPGHeroCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ARPGHeroCharacter::MoveRight);
@@ -78,9 +99,10 @@ void ARPGHeroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Only needed for Heroes placed in world and when the player is the Server.
-	// On respawn, they are set up in PossessedBy.
-	// When the player a client, the floating status bars are all set up in OnRep_PlayerState.
+
+	//We will initiate the Floating Status Bar here just for Player that are on the Server, the Players that are clients Initialize their Status Bar on the OnRep_PlayerState;
+
+	InitializeFloatingStatusBar();
 
 	StartingCameraBoomArmLenght = CameraBoom->TargetArmLength;
 	StartingCameraBoomLocation = CameraBoom->GetRelativeLocation();
@@ -111,6 +133,7 @@ void ARPGHeroCharacter::PossessedBy(AController * NewController)
 
 		InitializeAbilities();
 
+
 		
 		// Respawn specific things that won't affect first possession.
 		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
@@ -118,6 +141,8 @@ void ARPGHeroCharacter::PossessedBy(AController * NewController)
 
 	
 		PS->SetTeam(PlayerTeam);
+
+		InitializeFloatingStatusBar();
 	}
 }
 
@@ -148,14 +173,20 @@ void ARPGHeroCharacter::OnRep_PlayerState()
 		ARPGPlayerController* PC = Cast<ARPGPlayerController>(GetController());
 
 
+	
 		// Respawn specific things that won't affect first possession.
 
+		
 
 		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
 		SetHealth(GetMaxHealth());
 
 	
 		PS->SetTeam(PlayerTeam);
+
+		InitializeFloatingStatusBar();
+
+		
 
 	}
 }
@@ -203,6 +234,37 @@ FVector ARPGHeroCharacter::GetStartingCameraBoomLocation()
 ERPGTeam ARPGHeroCharacter::GetTeam() const
 {
 	return PlayerTeam;
+}
+
+void ARPGHeroCharacter::InitializeFloatingStatusBar()
+{
+	// We will create the widget just one time
+	if (UIFloatingStatusBar || !GetAbilitySystemComponent())
+	{
+		return;
+	}
+
+	//We just set up the UI for the Players that are local ones, not for any copy on the server or other things. The function that we use here is the same that we use on the Blueprints.
+	ARPGPlayerController* PC = Cast<ARPGPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(),0));
+
+	if (UIFloatingStatusBarClass)
+	{
+		// We safely create the Widget on the Player Controller.
+		UIFloatingStatusBar = CreateWidget<URPGFloatingStatusBarWidget>(PC,UIFloatingStatusBarClass);
+		if (UIFloatingStatusBar && UIFloatingStatusBarComponent)
+		{
+			UIFloatingStatusBarComponent->SetWidget(UIFloatingStatusBar);
+
+			UIFloatingStatusBar->SetHealthPercentage(GetHealth() / GetMaxHealth());
+			//TODO add the mana Percentage
+
+			
+		}
+	}
+	
+
+	
+	
 }
 
 void ARPGHeroCharacter::LookUp(float Value)

@@ -36,6 +36,9 @@ ARPGPlayerState::ARPGPlayerState()
 void ARPGPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME_CONDITION_NOTIFY(ARPGPlayerState, InventoryComponent, COND_None, REPNOTIFY_Always);
+    
  
 }
 

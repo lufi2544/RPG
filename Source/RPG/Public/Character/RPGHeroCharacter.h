@@ -8,6 +8,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "RPG/RPG.h"
+#include "UI/RPGFloatingStatusBarWidget.h"
+
 
 #include "RPGHeroCharacter.generated.h"
 
@@ -53,9 +55,7 @@ public:
 	
 protected:
 	
-	virtual void BeginPlay() override;
 
-	virtual void OnRep_PlayerState() override;
 
 	// This is the Character Hero type, it may change over the game, so I decided to just add that on the Player State, because is something that can
 	//be changed eventually.
@@ -83,11 +83,24 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "RRPG|Camera")
 	FVector StartingCameraBoomLocation;
 
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category = "RPG|UI")
+	TSubclassOf<class URPGFloatingStatusBarWidget> UIFloatingStatusBarClass;
+
+	UPROPERTY()
+	class URPGFloatingStatusBarWidget* UIFloatingStatusBar;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category= "RPG|UI")
+	class UWidgetComponent* UIFloatingStatusBarComponent;
+
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category= "RPG|State")
 	ERPGTeam PlayerTeam = ERPGTeam::Neutral;
 
 
-protected:
+	//Initialize the floating status bar for the characters.
+	UFUNCTION()
+	void InitializeFloatingStatusBar();
+	
 	//Mouse
 	void LookUp(float fValue);
 
@@ -107,6 +120,12 @@ protected:
 	void MoveRight(float fValue);
 
 	bool ASCInputBound = false;
+	
+	virtual void BeginPlay() override;
+
+	virtual void OnRep_PlayerState() override;
+
+	
 
 	// Called from both SetupPlayerInputComponent and OnRep_PlayerState because of a potential race condition where the PlayerController might
 	// call ClientRestart which calls SetupPlayerInputComponent before the PlayerState is repped to the client so the PlayerState would be null in SetupPlayerInputComponent.

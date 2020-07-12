@@ -3,8 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RPGCharacterBase.h"
 #include "GameFramework/PlayerController.h"
+#include "UI/RPGDamageTextWidgetComponent.h"
+#include "RPG/Public/UI/RPGHUDWidget.h"
 #include "RPGPlayerController.generated.h"
+
+
+class URPGWidget;
 
 /**
  * 
@@ -16,10 +22,32 @@ class RPG_API ARPGPlayerController : public APlayerController
 
 	public:
 
+	void CreateHUD();
+
+	UPROPERTY(EditAnywhere , Category = "RPG|UI")
+	TSubclassOf<URPGDamageTextWidgetComponent> DamageNumberClass;
+
+	class URPGHUDWidget* GetHUD();
+
+	UFUNCTION(Client , Reliable,WithValidation)
+	void ShowDamaegNumber(float DamageAmount , ARPGCharacterBase* TargetCharacter);
+	void ShowDamageNumber_Implementation(float DamageAmount , ARPGCharacterBase* TargetCharacter);
+	bool ShowDamageNumber_Validate(float DamageAmount, ARPGCharacterBase* TargetCharacter);
+
 	protected:
 
+	UPROPERTY(BlueprintReadWrite , EditAnywhere,Category= "RPG|UI")
+	TSubclassOf<class URPGHUDWidget> UIHUDWidgetClass;
+
+	UPROPERTY(BlueprintReadWrite, category = "RPG|UI")
+	 class URPGHUDWidget* UIHUDWidget;
+
+	
+	// Server Only
 	void OnPossess(APawn* InPawn) override;
 
+
+	//For Clients
 	void OnRep_PlayerState() override;
 	
 };
