@@ -88,7 +88,8 @@ class RPG_API ARPGPlayerInventoryComponent : public AInfo
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|InventoryComopnent|Item" , Replicated, EditFixedSize)
     TArray<FRPGItemData>Inventory;
 
-	//Player Inventory capacity..
+	//Player Inventory capacity.. Set Up to 3 by default, this can be changed on the future, or maybe depending on the character
+	// I add some more amount to start the game
 	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category= "RPG|InventoryComopnent|Item", Replicated)
     int32 InventoryCapacity = 3;
 

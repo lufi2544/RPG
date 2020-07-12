@@ -55,11 +55,11 @@ ARPGHeroCharacter::ARPGHeroCharacter(const class FObjectInitializer& ObjectIniti
 	UIFloatingStatusBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500,500));
 
-	UIFloatingStatusBarClass = StaticLoadClass(UObject::StaticClass(),nullptr,TEXT("/Game/RPG/UI/WB_FloatingStatusBarHero.WB_FloatingStatusBarHero"));
+	UIFloatingStatusBarClass = StaticLoadClass(UObject::StaticClass(),nullptr,TEXT("/Game/RPG/UI/WB_FloatingStatusBarHero.WB_FloatingStatusBarHero_C"));
 
 	if (!UIFloatingStatusBarClass)
 	{
-		UE_LOG(LogTemp,Error,TEXT("The UI Floating bar has not been loaded please update the reference location of the file on the c++ RPGHeroCharacter"));
+		UE_LOG(LogTemp,Error,TEXT(" %s() The UI Floating bar has not been loaded please update the reference location of the file on the c++ RPGHeroCharacter"),*FString(__FUNCTION__));
 	}
 	
 
@@ -133,6 +133,12 @@ void ARPGHeroCharacter::PossessedBy(AController * NewController)
 
 		InitializeAbilities();
 
+		ARPGPlayerController* PC = Cast<ARPGPlayerController>(GetController());
+		if (PC)
+		{
+			PC->CreateHUD();
+		}
+
 
 		
 		// Respawn specific things that won't affect first possession.
@@ -172,7 +178,10 @@ void ARPGHeroCharacter::OnRep_PlayerState()
 
 		ARPGPlayerController* PC = Cast<ARPGPlayerController>(GetController());
 
-
+		if (PC)
+		{
+			PC->CreateHUD();
+		}
 	
 		// Respawn specific things that won't affect first possession.
 

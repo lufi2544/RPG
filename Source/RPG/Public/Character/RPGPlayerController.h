@@ -25,7 +25,7 @@ class RPG_API ARPGPlayerController : public APlayerController
 	void CreateHUD();
 
 	UPROPERTY(EditAnywhere , Category = "RPG|UI")
-	TSubclassOf<URPGDamageTextWidgetComponent> DamageNumberClass;
+	TSubclassOf<class URPGDamageTextWidgetComponent> DamageNumberClass;
 
 	class URPGHUDWidget* GetHUD();
 

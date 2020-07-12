@@ -40,10 +40,17 @@ void ARPGPlayerController::CreateHUD()
     UIHUDWidget = CreateWidget<URPGHUDWidget>(this,UIHUDWidgetClass);
     UIHUDWidget->AddToViewport();
 
-    //TODO Set attributes
+    UIHUDWidget->SetCurrentHealth(PS->GetHealth());
+    UIHUDWidget->SetMaxHealth(PS->GetMaxHealth());
+    UIHUDWidget->SetHealthPercentage(PS->GetHealth() / PS->GetMaxHealth());
 
 
-    
+    DamageNumberClass = StaticLoadClass(UObject::StaticClass(),nullptr,TEXT("/Game/RPG/UI/WC_DamageText.WC_DamageText_C"));
+
+    if (!DamageNumberClass)
+    {
+        UE_LOG(LogTemp,Error,TEXT(" %s() Failed to Find the Damage NUmberClass.If was moved, please update the reference location in the C++ class."),*FString(__FUNCTION__));
+    }
     
     
 }
@@ -59,6 +66,10 @@ void ARPGPlayerController::ShowDamaegNumber_Implementation(float DamageAmount, A
     DamageText->RegisterComponent();
     DamageText->AttachToComponent(TargetCharacter->GetRootComponent() , FAttachmentTransformRules::KeepRelativeTransform);
     DamageText->SetDamageText(DamageAmount);
+    
+
+
+    
 }
 
 bool ARPGPlayerController::ShowDamaegNumber_Validate(float DamageAmount, ARPGCharacterBase* TargetCharacter)

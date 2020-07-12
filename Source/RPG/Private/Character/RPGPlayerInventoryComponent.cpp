@@ -23,6 +23,12 @@ void ARPGPlayerInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimePr
 {
 
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME_CONDITION_NOTIFY(ARPGPlayerInventoryComponent, EquippedItems, COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(ARPGPlayerInventoryComponent, Inventory, COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(ARPGPlayerInventoryComponent, InventoryCapacity, COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(ARPGPlayerInventoryComponent, CurrentInventoryItemsNum, COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(ARPGPlayerInventoryComponent, bAllPrimaryItemsEquipped, COND_None, REPNOTIFY_Always);
 }
 
 int32 ARPGPlayerInventoryComponent::GetCurrentInventoryItemsNum() const

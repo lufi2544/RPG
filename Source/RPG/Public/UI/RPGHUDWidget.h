@@ -21,8 +21,12 @@ class RPG_API URPGHUDWidget : public UUserWidget
 
 	/** Attributes Setters */
 
+
 	UFUNCTION(BlueprintImplementableEvent , BlueprintCallable)
-	void SetHealth(float MaxHealth);
+	void SetMaxHealth(float MaxHealth);
+	
+	UFUNCTION(BlueprintImplementableEvent , BlueprintCallable)
+	void SetCurrentHealth(float CurrentHealth);
 
 	UFUNCTION(BlueprintImplementableEvent , BlueprintCallable)
 	void SetHealthPercentage(float HealthPercentage);

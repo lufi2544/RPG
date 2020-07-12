@@ -89,19 +89,19 @@ void URPGAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCal
 
     AActor* TargetActor = nullptr;
     AController* TargetController = nullptr;
-    ARPGCharacterBase* Targethero = nullptr;
+    ARPGCharacterBase* TargetHero = nullptr;
    if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
    {
        TargetActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
        TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
-       Targethero = Cast<ARPGCharacterBase>(TargetActor);
+       TargetHero = Cast<ARPGCharacterBase>(TargetActor);
    }
 
     
     //Get The Source Actor
     AActor* SourceActor = nullptr;
     AController* SourceActorController = nullptr;
-    ARPGCharacterBase* Sourcehero = nullptr;
+    ARPGCharacterBase* SourceHero = nullptr;
 
    if (SourceASC && SourceASC->AbilityActorInfo.IsValid() && SourceASC->AbilityActorInfo->AvatarActor.IsValid())
    {
@@ -114,7 +114,7 @@ void URPGAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCal
            
        }
 
-       Sourcehero = Cast<ARPGCharacterBase>(SourceActor);
+       SourceHero = Cast<ARPGCharacterBase>(SourceActor);
    }
 
 
@@ -132,7 +132,16 @@ void URPGAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCal
        SetHealth(FMath::Clamp(FinalHealth,0.0f, GetMaxHealth()));
 
 
-       //TODO set the damage number on the UI.
+       if (SourceHero != TargetHero)
+       {
+           ARPGPlayerController* PC = Cast<ARPGPlayerController>(SourceActorController);
+
+           if (PC)
+           {
+               PC->ShowDamaegNumber(LocalDamageDealth,TargetHero);
+           }
+       }
+       
    }else if(Data.EvaluatedData.Attribute == GetHealthAttribute())
    {
        SetHealth(FMath::Clamp(GetHealth(),0.0f,GetMaxHealth()));
