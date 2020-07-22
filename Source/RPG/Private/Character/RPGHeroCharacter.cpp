@@ -245,6 +245,11 @@ ERPGTeam ARPGHeroCharacter::GetTeam() const
 	return PlayerTeam;
 }
 
+URPGFloatingStatusBarWidget* ARPGHeroCharacter::GetFloatingStatusBar()
+{
+	return IsValid(UIFloatingStatusBar) ? UIFloatingStatusBar : nullptr;
+}
+
 void ARPGHeroCharacter::InitializeFloatingStatusBar()
 {
 	// We will create the widget just one time

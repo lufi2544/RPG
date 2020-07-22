@@ -2,15 +2,13 @@
 
 
 #include "Character/RPGPlayerState.h"
-
 #include "RPG/Public/Items/Weapons/RPGWeapon.h"
-
-
-
+#include "RPG/Public/Character/RPGHeroCharacter.h"
 #include "AbilitySystem/RPGAbilitySystemComponent.h"
 #include "AbilitySystem/RPGAttributeSetBase.h"
 #include "Items/RPGBag.h"
 #include "Net/UnrealNetwork.h"
+#include "UI/RPGFloatingStatusBarWidget.h"
 
 ARPGPlayerState::ARPGPlayerState()
 {
@@ -50,6 +48,13 @@ UAbilitySystemComponent* ARPGPlayerState::GetAbilitySystemComponent() const
 URPGAttributeSetBase* ARPGPlayerState::GetAttributeSetBase() const
 {
     return AttributeSet;   
+}
+
+void ARPGPlayerState::BeginPlay()
+{
+    Super::BeginPlay();
+
+   HealthChangeDelegateHandle =  AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this,&ARPGPlayerState::HealthChange);
 }
 
 float ARPGPlayerState::GetHealth() const
@@ -95,6 +100,29 @@ ERPGTeam ARPGPlayerState::GetTeam()
 void ARPGPlayerState::SetTeam(ERPGTeam NewTeam)
 {
     Team = NewTeam;
+}
+
+void ARPGPlayerState::HealthChange(const FOnAttributeChangeData& Data)
+{
+    float NewhealthValue = Data.NewValue;
+
+    //Update the Health Status Bar
+
+    ARPGHeroCharacter* Hero = Cast<ARPGHeroCharacter>(GetPawn());
+
+    if (Hero)
+    {
+        URPGFloatingStatusBarWidget* FloatingStatusBarWidget = Hero->GetFloatingStatusBar();
+
+        if (FloatingStatusBarWidget)
+        {
+            FloatingStatusBarWidget->SetHealthPercentage(NewhealthValue / GetMaxHealth());
+        }
+    }
+
+
+    //TODO add the dying logic
+    
 }
 
 

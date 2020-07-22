@@ -29,10 +29,9 @@ class RPG_API ARPGPlayerController : public APlayerController
 
 	class URPGHUDWidget* GetHUD();
 
-	UFUNCTION(Client , Reliable,WithValidation)
-	void ShowDamaegNumber(float DamageAmount , ARPGCharacterBase* TargetCharacter);
-	void ShowDamageNumber_Implementation(float DamageAmount , ARPGCharacterBase* TargetCharacter);
-	bool ShowDamageNumber_Validate(float DamageAmount, ARPGCharacterBase* TargetCharacter);
+	UFUNCTION(Server , Reliable,WithValidation)
+	void ShowDamageNumber(float DamageAmount , ARPGCharacterBase* TargetCharacter);
+
 
 	protected:
 

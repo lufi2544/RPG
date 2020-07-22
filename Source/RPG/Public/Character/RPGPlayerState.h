@@ -30,7 +30,9 @@ class RPG_API ARPGPlayerState : public APlayerState, public IAbilitySystemInterf
 
 public:
 
-		ARPGPlayerState();
+	ARPGPlayerState();
+
+	void BeginPlay() override;
 	
 	//Getter for the AbilitySystemComponent from the Interface
 	class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -39,6 +41,7 @@ public:
 	
 	//Getter for the AttributeSet Base
 	class URPGAttributeSetBase* GetAttributeSetBase() const;
+
 
 	/*
 	 * Getters for the Character State(AttributeSet related)
@@ -73,6 +76,9 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "RPG|PlayerState")
 	ERPGTeam Team = ERPGTeam::Neutral;
 
+	FDelegateHandle HealthChangeDelegateHandle;
+
+	virtual void HealthChange(const FOnAttributeChangeData& Data);
 	
 private:
 

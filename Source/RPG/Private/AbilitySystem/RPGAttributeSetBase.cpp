@@ -138,7 +138,7 @@ void URPGAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCal
 
            if (PC)
            {
-               PC->ShowDamaegNumber(LocalDamageDealth,TargetHero);
+               PC->ShowDamageNumber(LocalDamageDealth,TargetHero);
            }
        }
        

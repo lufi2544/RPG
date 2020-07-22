@@ -16,6 +16,8 @@ class RPG_API URPGDamageTextWidgetComponent : public UWidgetComponent
 
 	public:
 
+		URPGDamageTextWidgetComponent();
+
 		UFUNCTION(BlueprintImplementableEvent , BlueprintCallable)
 		void SetDamageText(float Damage);
 	

@@ -3,3 +3,8 @@
 
 #include "RPG/Public/UI/RPGDamageTextWidgetComponent.h"
 
+URPGDamageTextWidgetComponent::URPGDamageTextWidgetComponent()
+{
+    SetIsReplicated(true);
+
+}

@@ -109,7 +109,11 @@ void ARPGAbilityTargetActor::ConfirmTargetingAndContinue()
 
     FVector EndLocation = FVector(StartLocation.GetTargetingTransform().GetLocation().X,StartLocation.GetTargetingTransform().GetLocation().Y,StartLocation.GetTargetingTransform().GetLocation().Z +2.f);
 
+    // We Get all the Hit Results that has passed the RPGFilter from the Sphere Trace by reference.
+    
     SphereTraceWithFilter(HitResults,RPGFilter,StartLocation.GetTargetingTransform().GetLocation(),EndLocation);
+
+    // We create a GameplayAbilityTargetDataHandle from that HitResults and Broadcast the TargetData ImplementableEvent.
     
     if (SourceActor)
     {
@@ -117,22 +121,23 @@ void ARPGAbilityTargetActor::ConfirmTargetingAndContinue()
 
         TargetDataReadyDelegate.Broadcast(TargetDataHandle);
     }
-
-    
-    
+ 
 }
 
 void ARPGAbilityTargetActor::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-   //TODO add the reticle updated logic
 
+    //We Update the Reticles Location for their actors.
+    
     if (WorldReticles.Num() > 0)
     {
         for (int32 Index = 0 ; Index < WorldReticles.Num() ; Index++)
         {
             AActor* LocalActor =  *ReticleMap.Find( WorldReticles[ Index ]);
+
+            // We Locate the Reticle on the Top of the player head. 
 
             WorldReticles[ Index ]->SetActorLocation(FVector(LocalActor->GetActorLocation().X , GetActorLocation().Y , GetActorLocation().Z + 170.0f));
         }   

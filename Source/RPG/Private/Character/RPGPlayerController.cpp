@@ -45,6 +45,7 @@ void ARPGPlayerController::CreateHUD()
     UIHUDWidget->SetHealthPercentage(PS->GetHealth() / PS->GetMaxHealth());
 
 
+    //Well, as we are replicating the Damage Number to all the clients for them all to see the numbers, we have to select this class on the BP_RPGPlayerController, because on the Server will be null and will crash the game.
     DamageNumberClass = StaticLoadClass(UObject::StaticClass(),nullptr,TEXT("/Game/RPG/UI/WC_DamageText.WC_DamageText_C"));
 
     if (!DamageNumberClass)
@@ -60,22 +61,20 @@ URPGHUDWidget* ARPGPlayerController::GetHUD()
     return IsValid(UIHUDWidget) ? UIHUDWidget : nullptr;
 }
 
-void ARPGPlayerController::ShowDamaegNumber_Implementation(float DamageAmount, ARPGCharacterBase* TargetCharacter)
+void ARPGPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ARPGCharacterBase* TargetCharacter)
 {
-    URPGDamageTextWidgetComponent* DamageText = NewObject<URPGDamageTextWidgetComponent>(TargetCharacter, DamageNumberClass);
+    //We create a New Object Attached to the Target Player And from the 
+    URPGDamageTextWidgetComponent* DamageText = NewObject<URPGDamageTextWidgetComponent>(TargetCharacter,DamageNumberClass);
     DamageText->RegisterComponent();
     DamageText->AttachToComponent(TargetCharacter->GetRootComponent() , FAttachmentTransformRules::KeepRelativeTransform);
     DamageText->SetDamageText(DamageAmount);
-    
-
-
-    
 }
 
-bool ARPGPlayerController::ShowDamaegNumber_Validate(float DamageAmount, ARPGCharacterBase* TargetCharacter)
+bool ARPGPlayerController::ShowDamageNumber_Validate(float DamageAmount, ARPGCharacterBase* TargetCharacter)
 {
-    return true;
+    return  true;
 }
+
 
 void ARPGPlayerController::OnPossess(APawn* InPawn)
 {
