@@ -5,6 +5,6 @@
 
 URPGDamageTextWidgetComponent::URPGDamageTextWidgetComponent()
 {
-    SetIsReplicated(true);
 
+    SetIsReplicatedByDefault(true);
 }

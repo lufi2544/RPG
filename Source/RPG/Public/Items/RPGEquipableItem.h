@@ -22,6 +22,9 @@ enum class ERPGItemType : uint8
 
 	//Shield
 	Shield
+
+	//For Init Pruposes
+	,None
 };
 
 USTRUCT(BlueprintType)
@@ -36,15 +39,15 @@ struct  FRPGItemData
 
     //The Item Type.
     UPROPERTY(BlueprintReadOnly,EditAnywhere)
-    ERPGItemType ItemType;
+    ERPGItemType ItemType = ERPGItemType::None;
 
 	//The Item Name.
 	UPROPERTY(BlueprintReadOnly,EditAnywhere)
-    FName ItemName;
+    FName ItemName = "Name";
 
 	//Item Image
 	UPROPERTY(BlueprintReadOnly,EditAnywhere)
-	UTexture2D* ItemImage;
+	UTexture2D* ItemImage = nullptr;
 
 	//If the Item Can be consume by the player(potion , food , etc).
 	UPROPERTY(BlueprintReadOnly,EditAnywhere)
@@ -52,15 +55,15 @@ struct  FRPGItemData
 
 	// The Damage amount that the item has.
 	UPROPERTY(BlueprintReadOnly,EditAnywhere)
-    float Damage;
+    float Damage = 0.0f;
 
 	//The Armor that the Item has.
 	UPROPERTY(BlueprintReadOnly,EditAnywhere)
-    float Armor;
+    float Armor = 0.0f;
 
 	// How much the item costs.
 	UPROPERTY(BlueprintReadOnly,EditAnywhere)
-    float Price;
+    float Price = 0.0f;
 
 };
 

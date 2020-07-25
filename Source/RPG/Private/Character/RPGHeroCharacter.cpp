@@ -139,8 +139,7 @@ void ARPGHeroCharacter::PossessedBy(AController * NewController)
 			PC->CreateHUD();
 		}
 
-
-		
+		PS->CreateInventoryComponent();
 		// Respawn specific things that won't affect first possession.
 		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
 		SetHealth(GetMaxHealth());
@@ -182,7 +181,7 @@ void ARPGHeroCharacter::OnRep_PlayerState()
 		{
 			PC->CreateHUD();
 		}
-	
+
 		// Respawn specific things that won't affect first possession.
 
 		

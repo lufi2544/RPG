@@ -16,6 +16,7 @@
 ARPGPlayerInventoryComponent::ARPGPlayerInventoryComponent()
 {
 
+    SetReplicates(true);
     
 }
 

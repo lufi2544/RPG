@@ -26,8 +26,7 @@ ARPGPlayerState::ARPGPlayerState()
     // It is a must to update the components at the same frequency than the character.
     NetUpdateFrequency = 100.f;
 
-    InventoryComponent = CreateDefaultSubobject<ARPGPlayerInventoryComponent>(FName("InventoryComponent"));
-
+     CreateInventoryComponent();
 
 }
 
@@ -102,6 +101,8 @@ void ARPGPlayerState::SetTeam(ERPGTeam NewTeam)
     Team = NewTeam;
 }
 
+
+
 void ARPGPlayerState::HealthChange(const FOnAttributeChangeData& Data)
 {
     float NewhealthValue = Data.NewValue;
@@ -125,6 +126,30 @@ void ARPGPlayerState::HealthChange(const FOnAttributeChangeData& Data)
     
 }
 
+void ARPGPlayerState::CreateInventoryComponent()
+{
+    if (!this->InventoryComponent)
+    {
+        InventoryComponent = CreateDefaultSubobject<ARPGPlayerInventoryComponent>(FName("InventoryComponent"));
+        if (InventoryComponent)
+        {
+            InventoryComponent->SetReplicates(true);
+        }
+    }
+}
+
+void ARPGPlayerState::OnRep_InventoryComponent()
+{
+
+    if(this->InventoryComponent)
+    {
+        UE_LOG(LogTemp,Error,TEXT("exists"));
+    }else
+    {
+        UE_LOG(LogTemp,Error,TEXT("Does not exists"));
+       
+    }
+}
 
 
 

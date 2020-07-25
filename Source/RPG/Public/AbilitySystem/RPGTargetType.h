@@ -19,7 +19,8 @@ struct RPG_API FRPGGameplayTargetDataFilter : public FGameplayTargetDataFilter
 
 	virtual ~FRPGGameplayTargetDataFilter()
 	{}
-	
+
+	//This will be The Instigator Team, Will be plugged in by the BP Version of the Filer.
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (ExposeOnSpawn = true), Category = Filter)
 	ERPGTeam Team;
 

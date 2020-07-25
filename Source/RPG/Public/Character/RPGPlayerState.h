@@ -71,14 +71,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category= "RPG|RPGPlayerState")
 	void SetTeam(ERPGTeam NewTeam);
 	
+	void CreateInventoryComponent();
+	
 	protected:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "RPG|PlayerState")
 	ERPGTeam Team = ERPGTeam::Neutral;
-
+	
 	FDelegateHandle HealthChangeDelegateHandle;
 
+	UFUNCTION()
+	virtual void OnRep_InventoryComponent();
+
 	virtual void HealthChange(const FOnAttributeChangeData& Data);
+
+	
 	
 private:
 
@@ -90,7 +97,7 @@ private:
 	class URPGAttributeSetBase* AttributeSet;
 
 	//This Is the Inventory Component for the Player which stores all the data related to the Objects that he has on the Inventory.
-	UPROPERTY(BlueprintReadOnly, Category = "RPG|PlayerState|Inventory",Replicated, meta=(AllowPrivateAccess="True"))
+	UPROPERTY(BlueprintReadOnly, Category = "RPG|PlayerState|Inventory",ReplicatedUsing = OnRep_InventoryComponent, meta=(AllowPrivateAccess="True"))
 	ARPGPlayerInventoryComponent* InventoryComponent;
 
 
