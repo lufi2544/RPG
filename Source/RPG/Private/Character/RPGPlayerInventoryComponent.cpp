@@ -155,7 +155,8 @@ void ARPGPlayerInventoryComponent::ChangeItemEquipmentState(ARPGEquipableItem* I
          SetItemVariables(Item,Player);
      }
    
-
+    CheckAllPrimaryItemsEquipped(Player);
+    
 }
 
 bool ARPGPlayerInventoryComponent::CanEquipItem(ARPGEquipableItem* ItemToCheck,  ARPGHeroCharacter* Player)
@@ -345,6 +346,25 @@ bool ARPGPlayerInventoryComponent::HasPlayerPrimaryItemsEquipped()
     }
 
     return bAllPrimaryItemsEquipped;
+}
+
+void ARPGPlayerInventoryComponent::CheckAllPrimaryItemsEquipped(ARPGHeroCharacter* Player)
+{
+    if (Player)
+    {
+        ERPGCharacterHeroType PlayerHeroClass = Player->GetCharacterHeroType();
+        
+        if (bIsBackPackEquipped)
+        {
+            if (PlayerHeroClass == ERPGCharacterHeroType::Spinder)
+            {
+                if (bIsWeaponEquipped && bIsShieldEquipped)
+                {
+                    bAllPrimaryItemsEquipped = true;
+                }
+            }
+        }
+    }
 }
 
 void ARPGPlayerInventoryComponent::SetItemVariables(ARPGEquipableItem* ItemToAdd, ARPGHeroCharacter* Player)

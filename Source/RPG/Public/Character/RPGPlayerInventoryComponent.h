@@ -95,6 +95,7 @@ class RPG_API ARPGPlayerInventoryComponent : public AInfo
 
 
 protected:
+	
 	//Current Items Equipped by the Player.
 	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category= "RPG|InventoryComopnent|Item", Replicated)
     int32 CurrentInventoryItemsNum = 0;
@@ -102,8 +103,6 @@ protected:
 	//Current Items Equipped by the Player.
 	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category= "RPG|InventoryComopnent|Item", Replicated)
     uint32 bAllPrimaryItemsEquipped :1;
-
-
 
 
 	/** Inventory Functions */
@@ -134,6 +133,9 @@ protected:
 	/** Returs if the Player has the primary Items (Sword and shield, Double Sword... Equipped) */
 	bool HasPlayerPrimaryItemsEquipped();
 
+	void CheckAllPrimaryItemsEquipped(ARPGHeroCharacter* Player );
+
+	//TODO Add the check for the item Equipment State ---> 1-> Primary Weapons 2-> BackPack + case 1.
 	
 	void SetItemVariables(ARPGEquipableItem* ItemToAdd , ARPGHeroCharacter* Player);
 	
