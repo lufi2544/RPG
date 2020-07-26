@@ -15,8 +15,8 @@ ARPGPlayerState::ARPGPlayerState()
     AbilitySystemComponent = CreateDefaultSubobject<URPGAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 
-       /**We set the Ability System to be replicated and also to be replicated in a way that the server
-        will not tells us if anothe proxy has suffered a GE(Mixed Replication mode) .**/
+    /** We set the Ability System to be replicated and also to be replicated in a way that the server
+     will not tells us if anothe proxy has suffered a GE(Mixed Replication mode). **/
     AbilitySystemComponent->SetIsReplicated(true);
 
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
@@ -26,7 +26,7 @@ ARPGPlayerState::ARPGPlayerState()
     // It is a must to update the components at the same frequency than the character.
     NetUpdateFrequency = 100.f;
 
-     CreateInventoryComponent();
+    CreateInventoryComponent();
 
 }
 
@@ -130,7 +130,7 @@ void ARPGPlayerState::CreateInventoryComponent()
 {
     if (!this->InventoryComponent)
     {
-        InventoryComponent = CreateDefaultSubobject<ARPGPlayerInventoryComponent>(FName("InventoryComponent"));
+        InventoryComponent = NewObject<ARPGPlayerInventoryComponent>();
         if (InventoryComponent)
         {
             InventoryComponent->SetReplicates(true);
@@ -140,15 +140,14 @@ void ARPGPlayerState::CreateInventoryComponent()
 
 void ARPGPlayerState::OnRep_InventoryComponent()
 {
-
-    if(this->InventoryComponent)
+    if (InventoryComponent)
     {
-        UE_LOG(LogTemp,Error,TEXT("exists"));
+        UE_LOG(LogTemp,Error,TEXT("Exists"));
     }else
     {
-        UE_LOG(LogTemp,Error,TEXT("Does not exists"));
-       
+        UE_LOG(LogTemp,Error,TEXT("Does note Exists"));
     }
+ 
 }
 
 

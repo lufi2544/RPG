@@ -37,6 +37,8 @@ class RPG_API ARPGPlayerInventoryComponent : public AInfo
 
 	void GetLifetimeReplicatedProps( TArray< FLifetimeProperty > & OutLifetimeProps ) const override;
 
+	void BeginPlay() override;
+
 	UFUNCTION(BlueprintPure , Category= "RPG|InventoryComponent")
 	int32 GetCurrentInventoryItemsNum() const;
 
@@ -134,6 +136,13 @@ protected:
 	bool HasPlayerPrimaryItemsEquipped();
 
 	void CheckAllPrimaryItemsEquipped(ARPGHeroCharacter* Player );
+
+	/** Function that will return true if the Weapons Are equipped. Could be return true if the Bow is equipped or the Wand is equipped, it depends
+	 *
+	 * on the Player Hero Type.
+	 */
+	UFUNCTION(BlueprintPure , Category= "RPG|InventoryComponent")
+	bool GetWeaponsState();
 
 	//TODO Add the check for the item Equipment State ---> 1-> Primary Weapons 2-> BackPack + case 1.
 	

@@ -107,6 +107,12 @@ void ARPGHeroCharacter::BeginPlay()
 	StartingCameraBoomArmLenght = CameraBoom->TargetArmLength;
 	StartingCameraBoomLocation = CameraBoom->GetRelativeLocation();
 
+	ARPGPlayerController* PC = Cast<ARPGPlayerController>(GetController());
+
+	ARPGPlayerState* PS = Cast<ARPGPlayerState>(GetPlayerState());
+	
+
+
 
 }
 
@@ -140,6 +146,15 @@ void ARPGHeroCharacter::PossessedBy(AController * NewController)
 		}
 
 		PS->CreateInventoryComponent();
+		if (PC && PS)
+		{
+			if (PS->InventoryComponent)
+			{
+				PS->InventoryComponent->SetOwner(PC);
+        			
+			}
+        	
+		}
 		// Respawn specific things that won't affect first possession.
 		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
 		SetHealth(GetMaxHealth());
@@ -148,6 +163,8 @@ void ARPGHeroCharacter::PossessedBy(AController * NewController)
 		PS->SetTeam(PlayerTeam);
 
 		InitializeFloatingStatusBar();
+
+		
 	}
 }
 
@@ -184,8 +201,6 @@ void ARPGHeroCharacter::OnRep_PlayerState()
 
 		// Respawn specific things that won't affect first possession.
 
-		
-
 		// Set Health/Mana/Stamina to their max. This is only necessary for *Respawn*.
 		SetHealth(GetMaxHealth());
 
@@ -193,9 +208,6 @@ void ARPGHeroCharacter::OnRep_PlayerState()
 		PS->SetTeam(PlayerTeam);
 
 		InitializeFloatingStatusBar();
-
-		
-
 	}
 }
 

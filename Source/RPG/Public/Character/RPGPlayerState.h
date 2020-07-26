@@ -42,6 +42,11 @@ public:
 	//Getter for the AttributeSet Base
 	class URPGAttributeSetBase* GetAttributeSetBase() const;
 
+	
+	//This Is the Inventory Component for the Player which stores all the data related to the Objects that he has on the Inventory.
+	UPROPERTY(BlueprintReadOnly, Category = "RPG|PlayerState|Inventory",ReplicatedUsing = OnRep_InventoryComponent, meta=(AllowPrivateAccess="True"))
+	ARPGPlayerInventoryComponent* InventoryComponent;
+
 
 	/*
 	 * Getters for the Character State(AttributeSet related)
@@ -96,9 +101,6 @@ private:
 	UPROPERTY()
 	class URPGAttributeSetBase* AttributeSet;
 
-	//This Is the Inventory Component for the Player which stores all the data related to the Objects that he has on the Inventory.
-	UPROPERTY(BlueprintReadOnly, Category = "RPG|PlayerState|Inventory",ReplicatedUsing = OnRep_InventoryComponent, meta=(AllowPrivateAccess="True"))
-	ARPGPlayerInventoryComponent* InventoryComponent;
 
 
 };

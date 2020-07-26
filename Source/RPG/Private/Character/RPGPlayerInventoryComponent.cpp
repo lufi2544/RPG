@@ -32,6 +32,12 @@ void ARPGPlayerInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimePr
     DOREPLIFETIME_CONDITION_NOTIFY(ARPGPlayerInventoryComponent, bAllPrimaryItemsEquipped, COND_None, REPNOTIFY_Always);
 }
 
+//Server Side
+void ARPGPlayerInventoryComponent::BeginPlay()
+{
+    
+}
+
 int32 ARPGPlayerInventoryComponent::GetCurrentInventoryItemsNum() const
 {
     return CurrentInventoryItemsNum;
@@ -365,6 +371,12 @@ void ARPGPlayerInventoryComponent::CheckAllPrimaryItemsEquipped(ARPGHeroCharacte
             }
         }
     }
+}
+
+bool ARPGPlayerInventoryComponent::GetWeaponsState()
+{
+    
+    return false;
 }
 
 void ARPGPlayerInventoryComponent::SetItemVariables(ARPGEquipableItem* ItemToAdd, ARPGHeroCharacter* Player)
