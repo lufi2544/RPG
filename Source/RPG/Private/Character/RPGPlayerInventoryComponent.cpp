@@ -373,10 +373,61 @@ void ARPGPlayerInventoryComponent::CheckAllPrimaryItemsEquipped(ARPGHeroCharacte
     }
 }
 
-bool ARPGPlayerInventoryComponent::GetWeaponsState()
+void ARPGPlayerInventoryComponent::GetWeaponsState(bool& bPrimaryWeaponEquipped ,bool& bAllPrimaryWeaponsEquipped)
 {
+
+    ARPGHeroCharacter* Player = nullptr;
+    ERPGCharacterHeroType PlayerCharacterHeroType;
+    ARPGPlayerController* PC = Cast<ARPGPlayerController>(GetOwner());
+
+    if (PC)
+    {
+        Player = Cast<ARPGHeroCharacter>(PC->GetCharacter());
+    }
+
+    if (Player)
+    {
+     PlayerCharacterHeroType = Player->GetCharacterHeroType();
+     if (PlayerCharacterHeroType == ERPGCharacterHeroType::Spinder)
+     {
+         // We have to check if we have the Shield and Sword Equipped.
+         bPrimaryWeaponEquipped = bIsSwordEquipped;
+         
+         bAllPrimaryWeaponsEquipped = (bPrimaryWeaponEquipped && bIsShieldEquipped);
+     }
+        
+     if (PlayerCharacterHeroType == ERPGCharacterHeroType::Indrax)
+     {
+         // We can still attack if we are an Indrax and at the same time we have a sword Only.
+         bPrimaryWeaponEquipped = bIsSwordEquipped;
+         bAllPrimaryWeaponsEquipped = bIsDoubbleSwordEquipped;
+     }
+        
+     if (PlayerCharacterHeroType == ERPGCharacterHeroType::Kevalam)
+     {
+         // We can Attack If we have just the axe, but not the shield.
+         bPrimaryWeaponEquipped = bIsAxeEquipped;
+         bAllPrimaryWeaponsEquipped = bIsShieldEquipped && bPrimaryWeaponEquipped;
+     }
+        
+     if (PlayerCharacterHeroType == ERPGCharacterHeroType::Imperior)
+     {
+         bPrimaryWeaponEquipped = bIsWandEquipped;
+         bAllPrimaryWeaponsEquipped = bPrimaryWeaponEquipped;
+     }
+        
+     if (PlayerCharacterHeroType == ERPGCharacterHeroType::Warlord)
+     {
+         bPrimaryWeaponEquipped = bIsDoubbleHandSwordEquipped;
+         bAllPrimaryWeaponsEquipped = bPrimaryWeaponEquipped;
+     }
+
+        //TODO I have to think the eay I want the elf to be, maybe he could equip a bow and a wand, or maybe sword and wand or just wand, etc.
+
+
+        
+    }
     
-    return false;
 }
 
 void ARPGPlayerInventoryComponent::SetItemVariables(ARPGEquipableItem* ItemToAdd, ARPGHeroCharacter* Player)
@@ -404,4 +455,3 @@ void ARPGPlayerInventoryComponent::SetItemVariables(ARPGEquipableItem* ItemToAdd
     }
 
 }
-

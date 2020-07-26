@@ -106,7 +106,6 @@ protected:
 	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category= "RPG|InventoryComopnent|Item", Replicated)
     uint32 bAllPrimaryItemsEquipped :1;
 
-
 	/** Inventory Functions */
 
 	void ChangeItemEquipmentState(ARPGEquipableItem * Item, ARPGHeroCharacter* Player);
@@ -142,9 +141,11 @@ protected:
 	 * on the Player Hero Type.
 	 */
 	UFUNCTION(BlueprintPure , Category= "RPG|InventoryComponent")
-	bool GetWeaponsState();
+	void GetWeaponsState(bool& bPrimaryWeaponEquipped ,bool& bAllPrimaryWeaponsEquipped);
 
 	//TODO Add the check for the item Equipment State ---> 1-> Primary Weapons 2-> BackPack + case 1.
+
+	
 	
 	void SetItemVariables(ARPGEquipableItem* ItemToAdd , ARPGHeroCharacter* Player);
 	
