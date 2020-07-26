@@ -151,6 +151,7 @@ void ARPGHeroCharacter::PossessedBy(AController * NewController)
 			if (PS->InventoryComponent)
 			{
 				PS->InventoryComponent->SetOwner(PC);
+				PS->InventoryComponent->bOnlyRelevantToOwner = true;
         			
 			}
         	
