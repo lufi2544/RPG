@@ -49,7 +49,6 @@ ARPGHeroCharacter::ARPGHeroCharacter(const class FObjectInitializer& ObjectIniti
 
 
 	UIFloatingStatusBarComponent = CreateDefaultSubobject<UWidgetComponent>(FName("FloatingBarUI"));
-
 	UIFloatingStatusBarComponent->SetupAttachment(RootComponent);
 	UIFloatingStatusBarComponent->SetRelativeLocation(FVector(0,0,120));
 	UIFloatingStatusBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
