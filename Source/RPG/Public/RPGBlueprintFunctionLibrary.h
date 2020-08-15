@@ -48,6 +48,33 @@ class RPG_API URPGBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "RPG|BlueprintLibrary")
     static void ApplyEffectContainerSpecToTargetsFromTargetData(FRPGGameplayEffectContainerSpec ContainerSpec, const FGameplayAbilityTargetDataHandle& TargetDataHandle);
 
+
+
+
+	/** RPG Gameplay Effect Context */
+
+
+
+	/** This Ability will get the Ability Stacks from the Effect Context. We have to make sure that the Effect Contxt has an Abiliy setted.
+	 *
+	 * Will return False if the Effect Context does not have any ability Setted.
+	 * @return If an Ability was found inside the Effect Context.
+	 */
+	UFUNCTION(BlueprintPure , Category = "RPG|BlueprintLibrary|RPGEffectContext")
+	static int32 GetAbilityStacksFromContext(FGameplayEffectContextHandle EffectContexthandle);
+
+	/** This function sets an Ability inside the Effect Context.
+	 *
+	 * This is used when we create an Effect Context and we want to pass that context for later
+	 * usage and we want to extract info about the Ability that the Effect Context comes from.
+	 */
+	UFUNCTION(BlueprintCallable , Category = "RPG|BlueprintLibrary|RPGEffectContext")
+	static FGameplayEffectContextHandle& SetAbilityInsideEffectContext(URPGGameplayAbility* Ability , UPARAM(ref) FGameplayEffectContextHandle& ContextHandle);
+
+	
+	UFUNCTION(BlueprintCallable , Category = "RPG|BlueprintLibrary|RPGEffectContext")
+	static FGameplayEffectContextHandle& SetAbilityStacksOnEffectContext(FGameplayEffectContextHandle EffectContexthandle, int32 InStacks);
+	
 	
 };
 

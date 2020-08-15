@@ -2,6 +2,8 @@
 
 #include "RPG/Public/RPGBlueprintFunctionLibrary.h"
 
+
+#include "AbilitySystem/Core/RPGGameplayEffectTypes.h"
 #include "Character/RPGHeroCharacter.h"
 #include "RPG/Public/AbilitySystem/RPGAbilitySystemComponent.h"
 
@@ -104,4 +106,44 @@ void URPGBlueprintFunctionLibrary::ApplyEffectContainerSpecToTargetsFromTargetDa
     }
     
 }
+
+int32 URPGBlueprintFunctionLibrary::GetAbilityStacksFromContext(FGameplayEffectContextHandle EffectContextHandle)
+{
+    FRPGGameplayEffectContext* RPGContext = static_cast<FRPGGameplayEffectContext*>(EffectContextHandle.Get());
+    int32 iReturnStacks = 0;
+
+    if (RPGContext)
+    {
+        iReturnStacks = RPGContext->ContextAbilityStacks;
+    }
+
+    return iReturnStacks;
+}
+
+FGameplayEffectContextHandle& URPGBlueprintFunctionLibrary::SetAbilityInsideEffectContext(URPGGameplayAbility* Ability, FGameplayEffectContextHandle& ContextHandle)
+{
+    
+    FRPGGameplayEffectContext* RPGContext = static_cast<FRPGGameplayEffectContext*>(ContextHandle.Get());
+    
+    if (Ability)
+    {
+        RPGContext->SetAbility(Ability);
+    }
+
+    return ContextHandle;
+}
+
+FGameplayEffectContextHandle& URPGBlueprintFunctionLibrary::SetAbilityStacksOnEffectContext(FGameplayEffectContextHandle EffectContexthandle, int32 InStacks)
+{
+    FRPGGameplayEffectContext* RPGContext = static_cast<FRPGGameplayEffectContext*>(EffectContexthandle.Get());
+
+    if (RPGContext)
+    {
+        RPGContext->ContextAbilityStacks = InStacks;
+    }
+
+    return EffectContexthandle;
+}
+
+    
 

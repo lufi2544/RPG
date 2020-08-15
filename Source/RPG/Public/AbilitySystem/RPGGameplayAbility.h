@@ -27,6 +27,8 @@ public:
 
 	URPGGameplayAbility();
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	// Tells an ability to activate immediately when its granted. Used for passive abilities and abilites forced on others.
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|Ability")
     bool ActivateAbilityOnGranted = false;
@@ -125,4 +127,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category= "RPG|Ability")
     virtual void ApplyRPGCoolDown();
 
+
+
+	virtual int32 GetAbilityStacks()const
+	{
+		return AbilityStacks;
+	}
 };

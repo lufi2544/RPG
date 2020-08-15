@@ -3,6 +3,7 @@
 #include "RPG/Public/AbilitySystem/RPGAbilityTypes.h"
 #include "RPG/Public/AbilitySystem/RPGAbilitySystemComponent.h"
 #include "AbilitySystemComponent.h"
+#include "Net/UnrealNetwork.h"
 
 
 URPGGameplayAbility::URPGGameplayAbility()
@@ -12,6 +13,15 @@ URPGGameplayAbility::URPGGameplayAbility()
 
     ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Dead")));
     ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Debuff.Stun")));
+}
+
+void URPGGameplayAbility::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME(URPGGameplayAbility , AbilityStacks);
+    DOREPLIFETIME(URPGGameplayAbility , AbilityMaxStacks);
+    
 }
 
 void URPGGameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)

@@ -95,7 +95,8 @@ protected:
 
 	TWeakObjectPtr<class URPGAttributeSetBase>AttributeSet;
 	
-	
+
+	//TODO implement the Die Method
 
 FOnCharacterDieDelegate OnCharacterDie;
 
