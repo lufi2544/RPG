@@ -97,3 +97,18 @@ void ARPGPlayerController::OnRep_PlayerState()
     CreateHUD();
     
 }
+
+ARPGPlayerState* ARPGPlayerController::GetRPGPlayerStateFromController()
+{
+    ARPGCharacterBase* Player = nullptr;
+    ARPGPlayerState* ReturnPlayerStete = nullptr;
+    
+    if (!ensure(Player))
+    {
+        return nullptr;
+    }
+
+    ReturnPlayerStete = Cast<ARPGPlayerState>(Player->GetPlayerState());
+ 
+    return ReturnPlayerStete;
+}

@@ -9,3 +9,9 @@ void ARPGBattleGameMode::StartBattle()
     BattleMachine->StartBattle();
 
 }
+
+void ARPGBattleGameMode::FinishBattle()
+{
+
+    
+}

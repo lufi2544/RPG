@@ -18,11 +18,19 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 
 	public:
 
+	/** This function will initialize the Battle Logic. */
 	UFUNCTION(BlueprintCallable, Category = "RPG|BattleManager")
 	void StartBattle();
 
+	/** This function will finish the Battle Logic. */
+	UFUNCTION(BlueprintCallable , Category = "RPG|BattleManager")
+	void FinishBattle();
+
 	protected:
 
+	/** This is a reference to a Battle Machine for managing the BattleState. */
 	URPGBattleMachine* BattleMachine ;
+
+	
 	
 };
