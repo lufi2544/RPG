@@ -42,6 +42,11 @@ ARPGEnemy::ARPGEnemy(const class FObjectInitializer& ObjectInitializer) : Super(
     
 }
 
+ARPGPlayerState* ARPGEnemy::GetRPGPlayerState()
+{
+    return Super::GetRPGPlayerState();
+}
+
 void ARPGEnemy::BeginPlay()
 {
     Super::BeginPlay();

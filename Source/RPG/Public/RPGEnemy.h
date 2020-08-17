@@ -18,6 +18,8 @@ class RPG_API ARPGEnemy : public ARPGCharacterBase
 
 	ARPGEnemy( const class FObjectInitializer& ObjectInitializer);
 
+	virtual ARPGPlayerState* GetRPGPlayerState() override;
+
 	protected:
 
 		//Hard Pointer To the AbilitySystemComponent

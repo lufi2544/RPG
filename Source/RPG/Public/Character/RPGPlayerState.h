@@ -42,6 +42,16 @@ public:
 	//Getter for the AttributeSet Base
 	class URPGAttributeSetBase* GetAttributeSetBase() const;
 
+	/** Core Functions */
+
+	/** Return the Turn State of the Player( If he has moved this turn.) */
+	bool GetPlayerTurnState();
+
+	/** Sets if the Character has moved this turn. */
+	void SetPlayerStateTurn( bool bNewState );
+
+	/** Properties */
+
 	
 	//This Is the Inventory Component for the Player which stores all the data related to the Objects that he has on the Inventory.
 	UPROPERTY(BlueprintReadOnly, Category = "RPG|PlayerState|Inventory",ReplicatedUsing = OnRep_InventoryComponent, meta=(AllowPrivateAccess="True"))
@@ -100,6 +110,11 @@ private:
 	
 	UPROPERTY()
 	class URPGAttributeSetBase* AttributeSet;
+
+	/** Turn Logic Variables */
+
+	/** Wether the Character has finished his moves this turn. */
+	uint32 bHasMoved : 1;
 
 
 

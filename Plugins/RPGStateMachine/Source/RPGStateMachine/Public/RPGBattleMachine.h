@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RPGEnemy.h"
 #include "Character/RPGPlayerController.h"
 #include "UObject/NoExportTypes.h"
 #include "RPGBattleMachine.generated.h"
@@ -13,9 +14,11 @@ enum EBattleMachineEndState
 {
 
 
-	PlayerWon,
+	// There is no more enemies on the Map, all deffeted or they have may  escaped.
+	OutOfEnemies,
 
-	PlayerLost,
+	// there is no more allies on the Map, all defeted or they have may escaped
+	OutOfAllies,
 
 	None
 
@@ -27,17 +30,13 @@ UENUM(BlueprintType)
 enum EBattleMachineState
 {
 
-	// We continue Branching<
+	// We continue Branching
 	Accepted,
-	
-	// The Enemies Amount is 0
-	OutOfEnemies,
-
-	// The Allies amount is 0
-	OutOfAllies,
 
 	// The State got rejected by any means
-	Rejected
+	Rejected,
+
+	Idle
 	
 };
 
@@ -57,23 +56,67 @@ class RPGSTATEMACHINE_API URPGBattleMachine : public UObject
 	
 	URPGBattleMachine();
 
-	/** The Amount of Players who have entered the Battle. */
-	TArray<ARPGPlayerController*>&Players;
+	/** The Main Player Controller controlled by the Player. */
+	ARPGPlayerController* & MainPlayerController;
+
+	/** Ally Charactes that has entered the Battle. */
+	TArray<ARPGHeroCharacter*> AllyCharacters;
+
+	/** Enemy Characters that has entered the Battle. */
+	TArray<ARPGEnemy*> EnemyCharacters;
 
 
 	/** The Core Battle State Machine Functions */
 
 	
-	/** Function that will transport the Player to the BattleMap to Start the Battle. */
-	void StartBattle();
+	/** Function that will transport the Player to the BattleMap to Start the Battle.
+	 *
+	 * @param Enemies The Enemies that have been Spawned on the Map.
+	 * @param Allies The Ally Charactes who are on the map. 
+	 */
+	void StartBattle(TArray<ARPGEnemy*>&Enemies , TArray<ARPGHeroCharacter*>& Allies);
 
-	void StartBattleLogic();
+	/** Runs All the Battle State Machine */
+	void RunBattleStateMachine();
 
-	EBattleMachineState TryBattleBranch(EBattleMachineEndState& BattleMachineEndState);
+	/** Stops the State Machine */
+	void StopBattleStateMachine();
 
+	/** Function that checks the State of the Characters in general and that returns a State acording to that.
+	 *
+	 *  	Accepted, we can continue branching (The turns may continue).
+	 *  	
+	 *  	Rejected, Allies have escaped, Allies have been defeated .
+	 *  			  Enemies have escaped, Enemies have been defeated.
+	 *
+	 * The BattleMachineEndState passed by reference will tell us the reason of being rejected.
+	 */
+	EBattleMachineState TryCheckBattleState(EBattleMachineEndState& BattleMachineEndState);
+
+	/** Checks if the Hero Charactes are alive.
+	 *
+	 * @return True if there is at least one player alive.
+	 */
 	bool CheckPlayerStates();
 
-	void StopBattleLogic();
+	/** Checks if the Enemies are still Alive. Same Functionaluty as CheckPlayersStates()
+	 *
+	 * @return True if there is at least 1 enemy alive.
+	 */
+	bool CheckEnemiesState();
+
+
+
+	/** Turn Logic */
+
+
+	/** Tries to Branch between Teams Turn.
+	 *
+	 * @return  True if all the Players inside has moved.
+	 */
+	virtual bool TryTurnBranch(ERPGTeam ActualTeam);
+
+	virtual bool CheckAllCharactesMoved(TArray<ARPGCharacterBase*>Characters);
 
 
 };

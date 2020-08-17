@@ -39,7 +39,16 @@ public:
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+
+
+	/** Core Functions */
+
+
+	virtual ARPGPlayerState* GetRPGPlayerState();
+	
+
 	/** Getters for the Character Attributes. */
+	
 
 	/** Character Health Amount. */
 	UFUNCTION(BlueprintPure , Category = "RPG|CharacterBase|Attributes")
@@ -61,9 +70,25 @@ public:
 	UFUNCTION(BlueprintPure , Category = "RPG|CharacterBase|State")
 	virtual bool IsAlive() const;
 
+
+
+
+
+	
 protected:
 	// Called when the game starts or when spawned
     virtual void BeginPlay() override;
+
+
+	
+	/** Core Functions */
+
+
+
+
+	
+
+	/** Ability System Component Functions */
 
 	/*This function will iniitialize the Attributes for the character.We
 	*check if there is any attributes to Initialize on the Attributes Variable as well.*/
@@ -74,6 +99,9 @@ protected:
 
 	/** Virtual function used to set the Attribute to Max value  */
 	virtual void SetHealth(float fNewHealth);
+
+	
+	/** General Variables */
 
 	//The Main Name of the Character
 	UPROPERTY(BlueprintReadOnly ,EditAnywhere, Category= "RPG|CharacterBase")

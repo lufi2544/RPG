@@ -14,7 +14,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "RPG/RPGGameMode.h"
 #include "Kismet/KismetMathLibrary.h"
-
+#include "RPG/Public/Character/RPGCharacterBase.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/DecalComponent.h"
@@ -259,6 +259,11 @@ ERPGTeam ARPGHeroCharacter::GetTeam() const
 URPGFloatingStatusBarWidget* ARPGHeroCharacter::GetFloatingStatusBar()
 {
 	return IsValid(UIFloatingStatusBar) ? UIFloatingStatusBar : nullptr;
+}
+
+ARPGPlayerState* ARPGHeroCharacter::GetRPGPlayerState()
+{
+	return Super::GetRPGPlayerState();
 }
 
 void ARPGHeroCharacter::InitializeFloatingStatusBar()

@@ -49,6 +49,16 @@ URPGAttributeSetBase* ARPGPlayerState::GetAttributeSetBase() const
     return AttributeSet;   
 }
 
+bool ARPGPlayerState::GetPlayerTurnState()
+{
+    return bHasMoved;
+}
+
+void ARPGPlayerState::SetPlayerStateTurn( bool bNewState )
+{
+    bHasMoved = bNewState;
+}
+
 void ARPGPlayerState::BeginPlay()
 {
     Super::BeginPlay();

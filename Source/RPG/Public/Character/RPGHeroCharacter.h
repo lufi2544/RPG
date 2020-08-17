@@ -32,6 +32,10 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+
+	/** Core Functions */
+
 	class USpringArmComponent* GetCameraBoom();
 
 	class UCameraComponent* GetFollowCamera();
@@ -54,6 +58,8 @@ public:
 	ERPGTeam GetTeam() const;
 
 	URPGFloatingStatusBarWidget* GetFloatingStatusBar();
+
+	virtual ARPGPlayerState* GetRPGPlayerState() override;
 	
 protected:
 	
