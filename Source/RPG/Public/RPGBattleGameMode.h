@@ -16,7 +16,8 @@ UENUM(BlueprintType)
 enum class EBattleMachineEndState : uint8
 {
 
-
+	Continue,
+	
 	// There is no more enemies on the Map, all deffeted or they have may  escaped.
 	OutOfEnemies,
 
@@ -69,21 +70,7 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 
 	public:
 
-	/** This function will initialize the Battle Logic. */
-	UFUNCTION(BlueprintCallable, Category = "RPG|GameMode|Battle")
-	void StartBattle(TArray<ARPGHeroCharacter*>Enemies , TArray<ARPGHeroCharacter*> Allies , ARPGPlayerController* PC);
-
-	UFUNCTION(BlueprintCallable , Category = "RPG|GameMode|Battle")
-	void RunBattle(EBattleMachineEndState& EndState , ERPGTeam TeamToInitiate ,  ERPGTeam& out_LastTeam);
-
 	
-
-	/** This function will finish the Battle Logic. */
-
-
-
-
-	// We will have to manage the Destruction of the State Machine later.
 	
 
 	/** The Main Player Controller controlled by the Player. */
@@ -95,8 +82,22 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 	/** Enemy Characters that has entered the Battle. */
 	TArray<ARPGHeroCharacter*> EnemyCharacters;
 
+	/** --------------------------------------------------------------------------------------------------------- */
 
-	/** The Core Battle State Machine Functions */
+	/** This function will initialize the Battle Logic. */
+	UFUNCTION(BlueprintCallable, Category = "RPG|GameMode|Battle")
+	void StartBattle(TArray<ARPGHeroCharacter*>Enemies , TArray<ARPGHeroCharacter*> Allies , ARPGPlayerController* PC);
+
+	UFUNCTION(BlueprintCallable , Category = "RPG|GameMode|Battle")
+	void RunBattle(EBattleMachineEndState& EndState , ERPGTeam TeamToInitiate ,  ERPGTeam& out_LastTeam);
+
+	/** True if the Battle has Started. */
+	UFUNCTION(BlueprintPure , Category = "RPG|GameMode|Battle")
+	bool GetBattleState();
+
+
+
+	/** The Core Battle State Functions */
 
 	
 	/** Function that will transport the Player to the BattleMap to Start the Battle.
@@ -148,7 +149,7 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 
 	/** Tries to Branch between Teams Turn.
 	 *
-	 * @return  True if all the Players inside has moved.
+	 * @return  True if all the Players inside has made a movement this turn.
 	 */
 	virtual bool TryTurnBranch(ERPGTeam ActualTeam, ERPGTeam& LastTeam);
 
@@ -159,6 +160,9 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 	virtual bool CheckAllCharactesMoved(TArray<ARPGCharacterBase*>Characters);
 
 
+	/** --------------------------------------------------------------------------------------------------------- */
+
+	
 	/** Delegates */
 
 
@@ -169,8 +173,13 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 	FOnFinishBattle OnBattleFinishDelegate;
 
 
+
+
+	/** --------------------------------------------------------------------------------------------------------- */
+
 	protected:
 
+	
 	ERPGTeam LastBattleTeam;
 
 	/** Delegates */
@@ -182,7 +191,9 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
     void OnPlayerTurnEnded();
 
 	UFUNCTION(BlueprintImplementableEvent)
-    void OnTeamTurnEnded();
+    void OnTeamTurnEnded(ERPGTeam LastTeaminBattle);
+
+	/** Delegate Functions Call Backs */
 
 	void FinishBattle(EBattleMachineEndState EndState);
 
@@ -192,10 +203,15 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 
 
 
+	/** --------------------------------------------------------------------------------------------------------- */
+
+	private:
+
+	uint32 bHasBattleStarted : 1;
 
 
-	
-	};
+
+};
 
 
 

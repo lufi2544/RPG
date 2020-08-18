@@ -3,6 +3,7 @@
 
 #include "RPGBattleGameMode.h"
 
+#include "Kismet/KismetSystemLibrary.h"
 #include "RPGEnemy.h"
 
 void ARPGBattleGameMode::StartBattle(TArray<ARPGHeroCharacter*>Enemies , TArray<ARPGHeroCharacter*> Allies , ARPGPlayerController* PC)
@@ -17,29 +18,51 @@ void ARPGBattleGameMode::StartBattle(TArray<ARPGHeroCharacter*>Enemies , TArray<
         return;
     }
 
-   EnemyCharacters = Enemies;
+    EnemyCharacters = Enemies;
     AllyCharacters = Allies;
     MainPlayerController = PC;
+    bHasBattleStarted = true;
 
 
-    // Delegetes Assignment
-    OnBattleFinishDelegate.AddDynamic(this, &ARPGBattleGameMode::FinishBattle);
-    OnPlayerFinishedTurnDelegate.AddDynamic(this, &ARPGBattleGameMode::PlayerFinishedTurn);
-    OnTeamTurnFinishedDelegate.AddDynamic(this, &ARPGBattleGameMode::TeamFinishedTurn);
+  
     
     
 
+}
+
+bool ARPGBattleGameMode::GetBattleState()
+{
+    return bHasBattleStarted;
 }
 
 void ARPGBattleGameMode::RunBattle(EBattleMachineEndState& EndState, ERPGTeam TeamToInitiate, ERPGTeam& out_LastTeam)
 {
-    RunBattleStateMachine(EndState,TeamToInitiate,out_LastTeam);
+    if (bHasBattleStarted)
+    {
+        RunBattleStateMachine(EndState,TeamToInitiate,out_LastTeam);
+    }else
+    {
+        UKismetSystemLibrary::PrintString(GetWorld(),
+            FString("The Battle has not been initialized yet!"),
+            true,
+            true,
+            FLinearColor(FColor::Red)
+            );
+
+        EndState = EBattleMachineEndState::None;
+    }
+    
 }
+
+
 
 void ARPGBattleGameMode::FinishBattle(EBattleMachineEndState EndState)
 {
 
+    // Add all the finish battle checks here.
+    
     OnBattleFinished();
+    bHasBattleStarted = false;
     
 }
 
@@ -50,7 +73,7 @@ void ARPGBattleGameMode::PlayerFinishedTurn()
 
 void ARPGBattleGameMode::TeamFinishedTurn(ERPGTeam Team)
 {
-    OnTeamTurnEnded();
+    OnTeamTurnEnded(Team);
     
 }
 
@@ -59,16 +82,18 @@ void ARPGBattleGameMode::RunBattleStateMachine(EBattleMachineEndState& EndState 
 {
     //TODO Add the Current Logic for the State Machine.
 
-    TryCheckBattleState(EndState);
-
-    RunTurnState(TeamToInitiate,out__LastTeam);
+    if (TryCheckBattleState(EndState) == EBattleMachineState::Accepted)
+    {
+        RunTurnState(TeamToInitiate,out__LastTeam);
+    }
+ 
 }
 
 void ARPGBattleGameMode::StopBattleStateMachine(EBattleMachineEndState &EndState)
 {    
     //TODO Add the Escape Logic.
 
-    OnBattleFinishDelegate.Broadcast(EndState);
+    FinishBattle(EndState);
 
     // Empty the Character Arrays and Reset variables.
     EnemyCharacters.Empty();
@@ -83,11 +108,11 @@ void ARPGBattleGameMode::RunTurnState(ERPGTeam InitialTeam , ERPGTeam& out_LastT
     if (TryTurnBranch(InitialTeam , out_LastTeam))
     {
         LastBattleTeam = out_LastTeam;
-        OnTeamTurnFinishedDelegate.Broadcast(LastBattleTeam);
+        TeamFinishedTurn(LastBattleTeam);
     }else
     {
         // Go to the next player.
-        OnPlayerFinishedTurnDelegate.Broadcast();
+        PlayerFinishedTurn();
     }
     
 }
@@ -118,6 +143,7 @@ EBattleMachineState ARPGBattleGameMode::TryCheckBattleState(EBattleMachineEndSta
         
         //Player Turn Logic
 
+        BattleMachineEndState = EBattleMachineEndState::Continue;
         BattleMachineState = EBattleMachineState::Accepted;
         
      // State Machine got rejected by killing all enemies.   
