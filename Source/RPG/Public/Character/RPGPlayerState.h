@@ -45,8 +45,10 @@ public:
 	/** Core Functions */
 
 	/** Return the Turn State of the Player( If he has moved this turn.) */
+	UFUNCTION(BlueprintPure , Category = "RPG|RPGPlayerState")
 	bool GetPlayerTurnState();
 
+	UFUNCTION(BlueprintCallable , Category = "RPG|RPGPlayerState")
 	/** Sets if the Character has moved this turn. */
 	void SetPlayerStateTurn( bool bNewState );
 
