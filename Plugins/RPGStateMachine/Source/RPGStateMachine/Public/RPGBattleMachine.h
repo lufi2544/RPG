@@ -3,14 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RPGEnemy.h"
 #include "Character/RPGPlayerController.h"
 #include "UObject/NoExportTypes.h"
 #include "RPGBattleMachine.generated.h"
 
 
+class ARPGEnemy;
+
 UENUM(BlueprintType)
-enum EBattleMachineEndState
+enum class EBattleMachineEndState : uint8
 {
 
 
@@ -20,6 +21,12 @@ enum EBattleMachineEndState
 	// there is no more allies on the Map, all defeted or they have may escaped
 	OutOfAllies,
 
+	// Allies Escaped
+	EnemiesEscaped,
+
+	// Enemies Escaped
+	AlliesEscaped,
+
 	None
 
 
@@ -27,7 +34,7 @@ enum EBattleMachineEndState
 
 
 UENUM(BlueprintType)
-enum EBattleMachineState
+enum class EBattleMachineState  : uint8
 {
 
 	// We continue Branching
@@ -41,6 +48,9 @@ enum EBattleMachineState
 };
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFinishBattle , EBattleMachineEndState , BattleMachineEndState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTeamTurnFinished , ERPGTeam, FinishedTeam );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerFinishedTurn);
 
 /**
  * This is a Class that will manage all the Battle Logic, so if you want to add a new battle method, add that method here.This will manage all the checks during battle, etc
@@ -77,10 +87,10 @@ class RPGSTATEMACHINE_API URPGBattleMachine : public UObject
 	void StartBattle(TArray<ARPGEnemy*>&Enemies , TArray<ARPGHeroCharacter*>& Allies);
 
 	/** Runs All the Battle State Machine */
-	void RunBattleStateMachine();
+	void RunBattleStateMachine(EBattleMachineEndState& EndState, ERPGTeam TeamToInitiate , ERPGTeam& out__LastTeam);
 
 	/** Stops the State Machine */
-	void StopBattleStateMachine();
+	void StopBattleStateMachine(EBattleMachineEndState &EndState);
 
 	/** Function that checks the State of the Characters in general and that returns a State acording to that.
 	 *
@@ -110,13 +120,39 @@ class RPGSTATEMACHINE_API URPGBattleMachine : public UObject
 	/** Turn Logic */
 
 
+	/** Will Start running the Turn Logic.
+	 *
+	 * @param InitialTeam Is the team that will be the fist one to attack the opponent.
+	 */
+	virtual void RunTurnState(ERPGTeam InitialTeam , ERPGTeam& out_LastTeam);
+
 	/** Tries to Branch between Teams Turn.
 	 *
 	 * @return  True if all the Players inside has moved.
 	 */
-	virtual bool TryTurnBranch(ERPGTeam ActualTeam);
+	virtual bool TryTurnBranch(ERPGTeam ActualTeam, ERPGTeam& LastTeam);
 
+	/** Checks if all the Charactes from a Team have made a movement this round.
+	 *
+	 * @param Characters Couls be enemy team or ally team, it depends.Maybe the Player team got caught by surprise, so in that case the enemy team will attack first.
+	 */
 	virtual bool CheckAllCharactesMoved(TArray<ARPGCharacterBase*>Characters);
 
 
+	/** Delegates */
+
+
+	FOnPlayerFinishedTurn OnPlayerFinishedTurnDelegate;
+
+	FOnTeamTurnFinished OnTeamTurnFinishedDelegate;
+
+	FOnFinishBattle OnBattleFinishDelegate;
+
+
+	protected:
+
+	ERPGTeam LastTeam;
+	
+	
+	
 };

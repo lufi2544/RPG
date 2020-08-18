@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "RPGBattleMachine.h"
-
+#include "RPGEnemy.h"
 #include "RPG/Public/Character/RPGHeroCharacter.h"
 
 
@@ -21,18 +21,42 @@ void URPGBattleMachine::StartBattle(TArray<ARPGEnemy*>& Enemies, TArray<ARPGHero
     
 }
 
-void URPGBattleMachine::RunBattleStateMachine()
+void URPGBattleMachine::RunBattleStateMachine(EBattleMachineEndState& EndState , ERPGTeam TeamToInitiate ,  ERPGTeam& out__LastTeam)
 {
     //TODO Add the Current Logic for the State Machine.
+
+    TryCheckBattleState(EndState);
+
+    RunTurnState(TeamToInitiate,out__LastTeam);
 }
 
-void URPGBattleMachine::StopBattleStateMachine()
-{
-//TODO Add the CallBack to the GameMode.
+void URPGBattleMachine::StopBattleStateMachine(EBattleMachineEndState &EndState)
+{    
+    //TODO Add the Escape Logic.
+
+    OnBattleFinishDelegate.Broadcast(EndState);
+
+    // Empty the Character Arrays and Reset variables.
+    EnemyCharacters.Empty();
+    AllyCharacters.Empty();
+    MainPlayerController = nullptr;
     
 }
 
-
+void URPGBattleMachine::RunTurnState(ERPGTeam InitialTeam , ERPGTeam& out_LastTeam )
+{
+    //  All the Players has Finished Their turns ?
+    if (TryTurnBranch(InitialTeam , out_LastTeam))
+    {
+        LastTeam = out_LastTeam;
+        OnTeamTurnFinishedDelegate.Broadcast(LastTeam);
+    }else
+    {
+        // Go to the next player.
+        OnPlayerFinishedTurnDelegate.Broadcast();
+    }
+    
+}
 
 EBattleMachineState URPGBattleMachine::TryCheckBattleState(EBattleMachineEndState& BattleMachineEndState)
 {
@@ -49,9 +73,11 @@ EBattleMachineState URPGBattleMachine::TryCheckBattleState(EBattleMachineEndStat
         if (!CheckEnemiesState())
         {
 
+            /** All Enemies Dead */
 
             BattleMachineState = EBattleMachineState::Rejected;
             BattleMachineEndState = EBattleMachineEndState::OutOfEnemies;
+            StopBattleStateMachine(BattleMachineEndState);
             
             return BattleMachineState;
         }
@@ -63,10 +89,13 @@ EBattleMachineState URPGBattleMachine::TryCheckBattleState(EBattleMachineEndStat
      // State Machine got rejected by killing all enemies.   
     }else
     {
+        /** All Allies Dead **/
         // If we run out of Allies means that we have lost the Battle and that we are out of allies;
+
         
         BattleMachineState = EBattleMachineState::Rejected;
         BattleMachineEndState = EBattleMachineEndState::OutOfAllies;
+        StopBattleStateMachine(BattleMachineEndState);
     }
   
   return BattleMachineState;  
@@ -134,7 +163,7 @@ bool URPGBattleMachine::CheckEnemiesState()
     return bSuccess;
 }
 
-bool URPGBattleMachine::TryTurnBranch(ERPGTeam ActualTeam)
+bool URPGBattleMachine::TryTurnBranch(ERPGTeam ActualTeam,ERPGTeam& LastTeam)
 {
 
     bool bSucces = false;
@@ -163,9 +192,20 @@ bool URPGBattleMachine::TryTurnBranch(ERPGTeam ActualTeam)
         
     }
 
+    LastTeam = ActualTeam;
+
+    if (CheckAllCharactesMoved(CharactersToCheck))
+    {
+
+        bSucces = true;
+        LastTeam = ActualTeam;
+        
+    }
+    
     /** If the Charactes have finished of moving in the turn, then we can change the turn to the other team. */
-    return CheckAllCharactesMoved(CharactersToCheck);
+    return bSucces;
 }
+
 
 bool URPGBattleMachine::CheckAllCharactesMoved(TArray<ARPGCharacterBase*> Characters)
 {

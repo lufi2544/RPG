@@ -10,6 +10,8 @@ public class RPG : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay","RPGStateMachine" });
 
+		
+
         PrivateDependencyModuleNames.AddRange(new string[] {
             "Slate",
             "SlateCore",
@@ -18,5 +20,8 @@ public class RPG : ModuleRules
             "GameplayTasks"
             ,"RPGStateMachine"
         });
+		
+		PublicDependencyModuleNames.Add("RPGStateMachine");
     }
+	
 }
