@@ -74,6 +74,9 @@ class RPG_API URPGBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	
 	UFUNCTION(BlueprintCallable , Category = "RPG|BlueprintLibrary|RPGEffectContext")
 	static FGameplayEffectContextHandle& SetAbilityStacksOnEffectContext(FGameplayEffectContextHandle EffectContexthandle, int32 InStacks);
+
+	UFUNCTION(BlueprintPure , Category = "RPG|BlueprintLibrary")
+	static bool IsPlayerAlly(ARPGCharacterBase* Player , ARPGCharacterBase* Other);
 	
 	
 };

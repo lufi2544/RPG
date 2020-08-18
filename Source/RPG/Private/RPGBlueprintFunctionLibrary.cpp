@@ -145,5 +145,27 @@ FGameplayEffectContextHandle& URPGBlueprintFunctionLibrary::SetAbilityStacksOnEf
     return EffectContexthandle;
 }
 
+bool URPGBlueprintFunctionLibrary::IsPlayerAlly(ARPGCharacterBase* Player, ARPGCharacterBase* Other)
+{
+    bool bSuccess = false;
+    if (Player && Other)
+    {
+        ARPGPlayerState* MainPlayerState = nullptr;
+        ARPGPlayerState* OtherPlayerState = nullptr;
+
+        MainPlayerState = Player->GetRPGPlayerState();
+        OtherPlayerState = Other->GetRPGPlayerState();
+
+        if (MainPlayerState && OtherPlayerState)
+        {
+            bSuccess = (MainPlayerState->GetTeam() == OtherPlayerState->GetTeam() );
+        }
+
+        
+    }
+
+    return  bSuccess;
+}
+
     
 

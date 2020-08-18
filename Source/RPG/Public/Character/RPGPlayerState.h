@@ -85,6 +85,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category= "RPG|RPGPlayerState")
 	void SetTeam(ERPGTeam NewTeam);
+
 	
 	void CreateInventoryComponent();
 	
