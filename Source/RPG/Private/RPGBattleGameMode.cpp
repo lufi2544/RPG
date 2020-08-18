@@ -173,7 +173,7 @@ bool ARPGBattleGameMode::CheckPlayerStates()
         // We Iterate All the Players and store all the dead Players, if it is equal to the Amout of Players, the State gets rejected and we return false.
         for(ARPGHeroCharacter* Character : AllyCharacters)
         {
-            ARPGPlayerState* PS = Character->GetRPGPlayerState();
+            ARPGPlayerState* PS =Cast<ARPGPlayerState>(Character->GetPlayerState());
 
             if (PS)
             {
@@ -203,7 +203,7 @@ bool ARPGBattleGameMode::CheckEnemiesState()
     {
         for(ARPGHeroCharacter* Character : EnemyCharacters)
         {
-            ARPGPlayerState* PS = Character->GetRPGPlayerState();
+            ARPGPlayerState* PS =Cast<ARPGPlayerState>(Character->GetPlayerState());
 
             if (PS)
             {
@@ -278,7 +278,7 @@ bool ARPGBattleGameMode::CheckAllCharactesMoved(TArray<ARPGCharacterBase*> Chara
         
         for (ARPGCharacterBase* Character : Characters)
         {
-            ARPGPlayerState* PS = Character->GetRPGPlayerState();
+            ARPGPlayerState* PS = Cast<ARPGPlayerState>(Character->GetPlayerState());
 
             if (PS)
             {

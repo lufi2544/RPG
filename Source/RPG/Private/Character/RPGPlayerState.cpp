@@ -2,6 +2,8 @@
 
 
 #include "Character/RPGPlayerState.h"
+
+#include "RPGEnemy.h"
 #include "RPG/Public/Items/Weapons/RPGWeapon.h"
 #include "RPG/Public/Character/RPGHeroCharacter.h"
 #include "AbilitySystem/RPGAbilitySystemComponent.h"
@@ -120,11 +122,13 @@ void ARPGPlayerState::HealthChange(const FOnAttributeChangeData& Data)
     //Update the Health Status Bar
 
     ARPGHeroCharacter* Hero = Cast<ARPGHeroCharacter>(GetPawn());
+    
 
     if (Hero)
     {
-        URPGFloatingStatusBarWidget* FloatingStatusBarWidget = Hero->GetFloatingStatusBar();
-
+        
+       URPGFloatingStatusBarWidget* FloatingStatusBarWidget = Hero->GetFloatingStatusBar();
+        
         if (FloatingStatusBarWidget)
         {
             FloatingStatusBarWidget->SetHealthPercentage(NewhealthValue / GetMaxHealth());

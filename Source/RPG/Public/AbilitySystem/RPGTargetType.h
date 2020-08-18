@@ -28,8 +28,9 @@ struct RPG_API FRPGGameplayTargetDataFilter : public FGameplayTargetDataFilter
 	{
 
 		Super::FilterPassesForActor(ActorToBeFiltered);
-		const ARPGHeroCharacter* TargetHero = Cast<ARPGHeroCharacter>(ActorToBeFiltered);
-		const ARPGHeroCharacter* Player = Cast<ARPGHeroCharacter>(SelfActor);
+		
+		const ARPGCharacterBase* TargetHero = Cast<ARPGCharacterBase>(ActorToBeFiltered);
+		const ARPGCharacterBase* Player = Cast<ARPGCharacterBase>(SelfActor);
 
 		ARPGPlayerState* TargetingActorPS = Cast<ARPGPlayerState>(TargetHero->GetPlayerState());
 

@@ -32,7 +32,6 @@ class RPG_API ARPGPlayerController : public APlayerController
 	UFUNCTION(Server , Reliable,WithValidation)
 	void ShowDamageNumber(float DamageAmount , ARPGCharacterBase* TargetCharacter);
 
-	ARPGPlayerState* GetRPGPlayerStateFromController();
 
 
 	protected:

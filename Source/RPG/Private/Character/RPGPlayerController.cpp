@@ -100,17 +100,4 @@ void ARPGPlayerController::OnRep_PlayerState()
 
 }
 
-ARPGPlayerState* ARPGPlayerController::GetRPGPlayerStateFromController()
-{
-    ARPGCharacterBase* MainPlayer = nullptr;
-    ARPGPlayerState* ReturnPlayerState = nullptr;
-    
-    if (!ensure(Player))
-    {
-        return nullptr;
-    }
 
-    ReturnPlayerState = Cast<ARPGPlayerState>(MainPlayer->GetPlayerState());
- 
-    return ReturnPlayerState;
-}

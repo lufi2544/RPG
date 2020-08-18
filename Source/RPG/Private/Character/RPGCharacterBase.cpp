@@ -33,10 +33,7 @@ UAbilitySystemComponent* ARPGCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent.Get();
 }
 
-ARPGPlayerState* ARPGCharacterBase::GetRPGPlayerState()
-{
-	return Cast<ARPGPlayerState>(GetPlayerState());
-}
+
 
 float ARPGCharacterBase::GetHealth() const
 {

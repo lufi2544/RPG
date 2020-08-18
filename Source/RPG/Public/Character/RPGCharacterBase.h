@@ -13,20 +13,14 @@
 #include "RPG/RPG.h"
 #include "RPGCharacterBase.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterDieDelegate , ARPGCharacterBase*, Character);
+
 
 class URPGAttributeSetBase;
 class URPGGameplayAbility;
 
-
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterDieDelegate , ARPGCharacterBase*, Character);
 
 //TODO add the hit reaction logic for the characters.
-
-// DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterBaseHitReactDelegate, );
-
-
-
 
 UCLASS()
 class RPG_API ARPGCharacterBase : public ACharacter , public IAbilitySystemInterface
@@ -43,8 +37,8 @@ public:
 
 	/** Core Functions */
 
+	
 
-	virtual ARPGPlayerState* GetRPGPlayerState();
 	
 
 	/** Getters for the Character Attributes. */

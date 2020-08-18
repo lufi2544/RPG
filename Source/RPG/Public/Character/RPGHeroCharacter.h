@@ -32,6 +32,7 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	
 
 
 	/** Core Functions */
@@ -59,7 +60,7 @@ public:
 
 	URPGFloatingStatusBarWidget* GetFloatingStatusBar();
 
-	virtual ARPGPlayerState* GetRPGPlayerState() override;
+
 	
 protected:
 	

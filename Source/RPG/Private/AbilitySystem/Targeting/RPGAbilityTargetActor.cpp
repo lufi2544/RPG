@@ -53,11 +53,29 @@ void ARPGAbilityTargetActor::SphereTraceWithFilter(TArray<FHitResult>& Out_HitRe
         if (!IsValid(HitResult.GetActor()) || FilterHandle.DataFilter->FilterPassesForActor(HitResult.GetActor()))
         {
 
+            // We Have to Make sure that we Add the Hit Result just Once.
+
             HitResult.bBlockingHit = true;
-            Out_HitResults.Add(HitResult);
-            
-        }
-        
+
+            if (Out_HitResults.Num() > 0)
+            {
+                bool bCanBeAdded = true;
+                for (FHitResult InHitResult : Out_HitResults)
+                {
+                    if (HitResult.GetActor() == InHitResult.GetActor() )
+                    {
+                     bCanBeAdded = false;
+                    }
+                }
+                if (bCanBeAdded)
+                {
+                    Out_HitResults.Add(HitResult);
+                }
+            }else
+            {
+                Out_HitResults.Add(HitResult);
+            }       
+        }     
     }
     
 }

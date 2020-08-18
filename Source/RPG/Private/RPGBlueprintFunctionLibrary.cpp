@@ -153,8 +153,9 @@ bool URPGBlueprintFunctionLibrary::IsPlayerAlly(ARPGCharacterBase* Player, ARPGC
         ARPGPlayerState* MainPlayerState = nullptr;
         ARPGPlayerState* OtherPlayerState = nullptr;
 
-        MainPlayerState = Player->GetRPGPlayerState();
-        OtherPlayerState = Other->GetRPGPlayerState();
+        MainPlayerState =Cast<ARPGPlayerState>( Player->GetPlayerState());
+        OtherPlayerState = Cast<ARPGPlayerState>( Other->GetPlayerState());
+
 
         if (MainPlayerState && OtherPlayerState)
         {

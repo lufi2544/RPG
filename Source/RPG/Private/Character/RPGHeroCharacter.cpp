@@ -89,6 +89,9 @@ void ARPGHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	// Bind player input to the AbilitySystemComponent. Also called in OnRep_PlayerState because of a potential race condition.
 	BindASCInput();
 }
+
+
+
 /**
 * On the Server, Possession happens before BeginPlay.
 * On the Client, BeginPlay happens before Possession.
@@ -261,10 +264,6 @@ URPGFloatingStatusBarWidget* ARPGHeroCharacter::GetFloatingStatusBar()
 	return IsValid(UIFloatingStatusBar) ? UIFloatingStatusBar : nullptr;
 }
 
-ARPGPlayerState* ARPGHeroCharacter::GetRPGPlayerState()
-{
-	return Super::GetRPGPlayerState();
-}
 
 void ARPGHeroCharacter::InitializeFloatingStatusBar()
 {

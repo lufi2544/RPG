@@ -42,10 +42,6 @@ ARPGEnemy::ARPGEnemy(const class FObjectInitializer& ObjectInitializer) : Super(
     
 }
 
-ARPGPlayerState* ARPGEnemy::GetRPGPlayerState()
-{
-    return Super::GetRPGPlayerState();
-}
 
 void ARPGEnemy::BeginPlay()
 {
@@ -55,7 +51,7 @@ void ARPGEnemy::BeginPlay()
     {
         AbilitySystemComponent->InitAbilityActorInfo(this,this);
         InitializeAbilities();
-        InitializeAbilities();
+        InitializeAttributes();
 
         APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(),0);
         if (PC && PC->IsLocalController())
@@ -69,6 +65,10 @@ void ARPGEnemy::BeginPlay()
                     UIFloatingStatusBarComponent->SetWidget(UIFloatingStatusBar);
 
 
+                    // We Assign the Healt to the Max Health here.
+                    
+                    SetHealth(GetMaxHealth());
+
                     UIFloatingStatusBar->SetHealthPercentage(GetHealth() /GetMaxHealth());
 
                    
@@ -78,9 +78,27 @@ void ARPGEnemy::BeginPlay()
     }
 
     HealthChangedDelegate = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this,&ARPGEnemy::Healthchanged);
+
+    // Team Setting
+
+        ARPGPlayerState* PS = Cast<ARPGPlayerState>(GetPlayerState());
+
+    if (PS)
+    {
+        PS->SetTeam(ERPGTeam::Enemy);
+    }
     
 }
 
 void ARPGEnemy::Healthchanged(const FOnAttributeChangeData& Data)
 {
+
+    float NewValue = 0.0f;
+
+    NewValue = Data.NewValue;
+
+    if (UIFloatingStatusBar)
+    {
+        UIFloatingStatusBar->SetHealthPercentage(NewValue / GetMaxHealth());
+    }
 }
