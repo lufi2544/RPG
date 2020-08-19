@@ -11,6 +11,10 @@
 
 ARPGEnemy::ARPGEnemy(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
+
+    //TODO Refactor the ASC and The Attribute Set to just live at the Player State not at the Character.
+
+    
     HardRefAbilitySystemcomponent = CreateDefaultSubobject<URPGAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
     HardRefAbilitySystemcomponent->SetIsReplicated(true);
 

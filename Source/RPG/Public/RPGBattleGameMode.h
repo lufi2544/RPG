@@ -80,13 +80,13 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 	TArray<ARPGHeroCharacter*> AllyCharacters;
 
 	/** Enemy Characters that has entered the Battle. */
-	TArray<ARPGHeroCharacter*> EnemyCharacters;
+	TArray<ARPGEnemy*> EnemyCharacters;
 
 	/** --------------------------------------------------------------------------------------------------------- */
 
 	/** This function will initialize the Battle Logic. */
 	UFUNCTION(BlueprintCallable, Category = "RPG|GameMode|Battle")
-	void StartBattle(TArray<ARPGHeroCharacter*>Enemies , TArray<ARPGHeroCharacter*> Allies , ARPGPlayerController* PC);
+	void StartBattle(TArray<ARPGEnemy*>Enemies , TArray<ARPGHeroCharacter*> Allies , ARPGPlayerController* PC);
 
 	UFUNCTION(BlueprintCallable , Category = "RPG|GameMode|Battle")
 	void RunBattle(EBattleMachineEndState& EndState , ERPGTeam TeamToInitiate ,  ERPGTeam& out_LastTeam);

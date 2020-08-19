@@ -6,7 +6,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "RPGEnemy.h"
 
-void ARPGBattleGameMode::StartBattle(TArray<ARPGHeroCharacter*>Enemies , TArray<ARPGHeroCharacter*> Allies , ARPGPlayerController* PC)
+void ARPGBattleGameMode::StartBattle(TArray<ARPGEnemy*>Enemies , TArray<ARPGHeroCharacter*> Allies , ARPGPlayerController* PC)
 {
 
     //TODO Add the UI
@@ -201,14 +201,16 @@ bool ARPGBattleGameMode::CheckEnemiesState()
 
     if (EnemyIndex > 0)
     {
-        for(ARPGHeroCharacter* Character : EnemyCharacters)
+        for(ARPGEnemy* Character : EnemyCharacters)
         {
             ARPGPlayerState* PS =Cast<ARPGPlayerState>(Character->GetPlayerState());
 
             if (PS)
             {
-                if (!PS->IsAlive())
+                UE_LOG(LogTemp, Error  ,TEXT("%f"),Character->GetHealth());
+                if (!Character->IsAlive())
                 {
+                    
                     EnemiesDeadIndexCounter++;
                 }
             }   
