@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Character/RPGCharacterBase.h"
+#include "UI/RPGFloatingStatusBarWidget.h"
+
 #include "RPGEnemy.generated.h"
 
 /**
@@ -18,9 +20,13 @@ class RPG_API ARPGEnemy : public ARPGCharacterBase
 
 	ARPGEnemy( const class FObjectInitializer& ObjectInitializer);
 
+	URPGFloatingStatusBarWidget* GetFlopFloatingStatusBarWidget();
+	void InitializeFloatingBar();
 
 
-	protected:
+protected:
+
+	virtual void BeginPlay() override;
 
 		//Hard Pointer To the AbilitySystemComponent
 		UPROPERTY()
@@ -30,7 +36,7 @@ class RPG_API ARPGEnemy : public ARPGCharacterBase
 		UPROPERTY()
 		class URPGAttributeSetBase* HardRefAttributeSetBase;
 
-	virtual void BeginPlay() override;
+
 
 	UPROPERTY(BlueprintReadWrite , EditAnywhere , category = "RPG|UI")
 	TSubclassOf<class URPGFloatingStatusBarWidget> UIFloatingStatusBarClass;

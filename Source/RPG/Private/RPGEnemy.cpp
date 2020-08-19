@@ -42,6 +42,36 @@ ARPGEnemy::ARPGEnemy(const class FObjectInitializer& ObjectInitializer) : Super(
     
 }
 
+URPGFloatingStatusBarWidget* ARPGEnemy::GetFlopFloatingStatusBarWidget()
+{
+    return UIFloatingStatusBar;
+}
+
+
+void ARPGEnemy::InitializeFloatingBar()
+{
+    APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(),0);
+    if (PC && PC->IsLocalController())
+    {
+        if (UIFloatingStatusBarClass)
+        {
+            UIFloatingStatusBar = CreateWidget<URPGFloatingStatusBarWidget>(PC , UIFloatingStatusBarClass);
+
+            if (UIFloatingStatusBar && UIFloatingStatusBarComponent)
+            {
+                UIFloatingStatusBarComponent->SetWidget(UIFloatingStatusBar);
+
+
+                // We Assign the Healt to the Max Health here.
+                    
+
+                UIFloatingStatusBar->SetHealthPercentage(GetHealth() /GetMaxHealth());
+
+                   
+            }
+        }
+    }
+}
 
 void ARPGEnemy::BeginPlay()
 {
@@ -53,28 +83,7 @@ void ARPGEnemy::BeginPlay()
         InitializeAbilities();
         InitializeAttributes();
 
-        APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(),0);
-        if (PC && PC->IsLocalController())
-        {
-            if (UIFloatingStatusBarClass)
-            {
-                UIFloatingStatusBar = CreateWidget<URPGFloatingStatusBarWidget>(PC , UIFloatingStatusBarClass);
-
-                if (UIFloatingStatusBar && UIFloatingStatusBarComponent)
-                {
-                    UIFloatingStatusBarComponent->SetWidget(UIFloatingStatusBar);
-
-
-                    // We Assign the Healt to the Max Health here.
-                    
-                    SetHealth(GetMaxHealth());
-
-                    UIFloatingStatusBar->SetHealthPercentage(GetHealth() /GetMaxHealth());
-
-                   
-                }
-            }
-        }
+        InitializeFloatingBar();
     }
 
     HealthChangedDelegate = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this,&ARPGEnemy::Healthchanged);
@@ -89,6 +98,8 @@ void ARPGEnemy::BeginPlay()
     }
     
 }
+
+
 
 void ARPGEnemy::Healthchanged(const FOnAttributeChangeData& Data)
 {

@@ -67,11 +67,41 @@ void URPGAttributeSetBase::OnRep_XPBounty(FGameplayAttributeData& XPBountyldvalu
     GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase,XPBounty,XPBountyldvalue)
 }
 
+void URPGAttributeSetBase::AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute,
+    const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttrivuteProperty)
+{
+    UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent();
+    const float CurrentMaxValue = MaxAttribute.GetCurrentValue();
+
+    if (!FMath::IsNearlyEqual(CurrentMaxValue , NewMaxValue && ASC))
+    {
+        const float CurrentValue = AffectedAttribute.GetCurrentValue();
+
+         // If we do not have the Normal Attribute to the Max, what we do here is just set the Nomla Attribute with the Max Attribute Amoun.
+        // but if the MaxAttribute Changes and the Normal Attribute is not nearly equal to the Max Health, we change the Normal Attribute and mantain the Proportion.
+        float NewDelta = (CurrentMaxValue > 0.f) ? (CurrentValue * NewMaxValue / CurrentMaxValue) - CurrentValue : NewMaxValue;
+
+        // We Apply a modifier to the Attribute.
+        ASC->ApplyModToAttributeUnsafe(AffectedAttrivuteProperty,EGameplayModOp::Additive,NewDelta);
+    }
+    
+}
+
 void URPGAttributeSetBase::OnRep_Armor(FGameplayAttributeData& ArmorOldvalue)
 {
     GAMEPLAYATTRIBUTE_REPNOTIFY(URPGAttributeSetBase,Armor,ArmorOldvalue)
 }
 
+void URPGAttributeSetBase::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+
+    Super::PreAttributeChange(Attribute, NewValue);
+
+    if (Attribute == GetMaxHealthAttribute())
+    {
+        AdjustAttributeForMaxChange(Health,MaxHealth,NewValue,GetHealthAttribute());
+    }
+}
 
 void URPGAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
@@ -150,3 +180,5 @@ void URPGAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCal
     
     
 }
+
+

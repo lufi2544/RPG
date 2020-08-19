@@ -93,7 +93,8 @@ public:
 	
 	protected:
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "RPG|PlayerState")
+	/** This is the Character Team, is used for Targeting in the Game. */
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "RPG|PlayerState",Replicated)
 	ERPGTeam Team = ERPGTeam::Neutral;
 	
 	FDelegateHandle HealthChangeDelegateHandle;

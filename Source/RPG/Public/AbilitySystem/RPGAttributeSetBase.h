@@ -33,6 +33,10 @@ class RPG_API URPGAttributeSetBase : public UAttributeSet
 	
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData &Data) override;
 
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+
+	
+
 	//The Character Health Amount
 	UPROPERTY(BlueprintReadOnly , Category = "RPG|AttributeSet" , ReplicatedUsing = OnRep_Health)
 	FGameplayAttributeData Health;
@@ -109,7 +113,7 @@ protected:
 	virtual void OnRep_XPBounty(FGameplayAttributeData& XPBountyldvalue);
 
 	
-	
+	void AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute , const FGameplayAttributeData& MaxAttribute , float NewMaxValue, const FGameplayAttribute& AffectedAttrivuteProperty);
 	
 	
 	

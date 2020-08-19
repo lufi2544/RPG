@@ -37,6 +37,7 @@ void ARPGPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
     DOREPLIFETIME_CONDITION_NOTIFY(ARPGPlayerState, InventoryComponent, COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(ARPGPlayerState, Team, COND_None, REPNOTIFY_Always);
     
  
 }
@@ -122,17 +123,31 @@ void ARPGPlayerState::HealthChange(const FOnAttributeChangeData& Data)
     //Update the Health Status Bar
 
     ARPGHeroCharacter* Hero = Cast<ARPGHeroCharacter>(GetPawn());
+    ARPGEnemy* Enemy = nullptr;
+    URPGFloatingStatusBarWidget* FloatingStatusBarWidget = nullptr;
     
 
     if (Hero)
     {
         
-       URPGFloatingStatusBarWidget* FloatingStatusBarWidget = Hero->GetFloatingStatusBar();
+        FloatingStatusBarWidget = Hero->GetFloatingStatusBar();
         
         if (FloatingStatusBarWidget)
         {
             FloatingStatusBarWidget->SetHealthPercentage(NewhealthValue / GetMaxHealth());
         }
+    }else
+    {
+        Enemy = Cast<ARPGEnemy>(GetPawn());
+        if (Enemy)
+        {
+            FloatingStatusBarWidget = Enemy->GetFlopFloatingStatusBarWidget();
+            if (FloatingStatusBarWidget)
+            {
+                FloatingStatusBarWidget->SetHealthPercentage(NewhealthValue/ GetMaxHealth());
+            }
+        }
+        
     }
 
 
