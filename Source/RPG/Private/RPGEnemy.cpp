@@ -12,22 +12,6 @@
 ARPGEnemy::ARPGEnemy(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 
-    //TODO Refactor the ASC and The Attribute Set to just live at the Player State not at the Character.
-
-    
-    HardRefAbilitySystemcomponent = CreateDefaultSubobject<URPGAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-    HardRefAbilitySystemcomponent->SetIsReplicated(true);
-
-    // As this is going to be the AI, we do not want to replicate the GE to the clients, so the GE will live on the Server only. The Attributes, GameplayTags and GameplayCues will still replicate to us.
-    HardRefAbilitySystemcomponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
-
-    AbilitySystemComponent = HardRefAbilitySystemcomponent;
-
-    // By creating the AttributeSet as a DegfaultSubobject, this is going to be tied to the Ability System Component.
-    HardRefAttributeSetBase = CreateDefaultSubobject<URPGAttributeSetBase>(TEXT("AttributeSetBase"));
-
-    // Set our parent`s AttributeSet TWeakObjectPtr Variable
-    AttributeSet = HardRefAttributeSetBase;
 
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
     UIFloatingStatusBarComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("UIFloatingStatusBar"));
@@ -81,6 +65,19 @@ void ARPGEnemy::BeginPlay()
 {
     Super::BeginPlay();
 
+
+    ARPGPlayerState* PS = Cast<ARPGPlayerState>(GetPlayerState());
+
+    if (PS)
+    {
+        // We set the Ability System Component and the Attribute Set Base from the Player State.
+        AttributeSet = PS->GetAttributeSetBase();
+
+        AbilitySystemComponent = Cast<URPGAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+
+        PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS,this);
+    }
+
     if (AbilitySystemComponent.IsValid())
     {
         AbilitySystemComponent->InitAbilityActorInfo(this,this);
@@ -94,7 +91,6 @@ void ARPGEnemy::BeginPlay()
 
     // Team Setting
 
-        ARPGPlayerState* PS = Cast<ARPGPlayerState>(GetPlayerState());
 
     if (PS)
     {

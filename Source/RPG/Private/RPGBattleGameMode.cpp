@@ -208,7 +208,7 @@ bool ARPGBattleGameMode::CheckEnemiesState()
             if (PS)
             {
                 UE_LOG(LogTemp, Error  ,TEXT("%f"),Character->GetHealth());
-                if (!Character->IsAlive())
+                if (!PS->IsAlive())
                 {
                     
                     EnemiesDeadIndexCounter++;

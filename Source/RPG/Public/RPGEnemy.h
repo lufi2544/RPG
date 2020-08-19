@@ -28,14 +28,6 @@ protected:
 
 	virtual void BeginPlay() override;
 
-		//Hard Pointer To the AbilitySystemComponent
-		UPROPERTY()
-		class URPGAbilitySystemComponent* HardRefAbilitySystemcomponent;
-
-		//Hard Pointer to the AttributeSetBase
-		UPROPERTY()
-		class URPGAttributeSetBase* HardRefAttributeSetBase;
-
 
 
 	UPROPERTY(BlueprintReadWrite , EditAnywhere , category = "RPG|UI")
