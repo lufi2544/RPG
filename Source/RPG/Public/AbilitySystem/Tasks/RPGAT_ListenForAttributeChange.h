@@ -33,7 +33,7 @@ class RPG_API URPGAT_ListenForAttributeChange : public UBlueprintAsyncActionBase
 	
 
 	/** We have to call this function if we want the task to end, if we do not call this function
-	 * the task will keep listening for ever.
+	 * the task will keep listening for ever. :O
 	 */
 	UFUNCTION(BlueprintCallable)
 	void EndTask();
@@ -46,7 +46,7 @@ class RPG_API URPGAT_ListenForAttributeChange : public UBlueprintAsyncActionBase
 	FGameplayAttribute AttributeToListenFor;
 	TArray<FGameplayAttribute>AttributesToListenFor;
 
-	//Attributes Change. MOstly handled for the UI
+	//Attributes Change. Mostly handled for the UI
 	
 	void OnAttributeChanged(const FOnAttributeChangeData& Data);
 	

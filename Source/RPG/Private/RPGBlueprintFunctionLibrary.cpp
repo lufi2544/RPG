@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/Core/RPGGameplayEffectTypes.h"
 #include "Character/RPGHeroCharacter.h"
+#include "Kismet/GameplayStatics.h"
 #include "RPG/Public/AbilitySystem/RPGAbilitySystemComponent.h"
 
 
@@ -144,6 +145,8 @@ FGameplayEffectContextHandle& URPGBlueprintFunctionLibrary::SetAbilityStacksOnEf
 
     return EffectContexthandle;
 }
+
+
 
 bool URPGBlueprintFunctionLibrary::IsPlayerAlly(ARPGCharacterBase* Player, ARPGCharacterBase* Other)
 {

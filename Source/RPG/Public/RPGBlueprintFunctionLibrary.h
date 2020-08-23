@@ -21,6 +21,10 @@ class RPG_API URPGBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 
 	public:
 
+
+
+	/** GameplayAbility Functions */
+
 	/** Function That Will add the Targets or the Hit Results to the Target data to the @ContainerSpec
 	 * This is meant to be used on a projectile for example, that the Target adding will be implmeneted outside the GameplayAbility
 	 * @param ContainerSpec The Container Spec to add the Target Data.
@@ -48,7 +52,12 @@ class RPG_API URPGBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "RPG|BlueprintLibrary")
     static void ApplyEffectContainerSpecToTargetsFromTargetData(FRPGGameplayEffectContainerSpec ContainerSpec, const FGameplayAbilityTargetDataHandle& TargetDataHandle);
 
+	
+	UFUNCTION(BlueprintPure , Category = "RPG|BlueprintLibrary")
+    static bool IsPlayerAlly(ARPGCharacterBase* Player , ARPGCharacterBase* Other);
 
+	
+	/** ----------------------------------------------------------------------------------------------------------------------------------------------- */
 
 
 	/** RPG Gameplay Effect Context */
@@ -75,8 +84,11 @@ class RPG_API URPGBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable , Category = "RPG|BlueprintLibrary|RPGEffectContext")
 	static FGameplayEffectContextHandle& SetAbilityStacksOnEffectContext(FGameplayEffectContextHandle EffectContexthandle, int32 InStacks);
 
-	UFUNCTION(BlueprintPure , Category = "RPG|BlueprintLibrary")
-	static bool IsPlayerAlly(ARPGCharacterBase* Player , ARPGCharacterBase* Other);
+
+	/** ----------------------------------------------------------------------------------------------------------------------------------------------- */
+
+	/** Core Functions */
+
 	
 	
 };

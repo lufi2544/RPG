@@ -8,3 +8,20 @@ ARPGGameMode::ARPGGameMode()
 
 
 }
+
+void ARPGGameMode::TravelPlayerToLevel(ARPGPlayerController* PlayerController,ERPGMapTravelState MapTravelState)
+{
+    FString MapURL = "null";
+    
+    if (MapTravelState == ERPGMapTravelState::Battle)
+    {
+        MapURL = "/Game/Maps/WorldMap.WorldMap";    
+    }
+
+    if (PlayerController && (MapURL != "null"))
+    {
+        
+        PlayerController->ClientTravel(MapURL,ETravelType::TRAVEL_Absolute);
+    }
+    
+}

@@ -29,6 +29,11 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+
+	/** Reference to the Caster Of the Ability. */
+	UPROPERTY(BlueprintReadWrite , Category = "RPG|Ability|References")
+	ARPGCharacterBase* RPG_Player;
+	
 	// Tells an ability to activate immediately when its granted. Used for passive abilities and abilites forced on others.
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|Ability")
     bool ActivateAbilityOnGranted = false;
@@ -63,12 +68,11 @@ public:
 	UPROPERTY(BlueprintReadWrite , EditAnywhere ,Category = "RPG|Ability|Stacks")
 	float RecastTime = 0.0f;
 	
-	// These are the stacks of the Ability, you can custom this property in order for the ability to work with a maximum amount of recast
-	//the ability in a certain amount of time.(This property will be tied to the IsStackable Property.)
+	// These are the Current Ability Stacks. If IsStackable is true, the Ability Staks are the current Stacks that the Ability has, related to the Max Stacks.(This property will be tied to the IsStackable Property.)
 	UPROPERTY(BlueprintReadWrite, Category = "RPG|Ability|Stacks")
 	int32 AbilityStacks = 0;
 
-	//Max Ability Stacks.The property amount will be set ->(if the Ability IsStackable, AbilityMaxStacks will be the number set on the Ability BP) ,
+	//Max Ability Stacks.The property amount will be set ->(if the Ability IsStackable, AbilityMaxStacks will be the number set at the Ability BP) ,
 	//	(if IsComboAbility the Ability Max Stacks will be the montages to play number.)
 	UPROPERTY(BlueprintReadWrite , EditAnywhere, Category = "RPG|Ability|Stacks")
     int32 AbilityMaxStacks = 0;
@@ -86,6 +90,34 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category = "RPG|Ability|Base")
 	float AbilityCooldown;
+
+
+	/** -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+	/** Effect Variables  */
+
+
+	/** Main Effects */
+
+
+
+	/** Container that holds the Effects that are going to be applied to the Player Targets(Enemies); */
+	UPROPERTY(BlueprintReadWrite , Category = "RPG|Ability|Effects" , VisibleAnywhere)
+	FRPGGameplayEffectContainerSpec MainEffectContainerSpec;
+
+	/** Container that holds the Effects that are going to be applied to the Player itself; */
+	UPROPERTY(BlueprintReadWrite , Category = "RPG|Ability|Effects" , VisibleAnywhere)
+	FRPGGameplayEffectContainerSpec PlayerEffectContainerSpec;
+
+	/** Container that holds the Effects that are going to be applied to the Player Allies; */
+	UPROPERTY(BlueprintReadWrite , Category = "RPG|Ability|Effects" , VisibleAnywhere)
+	FRPGGameplayEffectContainerSpec AllyEffectContainerSpec;
+
+	
+
+	
+
+	/** -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 	
 	//This is a map made of a GameplayTag and a GameplayEffectContainer that will apply all the effects to the target or the owwer later when is called.
 	/**
@@ -123,11 +155,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category= "RPG|Ability")
 	virtual void ApplyDamageModifiers(FRPGGameplayEffectContainerSpec& ContainerSpec,FRPGGameplayEffectContainerSpec InContainerSpec);
 
-	/** We create a new Spec from the Ability Cooldown Class and then apply it to the Player. */
+	/** We create a new Effect Spec from the Ability Cooldown Class based on the Ability Cooldown float and then we apply it to the Player. */
 	UFUNCTION(BlueprintCallable, Category= "RPG|Ability")
     virtual void ApplyRPGCoolDown();
-
-
 
 	virtual int32 GetAbilityStacks()const
 	{
