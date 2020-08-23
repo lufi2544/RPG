@@ -87,8 +87,7 @@ void ARPGEnemy::BeginPlay()
         InitializeFloatingBar();
     }
 
-    HealthChangedDelegate = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this,&ARPGEnemy::Healthchanged);
-
+   
     // Team Setting
 
 
