@@ -73,21 +73,21 @@ FRPGGameplayTargetDataFilterHandle URPGBlueprintFunctionLibrary::MakeRPGGameplay
 void URPGBlueprintFunctionLibrary::ApplyEffectContainerSpecToTargetsFromTargetData(FRPGGameplayEffectContainerSpec ContainerSpec, const FGameplayAbilityTargetDataHandle& TargetDataHandle)
 {
 
+    TMap<AActor* , FHitResult> TargetHitResultMap;
+    
     //Get all the actors from the Target Data
     
-    TArray<AActor*>	Result;
+    TArray<AActor*>	ResultActors;
+    
     for (int32 TargetDataIndex = 0; TargetDataIndex < TargetDataHandle.Data.Num(); ++TargetDataIndex)
     {
         if (TargetDataHandle.Data.IsValidIndex(TargetDataIndex))
         {
-            const FGameplayAbilityTargetData* DataAtIndex = TargetDataHandle.Data[TargetDataIndex].Get();
-            if (DataAtIndex)
+            const FGameplayAbilityTargetData* TargetData = TargetDataHandle.Data[TargetDataIndex].Get();
+            
+            if (TargetData)
             {
-                TArray<TWeakObjectPtr<AActor>> WeakArray = DataAtIndex->GetActors();
-                for (TWeakObjectPtr<AActor>& WeakPtr : WeakArray)
-                {
-                    Result.Add(WeakPtr.Get());
-                }
+                TArray<TWeakObjectPtr<AActor>> WeakActorArray = TargetData->GetActors();        
             }
         }
     }
@@ -96,16 +96,17 @@ void URPGBlueprintFunctionLibrary::ApplyEffectContainerSpecToTargetsFromTargetDa
     
     FGameplayAbilityTargetData_ActorArray* TargetData_Actors = new FGameplayAbilityTargetData_ActorArray();
 
-    TargetData_Actors->TargetActorArray.Append(Result);
+    TargetData_Actors->TargetActorArray.Append(ResultActors);
     
     for (FGameplayEffectSpecHandle SpecHandle : ContainerSpec.TargetGameplayEffectSpecsHandle)
-    {
+    {   
         if (SpecHandle.IsValid())
-        {
+        {        
             TargetData_Actors->ApplyGameplayEffectSpec(*SpecHandle.Data);
         }
     }
-    
+
+  
 }
 
 int32 URPGBlueprintFunctionLibrary::GetAbilityStacksFromContext(FGameplayEffectContextHandle EffectContextHandle)

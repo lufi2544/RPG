@@ -166,6 +166,14 @@ public:
 
 
 	UFUNCTION(BlueprintCallable , Category = "RPG|Ability")
-	virtual bool CommitAbiltiyStacks();
-		
+	virtual bool CommitAbilityStacks();
+
+	/** -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+	/** Ability Core Events */
+
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ApplyCooldown();
+	
 };

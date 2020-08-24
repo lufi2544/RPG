@@ -15,7 +15,7 @@ URPGGameplayAbility::URPGGameplayAbility()
     ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Debuff.Stun")));
 }
 
-bool URPGGameplayAbility::CommitAbiltiyStacks()
+bool URPGGameplayAbility::CommitAbilityStacks()
 {
     bool bSuccess = false;
     
