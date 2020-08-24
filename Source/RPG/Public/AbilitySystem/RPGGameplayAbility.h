@@ -119,14 +119,19 @@ public:
 
 	/** -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 	
-	//This is a map made of a GameplayTag and a GameplayEffectContainer that will apply all the effects to the target or the owwer later when is called.
 	/**
-	 * \brief This is a nice template
+	 * This is a map made of a GameplayTag and a GameplayEffectContainer that will apply all the effects to the target or the owwer later when is called.
 	 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "RPG|Ability|Effects")
 	TMap<FGameplayTag, struct FRPGGameplayEffectContainer> EffectContainerMap;
 
-	
+
+	virtual int32 GetAbilityStacks()const
+	{
+		return AbilityStacks;
+	}
+
+
 	// If an ability is marked as 'ActivateAbilityOnGranted', activate them immediately when given here
 	// Epic's comment: Projects may want to initiate passives or do other "BeginPlay" type of logic here.
 	virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
@@ -159,8 +164,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category= "RPG|Ability")
     virtual void ApplyRPGCoolDown();
 
-	virtual int32 GetAbilityStacks()const
-	{
-		return AbilityStacks;
-	}
+
+	UFUNCTION(BlueprintCallable , Category = "RPG|Ability")
+	virtual bool CommitAbiltiyStacks();
+		
 };

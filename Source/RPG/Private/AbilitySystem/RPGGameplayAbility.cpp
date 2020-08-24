@@ -15,6 +15,21 @@ URPGGameplayAbility::URPGGameplayAbility()
     ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Debuff.Stun")));
 }
 
+bool URPGGameplayAbility::CommitAbiltiyStacks()
+{
+    bool bSuccess = false;
+    
+    if (AbilityMaxStacks > 0)
+    {
+        if (AbilityStacks < AbilityMaxStacks)
+        {
+            bSuccess = true;
+        }    
+    }
+
+    return bSuccess;
+}
+
 void URPGGameplayAbility::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -109,6 +124,8 @@ void URPGGameplayAbility::ApplyRPGCoolDown()
     }
  
 }
+
+
 
 
 FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeEffectContainerSpec(FGameplayTag ContainerTag, const FGameplayEventData& EventData, int32 OverrideGameplayLevel)
