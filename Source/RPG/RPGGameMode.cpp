@@ -14,22 +14,30 @@ ARPGGameMode::ARPGGameMode()
 void ARPGGameMode::TravelPlayerToLevel(ARPGPlayerController* PlayerController,ERPGMapTravelState MapTravelState)
 {
     FString MapURL = "null";
+
+    /** We have to implement a new array of connected players if we want to implement multiplayer in the future. So we can travel all the players from that array later. */
+
+    //It is obligatory to add the ?listen at the end of the MapURL so the server will listen for the player connections, if we do not add this, it won`t listen
+    // for any calls to enter the level.
     
     if (MapTravelState == ERPGMapTravelState::Battle)
-    {
-        MapURL = "/Game/Maps/BattleMap.BattleMap";    
+    {        
+        MapURL = "/Game/Maps/BattleMap?listen";    
     }
 
     if (PlayerController && (MapURL != "null"))
     {
+        
         bool bSuccess = false;
         UWorld* World = GetWorld();
         if (World)
         {
-            bSuccess =  GetWorld()->ServerTravel(MapURL,true , true);
+            bSuccess =  GetWorld()->ServerTravel(MapURL,true );
+
+            PlayerController->ClientTravel(MapURL,ETravelType::TRAVEL_Absolute);
         }
 
-        UE_LOG(LogTemp , Error , TEXT("%f"),bSuccess );
+        UE_LOG(LogTemp , Error , TEXT(" LOL %f"),bSuccess );
 
     }
     
