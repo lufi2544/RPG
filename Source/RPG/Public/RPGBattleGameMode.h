@@ -13,7 +13,7 @@
 
 
 UENUM(BlueprintType)
-enum class EBattleMachineEndState : uint8
+enum class ERPGBattleMachineEndState : uint8
 {
 
 	Continue,
@@ -37,7 +37,7 @@ enum class EBattleMachineEndState : uint8
 
 
 UENUM(BlueprintType)
-enum class EBattleMachineState  : uint8
+enum class ERPGBattleMachineState  : uint8
 {
 
 	// We continue Branching
@@ -50,10 +50,21 @@ enum class EBattleMachineState  : uint8
 	
 };
 
+// TODO This Enum Will tell Who Started the Battle so we can initiate an attack by surprise.
+UENUM(BlueprintType)
+enum ERPGInitBattleState
+{
+	// The Player Started the Battle
+	Player,
+
+	Allyteam,
+
+	// An Enemy Started the Battle
+	Enemy
+};
 
 
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFinishBattle , EBattleMachineEndState , BattleMachineEndState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFinishBattle , ERPGBattleMachineEndState , BattleMachineEndState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTeamTurnFinished , ERPGTeam, FinishedTeam );
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerFinishedTurn);
 
@@ -89,7 +100,7 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 	void StartBattle(TArray<ARPGEnemy*>Enemies , TArray<ARPGHeroCharacter*> Allies , ARPGPlayerController* PC);
 
 	UFUNCTION(BlueprintCallable , Category = "RPG|GameMode|Battle")
-	void RunBattle(EBattleMachineEndState& EndState , ERPGTeam TeamToInitiate ,  ERPGTeam& out_LastTeam);
+	void RunBattle(ERPGBattleMachineEndState& EndState , ERPGTeam TeamToInitiate ,  ERPGTeam& out_LastTeam);
 
 	/** True if the Battle has Started. */
 	UFUNCTION(BlueprintPure , Category = "RPG|GameMode|Battle")
@@ -108,10 +119,10 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 	void StartBattle(TArray<ARPGHeroCharacter*>&Enemies , TArray<ARPGHeroCharacter*>& Allies);
 
 	/** Runs All the Battle State Machine */
-	void RunBattleStateMachine(EBattleMachineEndState& EndState, ERPGTeam TeamToInitiate , ERPGTeam& out__LastTeam);
+	void RunBattleStateMachine(ERPGBattleMachineEndState& EndState, ERPGTeam TeamToInitiate , ERPGTeam& out__LastTeam);
 
 	/** Stops the State Machine */
-	void StopBattleStateMachine(EBattleMachineEndState &EndState);
+	void StopBattleStateMachine(ERPGBattleMachineEndState &EndState);
 
 	/** Function that checks the State of the Characters in general and that returns a State acording to that.
 	 *
@@ -122,7 +133,7 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 	 *
 	 * The BattleMachineEndState passed by reference will tell us the reason of being rejected.
 	 */
-	EBattleMachineState TryCheckBattleState(EBattleMachineEndState& BattleMachineEndState);
+	ERPGBattleMachineState TryCheckBattleState(ERPGBattleMachineEndState& BattleMachineEndState);
 
 	/** Checks if the Hero Charactes are alive.
 	 *
@@ -195,7 +206,7 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 
 	/** Delegate Functions Call Backs */
 
-	void FinishBattle(EBattleMachineEndState EndState);
+	void FinishBattle(ERPGBattleMachineEndState EndState);
 
 	void PlayerFinishedTurn();
 

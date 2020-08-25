@@ -73,40 +73,22 @@ FRPGGameplayTargetDataFilterHandle URPGBlueprintFunctionLibrary::MakeRPGGameplay
 void URPGBlueprintFunctionLibrary::ApplyEffectContainerSpecToTargetsFromTargetData(FRPGGameplayEffectContainerSpec ContainerSpec, const FGameplayAbilityTargetDataHandle& TargetDataHandle)
 {
 
-    TMap<AActor* , FHitResult> TargetHitResultMap;
+    // I have used the Old School for loop to avoid creating a copy of the Data.
+
+    // We itirate the TargetDataHandle Data and apply the Effec Container Specs from the ContainerSpec
     
-    //Get all the actors from the Target Data
-    
-    TArray<AActor*>	ResultActors;
-    
-    for (int32 TargetDataIndex = 0; TargetDataIndex < TargetDataHandle.Data.Num(); ++TargetDataIndex)
+    for(int32 TargetDataIdx = 0 ; TargetDataIdx < TargetDataHandle.Data.Num() ; ++TargetDataIdx)
     {
-        if (TargetDataHandle.Data.IsValidIndex(TargetDataIndex))
+        // IT IS VITAL TO CHECK IF THE TARGET DATA IS VALID
+        if (TargetDataHandle.Data[TargetDataIdx].IsValid())
         {
-            const FGameplayAbilityTargetData* TargetData = TargetDataHandle.Data[TargetDataIndex].Get();
-            
-            if (TargetData)
+            for (int32 EffectSpecIdx = 0 ; EffectSpecIdx < ContainerSpec.TargetGameplayEffectSpecsHandle.Num(); ++EffectSpecIdx)
             {
-                TArray<TWeakObjectPtr<AActor>> WeakActorArray = TargetData->GetActors();        
+                TargetDataHandle.Data[TargetDataIdx]->ApplyGameplayEffectSpec(*ContainerSpec.TargetGameplayEffectSpecsHandle[EffectSpecIdx].Data);
             }
         }
     }
-
-    // Then we apply all the effects from the Container Spec
     
-    FGameplayAbilityTargetData_ActorArray* TargetData_Actors = new FGameplayAbilityTargetData_ActorArray();
-
-    TargetData_Actors->TargetActorArray.Append(ResultActors);
-    
-    for (FGameplayEffectSpecHandle SpecHandle : ContainerSpec.TargetGameplayEffectSpecsHandle)
-    {   
-        if (SpecHandle.IsValid())
-        {        
-            TargetData_Actors->ApplyGameplayEffectSpec(*SpecHandle.Data);
-        }
-    }
-
-  
 }
 
 int32 URPGBlueprintFunctionLibrary::GetAbilityStacksFromContext(FGameplayEffectContextHandle EffectContextHandle)
@@ -147,6 +129,23 @@ FGameplayEffectContextHandle& URPGBlueprintFunctionLibrary::SetAbilityStacksOnEf
     return EffectContexthandle;
 }
 
+void URPGBlueprintFunctionLibrary::AddHitResultToSpecHandleFromTargetData(
+    TSharedPtr<FGameplayAbilityTargetData> TargetDatSharedPtr, FGameplayEffectSpecHandle& SpecHandle)
+{
+
+            if (TargetDatSharedPtr->HasHitResult())
+            {
+                FHitResult HitResult;
+
+                HitResult = *TargetDatSharedPtr->GetHitResult();
+
+                SpecHandle.Data->GetContext().AddHitResult(HitResult);
+            }
+        
+    
+
+    
+}
 
 
 bool URPGBlueprintFunctionLibrary::IsPlayerAlly(ARPGCharacterBase* Player, ARPGCharacterBase* Other)

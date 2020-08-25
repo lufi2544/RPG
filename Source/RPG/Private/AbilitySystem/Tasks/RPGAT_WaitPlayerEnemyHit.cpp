@@ -51,17 +51,29 @@ void URPGAT_WaitPlayerEnemyHit::OnPlayerHitCallBack(UAbilitySystemComponent* Abi
 void URPGAT_WaitPlayerEnemyHit::OnEnemyHitCallBack(UAbilitySystemComponent* AbilitySystemComponent,
     const FGameplayEffectSpec& Spec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle)
 {
-    if (Spec.GetContext().GetHitResult())
-    {
-        if (Spec.GetContext().GetHitResult()->GetActor())
-        {
-            if (Spec.GetContext().GetAbility()->AbilityTags.HasAny(FGameplayTag::RequestGameplayTag(FName("Ability.CanInitBattle")).GetSingleTagContainer()))
-            {
-                OnEnemyHit.Broadcast();
-            }
-        }
-    }
 
+    FGameplayEffectContextHandle ContextHandle;
+    FHitResult ContexthandleHitResult;
+    const UGameplayAbility* ContextHandleAbility;
     
+  if (Spec.GetContext().Get())
+  {
+    ContextHandle = Spec.GetContext();
+      
+      if (ContextHandle.GetHitResult())
+      {
+          ContexthandleHitResult = *ContextHandle.GetHitResult();
+          
+          if ( ( ContexthandleHitResult.GetActor() ) && ( ContextHandle.GetAbility() ) )
+          {
+             ContextHandleAbility = ContextHandle.GetAbility();
+             if (ContextHandleAbility->AbilityTags.HasAny(FGameplayTag::RequestGameplayTag(FName("Ability.CanInitBattle")).GetSingleTagContainer()))
+             {
+                 OnEnemyHit.Broadcast();
+             }
+          }
+      }
+  }
+
 }
 

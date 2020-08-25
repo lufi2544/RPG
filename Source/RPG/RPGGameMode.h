@@ -37,6 +37,8 @@ public:
 	//TODO In the future I should Implement a new check here to Spawn the PLayer in a new Map depending on the Position of the old map.
 
 	//TODO Add the PreclientTravel to check the PreMapVariation check.
+
+	//TODO Add an ERPGBAttleInit Enum to dictate who started the battle.
 	
 	/** Function that will manage the Player Travel between Levels. */
 	UFUNCTION(BlueprintCallable , Category= "RPG|GameMode")

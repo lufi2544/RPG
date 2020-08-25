@@ -23,11 +23,6 @@ void ARPGBattleGameMode::StartBattle(TArray<ARPGEnemy*>Enemies , TArray<ARPGHero
     MainPlayerController = PC;
     bHasBattleStarted = true;
 
-
-  
-    
-    
-
 }
 
 bool ARPGBattleGameMode::GetBattleState()
@@ -35,7 +30,7 @@ bool ARPGBattleGameMode::GetBattleState()
     return bHasBattleStarted;
 }
 
-void ARPGBattleGameMode::RunBattle(EBattleMachineEndState& EndState, ERPGTeam TeamToInitiate, ERPGTeam& out_LastTeam)
+void ARPGBattleGameMode::RunBattle(ERPGBattleMachineEndState& EndState, ERPGTeam TeamToInitiate, ERPGTeam& out_LastTeam)
 {
     if (bHasBattleStarted)
     {
@@ -49,14 +44,14 @@ void ARPGBattleGameMode::RunBattle(EBattleMachineEndState& EndState, ERPGTeam Te
             FLinearColor(FColor::Red)
             );
 
-        EndState = EBattleMachineEndState::None;
+        EndState = ERPGBattleMachineEndState::None;
     }
     
 }
 
 
 
-void ARPGBattleGameMode::FinishBattle(EBattleMachineEndState EndState)
+void ARPGBattleGameMode::FinishBattle(ERPGBattleMachineEndState EndState)
 {
 
     // Add all the finish battle checks here.
@@ -78,18 +73,18 @@ void ARPGBattleGameMode::TeamFinishedTurn(ERPGTeam Team)
 }
 
 
-void ARPGBattleGameMode::RunBattleStateMachine(EBattleMachineEndState& EndState , ERPGTeam TeamToInitiate ,  ERPGTeam& out__LastTeam)
+void ARPGBattleGameMode::RunBattleStateMachine(ERPGBattleMachineEndState& EndState , ERPGTeam TeamToInitiate ,  ERPGTeam& out__LastTeam)
 {
     //TODO Add the Current Logic for the State Machine.
 
-    if (TryCheckBattleState(EndState) == EBattleMachineState::Accepted)
+    if (TryCheckBattleState(EndState) == ERPGBattleMachineState::Accepted)
     {
         RunTurnState(TeamToInitiate,out__LastTeam);
     }
  
 }
 
-void ARPGBattleGameMode::StopBattleStateMachine(EBattleMachineEndState &EndState)
+void ARPGBattleGameMode::StopBattleStateMachine(ERPGBattleMachineEndState &EndState)
 {    
     //TODO Add the Escape Logic.
 
@@ -117,9 +112,9 @@ void ARPGBattleGameMode::RunTurnState(ERPGTeam InitialTeam , ERPGTeam& out_LastT
     
 }
 
-EBattleMachineState ARPGBattleGameMode::TryCheckBattleState(EBattleMachineEndState& BattleMachineEndState)
+ERPGBattleMachineState ARPGBattleGameMode::TryCheckBattleState(ERPGBattleMachineEndState& BattleMachineEndState)
 {
-    EBattleMachineState BattleMachineState = EBattleMachineState::Idle;
+    ERPGBattleMachineState BattleMachineState = ERPGBattleMachineState::Idle;
     
     // 1 -> Check the Player State, we have to make sure that the Ally Team are still Alive.
     // 2 -> If Theay are still alive we will branch again.That Means that we will enter the next turn.
@@ -134,8 +129,8 @@ EBattleMachineState ARPGBattleGameMode::TryCheckBattleState(EBattleMachineEndSta
 
             /** All Enemies Dead */
 
-            BattleMachineState = EBattleMachineState::Rejected;
-            BattleMachineEndState = EBattleMachineEndState::OutOfEnemies;
+            BattleMachineState = ERPGBattleMachineState::Rejected;
+            BattleMachineEndState = ERPGBattleMachineEndState::OutOfEnemies;
             StopBattleStateMachine(BattleMachineEndState);
             
             return BattleMachineState;
@@ -143,8 +138,8 @@ EBattleMachineState ARPGBattleGameMode::TryCheckBattleState(EBattleMachineEndSta
         
         //Player Turn Logic
 
-        BattleMachineEndState = EBattleMachineEndState::Continue;
-        BattleMachineState = EBattleMachineState::Accepted;
+        BattleMachineEndState = ERPGBattleMachineEndState::Continue;
+        BattleMachineState = ERPGBattleMachineState::Accepted;
         
      // State Machine got rejected by killing all enemies.   
     }else
@@ -153,8 +148,8 @@ EBattleMachineState ARPGBattleGameMode::TryCheckBattleState(EBattleMachineEndSta
         // If we run out of Allies means that we have lost the Battle and that we are out of allies;
 
         
-        BattleMachineState = EBattleMachineState::Rejected;
-        BattleMachineEndState = EBattleMachineEndState::OutOfAllies;
+        BattleMachineState = ERPGBattleMachineState::Rejected;
+        BattleMachineEndState = ERPGBattleMachineEndState::OutOfAllies;
         StopBattleStateMachine(BattleMachineEndState);
     }
   

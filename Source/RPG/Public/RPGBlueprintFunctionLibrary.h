@@ -84,6 +84,8 @@ class RPG_API URPGBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable , Category = "RPG|BlueprintLibrary|RPGEffectContext")
 	static FGameplayEffectContextHandle& SetAbilityStacksOnEffectContext(FGameplayEffectContextHandle EffectContexthandle, int32 InStacks);
 
+	static void AddHitResultToSpecHandleFromTargetData(TSharedPtr<FGameplayAbilityTargetData> TargetDatSharedPtr , FGameplayEffectSpecHandle& SpecHandle);
+
 
 	/** ----------------------------------------------------------------------------------------------------------------------------------------------- */
 
