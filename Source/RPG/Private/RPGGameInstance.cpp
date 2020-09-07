@@ -19,7 +19,7 @@ void URPGGameInstance::TravelPlayer(ARPGPlayerController* PC, ERPGMapTravelState
 
     if (GM)
     {
-        GM->TravelPlayerToLevel(PC,MapTravelState);
+        GM->RPGGameModeStartBattle(PC,MapTravelState);
     }
 
     

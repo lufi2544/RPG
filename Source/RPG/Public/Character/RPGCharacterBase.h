@@ -4,17 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-
 #include "AbilitySystemComponent.h"
 #include "GameplayEffect.h"
-#include "RPGPlayerState.h"
-#include "RPGPlayerController.h"
+
 #include "AbilitySystemInterface.h"
-#include "RPG/RPG.h"
 #include "RPGCharacterBase.generated.h"
 
-
-
+class RPGPlayerState;
 class URPGAttributeSetBase;
 class URPGGameplayAbility;
 

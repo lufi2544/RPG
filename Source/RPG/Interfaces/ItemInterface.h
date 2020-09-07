@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/RPGCharacterBase.h"
-#include "Items/RPGEquipableItem.h"
 #include "UObject/Interface.h"
 #include "ItemInterface.generated.h"
 

@@ -4,14 +4,14 @@
 
 #include "AbilitySystemComponent.h"
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+
+#include "RPGEnemy.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
+#include "RPG/RPG.h"
+
 #include "RPGAT_WaitPlayerEnemyHit.generated.h"
 
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyHit);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerHit);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnHitEvent , ARPGCharacterBase* , InstigatorCharacter,ARPGCharacterBase*,HitCharacter,ERPGHitType ,HitType);
 
 /**
  * Task that will listen for a Player Getting Hit By an enemy or an Enemy getting hit by a Player. (Commonly used to initiate a Battle).
@@ -24,10 +24,7 @@ class RPG_API URPGAT_WaitPlayerEnemyHit : public UBlueprintAsyncActionBase
 	public:
 	
 	UPROPERTY(BlueprintAssignable)
-	FOnPlayerHit OnPlayerHit;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnEnemyHit OnEnemyHit;
+	FOnHitEvent OnBattleHitEvent;
 
 	UFUNCTION(BlueprintCallable , Category = "RPG|Tasks" , meta= (BlueprintInternalUseOnly = "true"))
 	static URPGAT_WaitPlayerEnemyHit* WaitPlayerEnemyHit(UAbilitySystemComponent* PlayerASC);

@@ -6,6 +6,7 @@
 #include "Abilities/GameplayAbilityTargetDataFilter.h"
 #include "Character/RPGCharacterBase.h"
 #include "RPG/RPG.h"
+#include "RPG/Public/Character/RPGPlayerState.h"
 #include "RPG/Public/Character/RPGHeroCharacter.h"
 #include "UObject/NoExportTypes.h"
 #include "RPGTargetType.generated.h"

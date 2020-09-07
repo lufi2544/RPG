@@ -3,6 +3,8 @@
 
 #include "RPG/Public/Character/RPGCharacterBase.h"
 #include "AbilitySystemComponent.h"
+#include "RPG/Public/Character/RPGPlayerState.h"
+#include "RPG/Public/Character/RPGPlayerController.h"
 #include "RPG/Public/Character/RPGCharacterMovementComponent.h"
 #include "RPG/Public/AbilitySystem/RPGAttributeSetBase.h"
 #include "Components/CapsuleComponent.h"

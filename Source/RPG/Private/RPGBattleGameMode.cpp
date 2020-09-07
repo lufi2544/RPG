@@ -2,7 +2,7 @@
 
 
 #include "RPGBattleGameMode.h"
-
+#include "RPG/Public/Character/RPGPlayerState.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "RPGEnemy.h"
 
@@ -75,7 +75,6 @@ void ARPGBattleGameMode::TeamFinishedTurn(ERPGTeam Team)
 
 void ARPGBattleGameMode::RunBattleStateMachine(ERPGBattleMachineEndState& EndState , ERPGTeam TeamToInitiate ,  ERPGTeam& out__LastTeam)
 {
-    //TODO Add the Current Logic for the State Machine.
 
     if (TryCheckBattleState(EndState) == ERPGBattleMachineState::Accepted)
     {

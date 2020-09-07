@@ -99,6 +99,7 @@ class RPG_API ARPGBattleGameMode : public ARPGGameMode
 	UFUNCTION(BlueprintCallable, Category = "RPG|GameMode|Battle")
 	void StartBattle(TArray<ARPGEnemy*>Enemies , TArray<ARPGHeroCharacter*> Allies , ARPGPlayerController* PC);
 
+	/** Will run all the Battle logic. */
 	UFUNCTION(BlueprintCallable , Category = "RPG|GameMode|Battle")
 	void RunBattle(ERPGBattleMachineEndState& EndState , ERPGTeam TeamToInitiate ,  ERPGTeam& out_LastTeam);
 

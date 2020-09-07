@@ -7,6 +7,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "RPGGameMode.generated.h"
 
+class ARPGPlayerController;
 
 UENUM(BlueprintType)
 enum class ERPGMapTravelState : uint8
@@ -17,6 +18,9 @@ enum class ERPGMapTravelState : uint8
 	//This is the World that the Player belongs to in first place.
 	NormalWorld
 };
+
+
+
 
 /** This is the Base Class for the GameMode of the RPGGame. This GameMode Can be Subclassed.
  *
@@ -34,15 +38,15 @@ public:
 
 	/** Battle GeneralMethods Methods */
 
-	//TODO In the future I should Implement a new check here to Spawn the PLayer in a new Map depending on the Position of the old map.
 
-	//TODO Add the PreclientTravel to check the PreMapVariation check.
 
 	//TODO Add an ERPGBAttleInit Enum to dictate who started the battle.
 	
 	/** Function that will manage the Player Travel between Levels. */
 	UFUNCTION(BlueprintCallable , Category= "RPG|GameMode")
-	void TravelPlayerToLevel(ARPGPlayerController* PlayerController,ERPGMapTravelState MapTravelState); 
+	void RPGGameModeStartBattle(ARPGPlayerController* PlayerController,ERPGMapTravelState MapTravelState);
+
+	
 
 
 };

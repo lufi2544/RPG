@@ -123,3 +123,13 @@ enum class ERPGCharacterHeroType : uint8
     //Elf
     Elf
 };
+
+
+UENUM(BlueprintType)
+enum class ERPGHitType : uint8
+{
+    PlayerWasHit,
+
+    EnemyWasHit
+    
+};

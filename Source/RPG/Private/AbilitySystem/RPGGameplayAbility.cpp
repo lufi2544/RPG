@@ -179,7 +179,13 @@ FRPGGameplayEffectContainerSpec URPGGameplayAbility::MakeContainerSpecFromContai
         
         for(const TSubclassOf<UGameplayEffect>& EffectClass : Container.EffectsToApply)
         {
-            ReturnEffectContainerSpec.TargetGameplayEffectSpecsHandle.Add(MakeOutgoingGameplayEffectSpec(EffectClass,OverrideGameplayLevel));
+            FGameplayEffectSpecHandle Handle ;
+            
+            Handle = MakeOutgoingGameplayEffectSpec(EffectClass,OverrideGameplayLevel);
+
+            
+            ReturnEffectContainerSpec.TargetGameplayEffectSpecsHandle.Add(Handle);
+            
         }
     }
 

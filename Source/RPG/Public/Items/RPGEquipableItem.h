@@ -3,10 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RPGEquipableItem.h"
 #include "GameFramework/Actor.h"
 #include "RPG/Interfaces/ItemInterface.h"
-#include "RPG/Interfaces/WeaponInterface.h"
 
 #include "RPGEquipableItem.generated.h"
 class ARPGEquipableItem;

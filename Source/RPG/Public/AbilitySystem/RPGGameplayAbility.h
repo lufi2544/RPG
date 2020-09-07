@@ -103,7 +103,7 @@ public:
 
 	/** Container that holds the Effects that are going to be applied to the Player Targets(Enemies); */
 	UPROPERTY(BlueprintReadWrite , Category = "RPG|Ability|Effects" , VisibleAnywhere)
-	FRPGGameplayEffectContainerSpec MainEffectContainerSpec;
+	FRPGGameplayEffectContainerSpec EnemyEffectContainerSpec;
 
 	/** Container that holds the Effects that are going to be applied to the Player itself; */
 	UPROPERTY(BlueprintReadWrite , Category = "RPG|Ability|Effects" , VisibleAnywhere)
